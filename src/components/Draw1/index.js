@@ -10,11 +10,18 @@ class Draw1 extends Component {
         clickColor: [],
         clickSize: [],
         curColor: "black",
-        fillColor: "white",
+        curSize: 1,
+        backgroundColor: "white",
         paint: false,
-        paintState: "paint"
+        strokes: 0,
+        strokeCount: []
     }
     componentDidMount() {
+        document.addEventListener("keydown", (e) => {
+            if(e.ctrlKey) {
+                console.log("ctl")
+            }
+        })
         this.setState({
             ctx: document.querySelector(".canvas").getContext("2d")
         })
@@ -23,33 +30,37 @@ class Draw1 extends Component {
         this.redraw(document.querySelector(".canvas"))
     }
     startDrawing = (e) => {
-        if(this.state.paintState === "paint") {
-            const mouseX = e.pageX - e.currentTarget.offsetLeft
-            const mouseY = e.pageY - e.currentTarget.offsetTop
-            this.setState({
-                paint: true
-            })
-            this.addClick(mouseX, mouseY)
-        }
+        const mouseX = e.pageX - e.currentTarget.offsetLeft
+        const mouseY = e.pageY - e.currentTarget.offsetTop
+        this.setState({
+            paint: true
+        })
+        this.addClick(mouseX, mouseY)
     }
     drawing = (e) => {
-        if(this.state.paint && this.state.paintState === "paint") {
+        if(this.state.paint) {
             this.addClick(e.pageX - e.currentTarget.offsetLeft, e.pageY - e.currentTarget.offsetTop, true)
         }
     }
     stopDrawing = () => {
+        if(this.state.paint) {
+            this.setState({
+                strokeCount: [...this.state.strokeCount, this.state.strokes],
+                strokes: 0,
+            })
+        }
         this.setState({
-            paint: false
+            paint: false,
         })
     }
     addClick = (x, y, dragging) => {
-        console.log("nice")
-        console.log(this.state.clickX)
         this.setState({
             clickX: [...this.state.clickX, x],
             clickY: [...this.state.clickY, y],
             clickDrag: [...this.state.clickDrag, dragging],
-            clickColor: [...this.state.clickColor, this.state.curColor]
+            clickColor: [...this.state.clickColor, this.state.curColor],
+            clickSize: [...this.state.clickSize, this.state.curSize],
+            strokes: this.state.strokes+1
         })
     }
     redraw = (canvas) => {
@@ -61,9 +72,8 @@ class Draw1 extends Component {
 
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
         ctx.lineJoin = "round"
-        ctx.lineWidth = 5
-        ctx.fillStyle = this.state.fillColor;
-        ctx.fillRect(20, 20, 400, 400);
+        ctx.fillStyle = this.state.backgroundColor
+        ctx.fillRect(0, 0, 400, 400);
                     
         for(var i = 0; i < clickX.length; i++) {		
             ctx.beginPath()
@@ -75,6 +85,7 @@ class Draw1 extends Component {
             ctx.lineTo(clickX[i], clickY[i])
             ctx.closePath()
             ctx.strokeStyle = clickColor[i]
+            ctx.lineWidth = this.state.clickSize[i]
             ctx.stroke()
         }
     }
@@ -83,20 +94,29 @@ class Draw1 extends Component {
             curColor: e.target.name
         })
     }
-    fillCanvas = () => {
-        if(this.state.paintState === "fill") {
-            const { ctx } = this.state
-            console.log(ctx)
-            ctx.fillStyle = this.state.curColor;
-            ctx.fillRect(20, 20, 420, 400);
-            this.setState({
-                fillColor: this.state.curColor
-            })
-        }
-    }
-    changePaintState = (e) => {
+    changeBackgroundColor = (e) => {
+        console.log(e.target.name)
+        const { ctx } = this.state
+        ctx.fillStyle = e.target.name
+        ctx.fillRect(0, 0, 420, 400);
         this.setState({
-            paintState: e.target.name
+            backgroundColor: e.target.name
+        })
+    }
+    changeClickSize = (e) => {
+        const { curSize } = this.state
+        this.setState({
+            curSize: curSize === 1 ? 5 : curSize === 5 ? 10 : 1
+        })
+    }
+    undo = () => {
+        const recentStroke = this.state.strokeCount.pop()
+        this.setState({
+            clickX: this.state.clickX.slice(0, this.state.clickX.length - recentStroke),
+            clickY: this.state.clickY.slice(0, this.state.clickY.length - recentStroke),
+            clickDrag: this.state.clickDrag.slice(0, this.state.clickDrag.length-recentStroke),
+            clickColor: this.state.clickColor.slice(0, this.state.clickColor.length - recentStroke),
+            clickSize: this.state.clickSize.slice(0, this.state.clickSize.length - recentStroke),
         })
     }
     clearCanvas = (e) => {
@@ -113,17 +133,32 @@ class Draw1 extends Component {
     render() {
         return(
             <S.Container1>
-                {console.log(this.state.paintState)}
+                {console.log(this.state.curSize)}
                 <S.UtilityLeft>
-                    <S.Bucket name="fill" onClick={this.changePaintState}>
-                        bucket
-                    </S.Bucket>
+                    <S.ClearCanvas className="fas fa-trash-alt clear" onClick={this.clearCanvas}></S.ClearCanvas>
                 </S.UtilityLeft>
                 <S.Container2>
                     <S.UtilityTop>
-                        
+                        <S.BackgroundColor
+                            className={`${this.state.backgroundColor === "white" ? "selected" : ""}`}
+                            name="white" 
+                            color="white" 
+                            onClick={this.changeBackgroundColor}
+                        ></S.BackgroundColor>
+                        <S.BackgroundColor 
+                            className={`${this.state.backgroundColor === "black" ? "selected" : ""}`}
+                            name="black" 
+                            color="black" 
+                            onClick={this.changeBackgroundColor}
+                        ></S.BackgroundColor>
+                        <S.BackgroundColor 
+                            className={`${this.state.backgroundColor === "grey" ? "selected" : ""}`}
+                            name="grey" 
+                            color="grey" 
+                            onClick={this.changeBackgroundColor}
+                        ></S.BackgroundColor>
                     </S.UtilityTop>
-                    <S.Canvas1 
+                    <S.Canvas 
                         className="canvas"
                         width="400" 
                         height="400" 
@@ -132,8 +167,7 @@ class Draw1 extends Component {
                         onMouseMove={this.drawing}
                         onMouseUp={this.stopDrawing}
                         onMouseLeave={this.stopDrawing}
-                        onClick={this.fillCanvas}
-                    ></S.Canvas1>
+                    ></S.Canvas>
                     <S.UtilityBottom>
                         <S.Color 
                             className={`${this.state.curColor === "red" ? "selected" : ""}`} 
@@ -177,10 +211,21 @@ class Draw1 extends Component {
                             color="black" 
                             onClick={this.changeColor}
                         ></S.Color>
+                        <S.Color 
+                            className={`${this.state.curColor === "white" ? "selected" : ""}`} 
+                            name="white" 
+                            color="white" 
+                            onClick={this.changeColor}
+                        ></S.Color>
                     </S.UtilityBottom>
                 </S.Container2>
                 <S.UtilityRight>
-                    <S.ClearCanvas className="clear" onClick={this.clearCanvas}>Clear</S.ClearCanvas>
+                    <S.WhiteSquare onClick={this.changeClickSize}>
+                        <S.PaintSize 
+                            className={`${this.state.curSize === 1 ? "small" : this.state.curSize === 5 ? "medium" : "large"}`} 
+                        ></S.PaintSize>
+                    </S.WhiteSquare>
+                    <S.Undo className="fas fa-undo" onClick={this.undo}></S.Undo>
                 </S.UtilityRight>
             </S.Container1>
         )
