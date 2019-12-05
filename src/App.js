@@ -1,12 +1,13 @@
 import React from 'react';
 import Draw from "./components/Draw"
+import Draw1 from "./components/Draw1"
 
 import './App.css';
 
 function App() {
   return (
     <div className="App">
-      <Draw />
+      <Draw1 />
     </div>
   );
 }
