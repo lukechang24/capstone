@@ -1,33 +1,37 @@
 import React, { Component } from "react"
+import { withFirebase } from "../Firebase"
 import S from "./style"
 
 class Draw1 extends Component {
     state = {
+        canvas: {
+            clickX: [],
+            clickY: [],
+            clickDrag: [],
+            clickColor: [],
+            clickSize: [],
+            backgroundColor: "white",
+        },
         ctx: null,
-        clickX: [],
-        clickY: [],
-        clickDrag: [],
-        clickColor: [],
-        clickSize: [],
         curColor: "black",
         curSize: 1,
-        backgroundColor: "white",
         paint: false,
         strokes: 0,
         strokeCount: []
     }
     componentDidMount() {
         document.addEventListener("keydown", (e) => {
-            if(e.ctrlKey) {
-                console.log("ctl")
+            if(e.ctrlKey && e.which === 90) {
+                this.undo()
             }
         })
         this.setState({
             ctx: document.querySelector(".canvas").getContext("2d")
         })
+
     }
     componentDidUpdate() {
-        this.redraw(document.querySelector(".canvas"))
+        this.redraw()
     }
     startDrawing = (e) => {
         const mouseX = e.pageX - e.currentTarget.offsetLeft
@@ -55,24 +59,24 @@ class Draw1 extends Component {
     }
     addClick = (x, y, dragging) => {
         this.setState({
-            clickX: [...this.state.clickX, x],
-            clickY: [...this.state.clickY, y],
-            clickDrag: [...this.state.clickDrag, dragging],
-            clickColor: [...this.state.clickColor, this.state.curColor],
-            clickSize: [...this.state.clickSize, this.state.curSize],
+            canvas: {
+                ...this.state.canvas,
+                clickX: [...this.state.canvas.clickX, x],
+                clickY: [...this.state.canvas.clickY, y],
+                clickDrag: [...this.state.canvas.clickDrag, dragging],
+                clickColor: [...this.state.canvas.clickColor, this.state.curColor],
+                clickSize: [...this.state.canvas.clickSize, this.state.curSize],
+            },
             strokes: this.state.strokes+1
         })
     }
-    redraw = (canvas) => {
+    redraw = () => {
         const { ctx } = this.state
-        const clickX = this.state.clickX
-        const clickY = this.state.clickY
-        const clickDrag = this.state.clickDrag
-        const clickColor = this.state.clickColor
+        const { clickX, clickY, clickDrag, clickColor, clickSize, backgroundColor } = this.state.canvas
 
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
         ctx.lineJoin = "round"
-        ctx.fillStyle = this.state.backgroundColor
+        ctx.fillStyle = backgroundColor
         ctx.fillRect(0, 0, 600, 600);
                     
         for(var i = 0; i < clickX.length; i++) {		
@@ -85,7 +89,7 @@ class Draw1 extends Component {
             ctx.lineTo(clickX[i], clickY[i])
             ctx.closePath()
             ctx.strokeStyle = clickColor[i]
-            ctx.lineWidth = this.state.clickSize[i]
+            ctx.lineWidth = clickSize[i]
             ctx.stroke()
         }
     }
@@ -95,12 +99,14 @@ class Draw1 extends Component {
         })
     }
     changeBackgroundColor = (e) => {
-        console.log(e.target.name)
         const { ctx } = this.state
         ctx.fillStyle = e.target.name
         ctx.fillRect(0, 0, 600, 600);
         this.setState({
-            backgroundColor: e.target.name
+            canvas: {
+                backgroundColor: e.target.name,
+                ...this.state.canvas
+            }
         })
     }
     changeClickSize = (e) => {
@@ -111,23 +117,29 @@ class Draw1 extends Component {
     }
     undo = () => {
         const recentStroke = this.state.strokeCount.pop()
+        const { clickX, clickY, clickDrag, clickColor, clickSize } = this.state.canvas
         this.setState({
-            clickX: this.state.clickX.slice(0, this.state.clickX.length - recentStroke),
-            clickY: this.state.clickY.slice(0, this.state.clickY.length - recentStroke),
-            clickDrag: this.state.clickDrag.slice(0, this.state.clickDrag.length-recentStroke),
-            clickColor: this.state.clickColor.slice(0, this.state.clickColor.length - recentStroke),
-            clickSize: this.state.clickSize.slice(0, this.state.clickSize.length - recentStroke),
+            canvas: {
+                clickX: clickX.slice(0, clickX.length - recentStroke),
+                clickY: clickY.slice(0, clickY.length - recentStroke),
+                clickDrag: clickDrag.slice(0, clickDrag.length-recentStroke),
+                clickColor: clickColor.slice(0, clickColor.length - recentStroke),
+                clickSize: clickSize.slice(0, clickSize.length - recentStroke),
+            }
         })
     }
     clearCanvas = (e) => {
         const { ctx } = this.state
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
         this.setState({
-            clickX: [],
-            clickY: [],
-            clickDrag: [],
-            clickColor: [],
-            clickSize: [],
+            canvas: {
+                ...this.state.canvas,
+                clickX: [],
+                clickY: [],
+                clickDrag: [],
+                clickColor: [],
+                clickSize: [],
+            }
         })
     }
     render() {

@@ -35,6 +35,8 @@ class Firebase {
 
   allLobbies = () => this.db.collection("lobbies")
 
+  createCanvas = (canvasInfo) => this.db.collection("canvas")
+
   signOut = () => this.auth.signOut
 }
 export default Firebase;
