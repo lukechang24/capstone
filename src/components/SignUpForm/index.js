@@ -6,7 +6,7 @@ class SignUpForm extends Component {
     state = {
         email: "",
         password: "",
-        displayName: ""
+        displayName: "",
     }
     handleInput = e => {
         this.setState({
@@ -19,7 +19,7 @@ class SignUpForm extends Component {
         this.props.firebase.createUser(email, password)
             .then(cred => {
                 this.props.firebase.findUser(cred.user.uid).set({
-                    email, 
+                    email,
                     displayName
                 })
                 this.props.history.push("/lobby")

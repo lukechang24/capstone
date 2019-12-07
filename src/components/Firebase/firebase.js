@@ -35,8 +35,10 @@ class Firebase {
 
   allLobbies = () => this.db.collection("lobbies")
 
-  createCanvas = (canvasInfo) => this.db.collection("canvas")
+  createCanvas = (canvasInfo) => this.db.collection("canvas").add(canvasInfo)
 
-  signOut = () => this.auth.signOut
+  findCanvas = roomId => this.db.collection("canvas").where("roomId", "==", roomId)
+
+  signOut = () => this.auth.signOut()
 }
 export default Firebase;

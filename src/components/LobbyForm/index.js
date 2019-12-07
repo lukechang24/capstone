@@ -26,7 +26,6 @@ class LobbyForm extends Component {
     render() {
         return(
             <div>
-                {console.log(this.props.currentUser, "nice")}
                 <form onSubmit={this.handleSubmit}>
                     Room Name: <input name="roomName" onChange={this.handleInput}></input><br/>
                     Password: <input name="password" onChange={this.handleInput}></input> *optional<br/>

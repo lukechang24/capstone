@@ -1,4 +1,5 @@
 import React, { Component } from "react"
+import { withRouter } from "react-router-dom"
 import { withFirebase } from "../Firebase"
 import S from "./style"
 
@@ -20,6 +21,14 @@ class Draw1 extends Component {
         strokeCount: []
     }
     componentDidMount() {
+        this.props.firebase.findCanvas(this.props.match.params.id).get()
+            .then(snapshot => {
+                snapshot.forEach(doc => {
+                    console.log(doc.data())
+                })
+            })
+        // this.props.firebase.createCanvas({...this.state.canvas, roomId: this.props.match.params.id})
+        console.log(this.props.currentUser)
         document.addEventListener("keydown", (e) => {
             if(e.ctrlKey && e.which === 90) {
                 this.undo()
@@ -28,7 +37,6 @@ class Draw1 extends Component {
         this.setState({
             ctx: document.querySelector(".canvas").getContext("2d")
         })
-
     }
     componentDidUpdate() {
         this.redraw()
@@ -242,4 +250,4 @@ class Draw1 extends Component {
     }
 }
 
-export default Draw1
+export default withRouter(withFirebase(Draw1))

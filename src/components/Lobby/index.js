@@ -8,10 +8,10 @@ class Lobby extends Component {
         lobbies: []
     }
     componentDidMount() {
-        this.props.firebase.allLobbies().get()
-            .then(snapShot => {
+        this.props.firebase.allLobbies()
+            .onSnapshot(snapshot => {
                 const lobbies = []
-                snapShot.forEach(doc => {
+                snapshot.forEach(doc => {
                     lobbies.push(doc.data())
                 })
                 this.setState({
