@@ -5,7 +5,7 @@ class LobbyForm extends Component {
     state = {
         canvasId: "",
         roomName: "",
-        password: ""
+        password: "",
     }
     handleInput = e => {
         this.setState({
@@ -15,12 +15,13 @@ class LobbyForm extends Component {
     handleSubmit = e => {
         e.preventDefault()
         const roomInfo = {
-            roomMasterId: this.props.currentUser.id,
             ...this.state, 
+            users: [this.props.currentUser.id],
         }
         this.props.firebase.createLobby(roomInfo)
-            .then(room => console.log(room.id))
-        // console.log(roomInfo)
+            .then(room => {
+                this.props.firebase.findLobby(room.id).update({id: room.id})
+            })
     }
     render() {
         return(

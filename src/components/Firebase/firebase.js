@@ -22,12 +22,19 @@ class Firebase {
   createUser = (email, password) => {
     return this.auth.createUserWithEmailAndPassword(email, password)
   }
+
   findUser = uid => this.db.collection("users").doc(uid)
 
   signInUser = (email, password) => {
     return this.auth.signInWithEmailAndPassword(email, password)
   }
 
-  createLobby = (roomInfo) => this.db.collection("lobbies").add(roomInfo) 
+  createLobby = roomInfo => this.db.collection("lobbies").add(roomInfo) 
+
+  findLobby = id => this.db.collection("lobbies").doc(id)
+
+  allLobbies = () => this.db.collection("lobbies")
+
+  signOut = () => this.auth.signOut
 }
 export default Firebase;

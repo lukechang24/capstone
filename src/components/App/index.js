@@ -15,6 +15,7 @@ class App extends Component {
       if(authUser) {
         this.props.firebase.findUser(authUser.uid).get()
           .then(snapShot => {
+            console.log(authUser)
             console.log(snapShot.data())
             this.setState({
               currentUser: {
@@ -35,7 +36,7 @@ class App extends Component {
     return(
       <Router>
         <div className="App">
-          {console.log(this.state)}
+          <input type="submit" value="log out" onClick={this.props.firebase.signOut}></input>
           <Switch>
             <Route exact path="/auth/signup" render={() => <SignUpForm />}></Route>
             <Route exact path="/auth/signin" render={() => <SignInForm />}></Route>

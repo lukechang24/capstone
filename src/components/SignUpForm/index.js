@@ -29,7 +29,6 @@ class SignUpForm extends Component {
     render() {
         return(
            <form onSubmit={this.handleSubmit}>
-               {console.log(this.props.firebase)}
                 <input name="email" placeholder="email" onChange={this.handleInput}></input>
                 <input name="password" placeholder="password" onChange={this.handleInput}></input>
                 <input name="displayName" placeholder="display name" onChange={this.handleInput}></input>
