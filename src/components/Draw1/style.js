@@ -4,19 +4,18 @@ import paintBrush from "../../images/paint-brush.png"
 const S = {};
 
 S.Container1 = styled.div`
-    height: 35rem;
-    width: 35rem;
+    height: 50rem;
+    width: 50rem;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 5rem;
     border: 0.1rem solid black;
     background-color: rgb(167, 218, 250);
 `
 
 S.UtilityLeft = styled.div`
     height: 100%;
-    width: 100%;
+    width: 5rem;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -24,15 +23,17 @@ S.UtilityLeft = styled.div`
 
 S.UtilityRight = styled.div`
     height: 100%;
-    width: 100%;
+    width: 5rem;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
 `
 S.Container2 = styled.div`
     height: 100%;
     display: flex;
     flex-direction: column;
+    justify-content: center;
 `
 
 S.Canvas = styled.canvas`
@@ -42,14 +43,14 @@ S.Canvas = styled.canvas`
 `
 
 S.UtilityTop = styled.div`
-    height: 100%;
+    height: 5rem;
     width: 100%;
     display: flex;
     align-items: flex-end;
 `
 
 S.UtilityBottom = styled.div`
-    height: 100%;
+    height: 5rem;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -74,9 +75,9 @@ S.BackgroundColor = styled.button`
     width: 2.5rem;
     height: 2.5rem;
     background-color: ${props => props.color};
-    border: 0.1rem solid black;
-    border-bottom: 0;
-    border-radius: 1rem 1rem 0 0;
+    border: 0;
+    border-radius: 0.75rem 0.75rem 0 0;
+    margin-right: 0.05rem;
     &.selected {
         height: 3.5rem;
     }
@@ -88,6 +89,7 @@ S.WhiteSquare = styled.div`
     justify-content: center;
     align-items: center;
     background-color: white;
+    margin-top: 5rem;
 `
 
 S.PaintSize = styled.button`

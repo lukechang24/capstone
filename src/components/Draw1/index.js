@@ -73,7 +73,7 @@ class Draw1 extends Component {
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
         ctx.lineJoin = "round"
         ctx.fillStyle = this.state.backgroundColor
-        ctx.fillRect(0, 0, 400, 400);
+        ctx.fillRect(0, 0, 600, 600);
                     
         for(var i = 0; i < clickX.length; i++) {		
             ctx.beginPath()
@@ -98,7 +98,7 @@ class Draw1 extends Component {
         console.log(e.target.name)
         const { ctx } = this.state
         ctx.fillStyle = e.target.name
-        ctx.fillRect(0, 0, 420, 400);
+        ctx.fillRect(0, 0, 600, 600);
         this.setState({
             backgroundColor: e.target.name
         })
@@ -133,7 +133,6 @@ class Draw1 extends Component {
     render() {
         return(
             <S.Container1>
-                {console.log(this.state.curSize)}
                 <S.UtilityLeft>
                     <S.ClearCanvas className="fas fa-trash-alt clear" onClick={this.clearCanvas}></S.ClearCanvas>
                 </S.UtilityLeft>
@@ -160,9 +159,8 @@ class Draw1 extends Component {
                     </S.UtilityTop>
                     <S.Canvas 
                         className="canvas"
-                        width="400" 
-                        height="400" 
-                        style={{"border": "0.1rem solid black"}} 
+                        width="600" 
+                        height="600" 
                         onMouseDown={this.startDrawing}
                         onMouseMove={this.drawing}
                         onMouseUp={this.stopDrawing}
