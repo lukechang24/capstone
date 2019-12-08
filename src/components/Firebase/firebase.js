@@ -22,22 +22,24 @@ class Firebase {
   createUser = (email, password) => {
     return this.auth.createUserWithEmailAndPassword(email, password)
   }
-
-  findUser = uid => this.db.collection("users").doc(uid)
-
+  
   signInUser = (email, password) => {
     return this.auth.signInWithEmailAndPassword(email, password)
   }
 
-  createLobby = roomInfo => this.db.collection("lobbies").add(roomInfo) 
+  findUser = uid => this.db.collection("users").doc(uid)
 
-  findLobby = id => this.db.collection("lobbies").doc(id)
+  createRoom = roomInfo => this.db.collection("lobbies").add(roomInfo) 
 
-  allLobbies = () => this.db.collection("lobbies")
+  findRoom = id => this.db.collection("lobbies").doc(id)
 
-  createCanvas = (canvasInfo) => this.db.collection("canvas").add(canvasInfo)
+  findRooms = () => this.db.collection("lobbies")
 
-  findCanvas = roomId => this.db.collection("canvas").where("roomId", "==", roomId)
+  createCanvas = (canvasInfo) => this.db.collection("canvases").add(canvasInfo)
+
+  findCanvas = id => this.db.collection("canvases").doc(id)
+
+  findCanvases = roomId => this.db.collection("canvases").where("roomId", "==", roomId)
 
   signOut = () => this.auth.signOut()
 }

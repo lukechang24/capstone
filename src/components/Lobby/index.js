@@ -1,6 +1,6 @@
 import React, { Component } from "react"
-import LobbyForm from "../LobbyForm"
-import LobbyList from "../LobbyList"
+import RoomForm from "../RoomForm"
+import RoomList from "../RoomList"
 import { withFirebase } from "../Firebase"
 
 class Lobby extends Component {
@@ -8,7 +8,7 @@ class Lobby extends Component {
         lobbies: []
     }
     componentDidMount() {
-        this.props.firebase.allLobbies()
+        this.props.firebase.findRooms()
             .onSnapshot(snapshot => {
                 const lobbies = []
                 snapshot.forEach(doc => {
@@ -22,8 +22,8 @@ class Lobby extends Component {
     render() {
         return(
             <div>
-                <LobbyForm currentUser={this.props.currentUser}/>
-                <LobbyList lobbies={this.state.lobbies}/>
+                <RoomForm currentUser={this.props.currentUser}/>
+                <RoomList lobbies={this.state.lobbies} setUserRoomId={this.setUserRoomId}/>
             </div>
         )
     }

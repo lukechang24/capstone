@@ -5,6 +5,7 @@ import S from "./style"
 
 class Draw1 extends Component {
     state = {
+        currentUser: this.props.currentUser,
         canvas: {
             clickX: [],
             clickY: [],
@@ -21,14 +22,38 @@ class Draw1 extends Component {
         strokeCount: []
     }
     componentDidMount() {
-        this.props.firebase.findCanvas(this.props.match.params.id).get()
-            .then(snapshot => {
-                snapshot.forEach(doc => {
-                    console.log(doc.data())
+        this.props.firebase.findCanvases(this.props.match.params.id)
+            .where("userId", "==", this.props.currentUser.id)
+                .onSnapshot(snapshot => {
+                    let exists = false
+                    snapshot.forEach(doc => {
+                        if(doc.data().userId === this.props.currentUser.id) {
+                            exists = true
+                            const canvasInfo = {
+                                ...doc.data().canvas
+                            }
+                            this.setState({
+                                ...this.state,
+                                canvas: {...canvasInfo}
+                            })
+                        }
+                    })
+                    if(!exists) {
+                        this.props.firebase.createCanvas({canvas: this.state.canvas, roomId: this.props.match.params.id, userId: this.props.currentUser.id})
+                            .then(doc => {
+                                this.props.firebase.findCanvas(doc.id).get()
+                                    .then(snapshot => {
+                                        const canvasInfo = {
+                                            ...snapshot.data().canvas
+                                        }
+                                        this.setState({
+                                            ...this.state,
+                                            canvas: {...canvasInfo}
+                                        })
+                                    })
+                            })
+                    }
                 })
-            })
-        // this.props.firebase.createCanvas({...this.state.canvas, roomId: this.props.match.params.id})
-        console.log(this.props.currentUser)
         document.addEventListener("keydown", (e) => {
             if(e.ctrlKey && e.which === 90) {
                 this.undo()
@@ -37,6 +62,15 @@ class Draw1 extends Component {
         this.setState({
             ctx: document.querySelector(".canvas").getContext("2d")
         })
+    }
+    static getDerivedStateFromProps(nextProps, prevState){
+        if(nextProps.currentUser!==prevState.currentUser) {
+            return {currentUser : nextProps.currentUser};
+        }
+        else {
+            return null;
+        }
+            
     }
     componentDidUpdate() {
         this.redraw()
@@ -47,7 +81,7 @@ class Draw1 extends Component {
         this.setState({
             paint: true
         })
-        this.addClick(mouseX, mouseY)
+        this.addClick(mouseX, mouseY, false)
     }
     drawing = (e) => {
         if(this.state.paint) {
@@ -64,6 +98,12 @@ class Draw1 extends Component {
         this.setState({
             paint: false,
         })
+        this.props.firebase.findCanvases(this.props.match.params.id).where("userId", "==", this.props.currentUser.id).get()
+            .then(snapshot => {
+                snapshot.forEach(doc => {
+                    this.props.firebase.findCanvas(doc.id).update({canvas: {...this.state.canvas}})
+                })
+            })
     }
     addClick = (x, y, dragging) => {
         this.setState({
@@ -107,15 +147,13 @@ class Draw1 extends Component {
         })
     }
     changeBackgroundColor = (e) => {
-        const { ctx } = this.state
-        ctx.fillStyle = e.target.name
-        ctx.fillRect(0, 0, 600, 600);
-        this.setState({
-            canvas: {
-                backgroundColor: e.target.name,
-                ...this.state.canvas
-            }
-        })
+        e.persist()
+        this.props.firebase.findCanvases(this.props.match.params.id).where("userId", "==", this.props.currentUser.id).get()
+            .then(snapshot => {
+                snapshot.forEach(doc => {
+                    this.props.firebase.findCanvas(doc.id).update({canvas: {...doc.data().canvas, backgroundColor: e.target.name}})
+                })
+            })
     }
     changeClickSize = (e) => {
         const { curSize } = this.state
@@ -126,33 +164,40 @@ class Draw1 extends Component {
     undo = () => {
         const recentStroke = this.state.strokeCount.pop()
         const { clickX, clickY, clickDrag, clickColor, clickSize } = this.state.canvas
-        this.setState({
-            canvas: {
-                clickX: clickX.slice(0, clickX.length - recentStroke),
-                clickY: clickY.slice(0, clickY.length - recentStroke),
-                clickDrag: clickDrag.slice(0, clickDrag.length-recentStroke),
-                clickColor: clickColor.slice(0, clickColor.length - recentStroke),
-                clickSize: clickSize.slice(0, clickSize.length - recentStroke),
-            }
-        })
+        const canvasInfo = {
+            clickX: clickX.slice(0, clickX.length - recentStroke),
+            clickY: clickY.slice(0, clickY.length - recentStroke),
+            clickDrag: clickDrag.slice(0, clickDrag.length-recentStroke),
+            clickColor: clickColor.slice(0, clickColor.length - recentStroke),
+            clickSize: clickSize.slice(0, clickSize.length - recentStroke)
+        }
+        this.props.firebase.findCanvases(this.props.match.params.id).where("userId", "==", this.props.currentUser.id).get()
+            .then(snapshot => {
+                snapshot.forEach(doc => {
+                    this.props.firebase.findCanvas(doc.id).update({canvas: {...canvasInfo}})
+                })
+            })
     }
     clearCanvas = (e) => {
-        const { ctx } = this.state
-        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
-        this.setState({
-            canvas: {
-                ...this.state.canvas,
-                clickX: [],
-                clickY: [],
-                clickDrag: [],
-                clickColor: [],
-                clickSize: [],
-            }
-        })
+        const canvasInfo = {
+            ...this.state.canvas,
+            clickX: [],
+            clickY: [],
+            clickDrag: [],
+            clickColor: [],
+            clickSize: [],
+        }
+        this.props.firebase.findCanvases(this.props.match.params.id).where("userId", "==", this.props.currentUser.id).get()
+            .then(snapshot => {
+                snapshot.forEach(doc => {
+                    this.props.firebase.findCanvas(doc.id).update({canvas: {...canvasInfo}})
+                })
+            })
     }
     render() {
         return(
             <S.Container1>
+                {console.log(this.state)}
                 <S.UtilityLeft>
                     <S.ClearCanvas className="fas fa-trash-alt clear" onClick={this.clearCanvas}></S.ClearCanvas>
                 </S.UtilityLeft>

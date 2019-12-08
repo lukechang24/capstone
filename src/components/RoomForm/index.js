@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import { withFirebase } from "../Firebase"
  
-class LobbyForm extends Component {
+class RoomForm extends Component {
     state = {
         canvasId: "",
         roomName: "",
@@ -20,7 +20,7 @@ class LobbyForm extends Component {
         }
         this.props.firebase.createLobby(roomInfo)
             .then(room => {
-                this.props.firebase.findLobby(room.id).update({id: room.id})
+                this.props.firebase.findRoom(room.id).update({id: room.id})
             })
     }
     render() {
@@ -36,4 +36,4 @@ class LobbyForm extends Component {
     }
 }
 
-export default withFirebase(LobbyForm)
+export default withFirebase(RoomForm)

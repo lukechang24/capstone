@@ -1,7 +1,7 @@
 import React from "react"
 import { NavLink } from "react-router-dom"
 
-const LobbyList = (props) => {
+const RoomList = (props) => {
     const lobbyList = props.lobbies.map((lobby, i) => {
         return(
             <NavLink to={`/lobby/${lobby.id}`} key={i}>
@@ -15,4 +15,4 @@ const LobbyList = (props) => {
     )
 }
 
-export default LobbyList
+export default RoomList
