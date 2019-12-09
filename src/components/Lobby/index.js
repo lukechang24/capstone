@@ -4,11 +4,21 @@ import RoomList from "../RoomList"
 import { withFirebase } from "../Firebase"
 
 class Lobby extends Component {
+    constructor(props) {
+        super(props)
+        this.unsubscribe = null
+    }
     state = {
-        lobbies: []
+        lobbies: [],
     }
     componentDidMount() {
-        this.props.firebase.findRooms()
+        this.getLobbies()
+    }
+    componentWillUnmount() {
+        this.unsubscribe()
+    }
+    getLobbies = () => {
+        this.unsubscribe = this.props.firebase.findRooms()
             .onSnapshot(snapshot => {
                 const lobbies = []
                 snapshot.forEach(doc => {
@@ -22,6 +32,8 @@ class Lobby extends Component {
     render() {
         return(
             <div>
+                {console.log(this.state.lobbies, "lobbies")}
+                <input type="submit" value="log out" onClick={this.props.signOut}></input>
                 <RoomForm currentUser={this.props.currentUser}/>
                 <RoomList lobbies={this.state.lobbies} setUserRoomId={this.setUserRoomId}/>
             </div>

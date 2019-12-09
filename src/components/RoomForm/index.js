@@ -16,11 +16,20 @@ class RoomForm extends Component {
         e.preventDefault()
         const roomInfo = {
             ...this.state, 
-            users: [this.props.currentUser.id],
+            users: [],
         }
-        this.props.firebase.createLobby(roomInfo)
+        this.props.firebase.createRoom(roomInfo)
             .then(room => {
-                this.props.firebase.findRoom(room.id).update({id: room.id})
+                const chatInfo = {
+                    userId: this.props.currentUser.id,
+                    roomId: room.id,
+                    createdAt: Date.now(),
+                    messages: []
+                }
+                this.props.firebase.createChat(chatInfo)
+                    .then(doc => {
+                        this.props.firebase.findRoom(room.id).update({id: room.id, chatId: doc.id})
+                    })
             })
     }
     render() {

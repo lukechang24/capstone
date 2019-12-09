@@ -1,5 +1,6 @@
-import app from 'firebase/app';
+import * as app from 'firebase/app'
 import 'firebase/firebase-firestore'
+import 'firebase/database'
 import "firebase/auth"
 
 
@@ -16,30 +17,45 @@ const config = {
 class Firebase {
   constructor() {
     app.initializeApp(config)
+    this.database = app.database()
     this.db = app.firestore()
     this.auth = app.auth()
   }
   createUser = (email, password) => {
     return this.auth.createUserWithEmailAndPassword(email, password)
   }
-  
+
   signInUser = (email, password) => {
     return this.auth.signInWithEmailAndPassword(email, password)
   }
 
+  connectionRef = () => this.database.ref(".info/connected")
+
+  userStatusDatabaseRef = () => this.database.ref(`/status/${this.auth.currentUser.uid}`)
+
+  userStatusFirestoreRef = () => this.db.doc(`/status/${this.auth.currentUser.uid}`)
+
   findUser = uid => this.db.collection("users").doc(uid)
 
-  createRoom = roomInfo => this.db.collection("lobbies").add(roomInfo) 
+  findUsers = roomId => this.db.collection("users").where("currentRoomId", "==", roomId)
 
-  findRoom = id => this.db.collection("lobbies").doc(id)
+  createRoom = roomInfo => this.db.collection("rooms").add(roomInfo) 
 
-  findRooms = () => this.db.collection("lobbies")
+  findRoom = id => this.db.collection("rooms").doc(id)
+
+  findRooms = () => this.db.collection("rooms")
 
   createCanvas = (canvasInfo) => this.db.collection("canvases").add(canvasInfo)
 
   findCanvas = id => this.db.collection("canvases").doc(id)
 
   findCanvases = roomId => this.db.collection("canvases").where("roomId", "==", roomId)
+
+  createChat = (chatInfo) => this.db.collection("chats").add(chatInfo)
+
+  chatRef = () => this.db.collection("chats")
+
+  findMessages = chatId => this.db.collection("chats").doc(chatId)
 
   signOut = () => this.auth.signOut()
 }

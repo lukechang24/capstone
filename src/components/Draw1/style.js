@@ -4,12 +4,11 @@ import paintBrush from "../../images/paint-brush.png"
 const S = {};
 
 S.Container1 = styled.div`
-    height: 50rem;
-    width: 50rem;
+    height: 100%;
+    width: 45rem;
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 0.1rem solid black;
     background-color: rgb(167, 218, 250);
 `
 
@@ -30,7 +29,6 @@ S.UtilityRight = styled.div`
     align-items: center;
 `
 S.Container2 = styled.div`
-    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;

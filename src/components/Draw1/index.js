@@ -5,7 +5,6 @@ import S from "./style"
 
 class Draw1 extends Component {
     state = {
-        currentUser: this.props.currentUser,
         canvas: {
             clickX: [],
             clickY: [],
@@ -63,21 +62,15 @@ class Draw1 extends Component {
             ctx: document.querySelector(".canvas").getContext("2d")
         })
     }
-    static getDerivedStateFromProps(nextProps, prevState){
-        if(nextProps.currentUser!==prevState.currentUser) {
-            return {currentUser : nextProps.currentUser};
-        }
-        else {
-            return null;
-        }
-            
-    }
     componentDidUpdate() {
         this.redraw()
     }
     startDrawing = (e) => {
-        const mouseX = e.pageX - e.currentTarget.offsetLeft
-        const mouseY = e.pageY - e.currentTarget.offsetTop
+        const mouseX = e.pageX - e.target.offsetLeft
+        const mouseY = e.pageY - e.target.offsetTop
+        console.log(e.target.offsetTop, "offset")
+        console.log(e.pageY, "page")
+        console.log(e.clientY, "client")
         this.setState({
             paint: true
         })
@@ -85,7 +78,7 @@ class Draw1 extends Component {
     }
     drawing = (e) => {
         if(this.state.paint) {
-            this.addClick(e.pageX - e.currentTarget.offsetLeft, e.pageY - e.currentTarget.offsetTop, true)
+            this.addClick(e.pageX - e.target.offsetLeft, e.pageY - e.target.offsetTop, true)
         }
     }
     stopDrawing = () => {
@@ -125,7 +118,7 @@ class Draw1 extends Component {
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
         ctx.lineJoin = "round"
         ctx.fillStyle = backgroundColor
-        ctx.fillRect(0, 0, 600, 600);
+        ctx.fillRect(0, 0, 550, 550);
                     
         for(var i = 0; i < clickX.length; i++) {		
             ctx.beginPath()
@@ -197,7 +190,6 @@ class Draw1 extends Component {
     render() {
         return(
             <S.Container1>
-                {console.log(this.state)}
                 <S.UtilityLeft>
                     <S.ClearCanvas className="fas fa-trash-alt clear" onClick={this.clearCanvas}></S.ClearCanvas>
                 </S.UtilityLeft>
@@ -224,8 +216,8 @@ class Draw1 extends Component {
                     </S.UtilityTop>
                     <S.Canvas 
                         className="canvas"
-                        width="600" 
-                        height="600" 
+                        width="550" 
+                        height="550" 
                         onMouseDown={this.startDrawing}
                         onMouseMove={this.drawing}
                         onMouseUp={this.stopDrawing}

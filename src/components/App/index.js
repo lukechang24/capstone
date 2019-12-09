@@ -5,6 +5,7 @@ import SignUpForm from "../SignUpForm"
 import SignInForm from "../SignInForm"
 import Lobby from "../Lobby"
 import Room from "../Room"
+import S from "./style"
 
 class App extends Component {
   state = {
@@ -25,6 +26,7 @@ class App extends Component {
               }
             })
           })
+        this.setUserStatusOnline()
       } else {
         this.setState({
           currentUser: {}
@@ -32,27 +34,58 @@ class App extends Component {
       }
     })
   }
+  setUserStatusOnline = () => {
+    this.props.firebase.connectionRef()
+      .on("value", snapshot => {
+        if(snapshot.val() === false) {
+          this.props.firebase.userStatusDatabaseRef().set({isOnline: false})
+          return
+        } else {
+          this.props.firebase.userStatusDatabaseRef().onDisconnect().set({isOnline: false})
+            .then(() => {
+              this.props.firebase.userStatusDatabaseRef().set({isOnline: true})
+            })
+        }
+      })
+    this.props.firebase.connectionRef()
+      .on("value", snapshot => {
+        if(snapshot.val() === false) {
+          this.props.firebase.userStatusFirestoreRef().set({isOnline: false})
+          return
+        } else {
+          this.props.firebase.userStatusDatabaseRef().onDisconnect().set({isOnline: false})
+            .then(() => {
+              this.props.firebase.userStatusDatabaseRef().set({isOnline: true})
+              this.props.firebase.userStatusFirestoreRef().set({isOnline: true});
+            })
+        }
+      })
+  }
   setCurrentUser = currentUser => {
     this.setState({
       currentUser
     })
   }
   signOut = () => {
-    this.props.firebase.signOut()
-    this.props.history.push("/lobby")
+    if(this.props.firebase.auth.currentUser) {
+      this.props.firebase.signOut()
+        .then(
+          this.props.firebase.userStatusDatabaseRef().set({isOnline: false})
+        )
+      this.props.history.push("/lobby")
+    }
   }
   render() {
-    return(
-        <div className="App">
-          {console.log(this.state.currentUser, "currentUSer")}
-          <input type="submit" value="log out" onClick={this.signOut}></input>
-          <Switch>
-            <Route exact path="/auth/signup" render={() => <SignUpForm />}></Route>
-            <Route exact path="/auth/signin" render={() => <SignInForm />}></Route>
-            <Route exact path="/lobby" render={() => <Lobby currentUser={this.state.currentUser}/>}></Route>
-            <Route exact path="/lobby/:id" render={() => <Room currentUser={this.state.currentUser} setCurrentUser={this.setCurrentUser}/>}></Route>
-          </Switch>
-        </div>
+    return (
+      <S.AppContainer>
+        {console.log(this.state.currentUser, "currentUSer")}
+        <Switch>
+          <Route exact path="/auth/signup" render={() => <SignUpForm />}></Route>
+          <Route exact path="/auth/signin" render={() => <SignInForm />}></Route>
+          <Route exact path="/lobby" render={() => <Lobby currentUser={this.state.currentUser} signOut={this.signOut} />}></Route>
+          <Route exact path="/lobby/:id" render={() => <Room currentUser={this.state.currentUser} setCurrentUser={this.setCurrentUser} />}></Route>
+        </Switch>
+      </S.AppContainer>
     )
   }
 }
