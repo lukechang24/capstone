@@ -19,16 +19,11 @@ S.Container2 = styled.div`
 
 S.ChatContainer = styled.div`
     height: 90%;
-    width: 20rem;
-    background-color: purple;
+    width: 23rem;
+    background-color: rgb(235, 235, 235);
     display: flex;
     flex-direction: column;
-`
-
-S.ChatBox = styled.div`
-    width: 100%;
-    height: 90%;
-    background-color: pink;
+    overflow-y: auto;
 `
 
 S.MessageForm = styled.form`
@@ -43,6 +38,13 @@ S.MessageInput = styled.input`
     width: 90%;
     font-size: 1rem;
     margin: 0.5rem;
+    padding: 0.5rem;
+    border: none;
+    border-radius: 0.3rem;
+`
+
+S.Spinner = styled.i`
+    font-size: 3rem;
 `
 
 export default S

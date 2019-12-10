@@ -1,25 +1,26 @@
 import React from "react"
-import WaitingRoom from "../WaitingRoom"
 import S from "./style"
 
 const UserList = (props) => {
     const userList = props.userList.map((user,i) => {
         return(
-            <div className={props.wait ? "big" : "small"} key={i}>
-                <h1>{user.displayName}</h1>
-            </div>
+                <S.Username key={i}>
+                    {i === 0 ? <i className="fas fa-crown"></i> : null}
+                    {user.displayName}
+                </S.Username>
         )
     })
-    console.log(props.waiting)
     return(
         <S.Container1 className={props.waiting ? "big" : "small"}>
             {props.waiting 
                 ?
-                    <button onClick={() => {props.startGame()}}>Start Game</button> 
+                    <S.Heading>Waiting for players...</S.Heading> 
                 : 
                     null
             }
-            {userList}
+            <S.UserContainer className={props.waiting ? "big" : "small"}>
+                {userList}
+            </S.UserContainer>
             {props.waiting 
                 ?
                     <button onClick={() => {props.startGame()}}>Start Game</button> 

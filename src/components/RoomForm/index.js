@@ -6,6 +6,7 @@ class RoomForm extends Component {
         canvasId: "",
         roomName: "",
         password: "",
+        started: false
     }
     handleInput = e => {
         this.setState({
@@ -21,13 +22,13 @@ class RoomForm extends Component {
         this.props.firebase.createRoom(roomInfo)
             .then(room => {
                 const chatInfo = {
-                    userId: this.props.currentUser.id,
                     roomId: room.id,
                     createdAt: Date.now(),
                     messages: []
                 }
                 this.props.firebase.createChat(chatInfo)
                     .then(doc => {
+                        this.props.firebase.chatRef().doc(doc.id).update({id: doc.id})
                         this.props.firebase.findRoom(room.id).update({id: room.id, chatId: doc.id})
                     })
             })

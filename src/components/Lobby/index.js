@@ -2,6 +2,7 @@ import React, { Component } from "react"
 import RoomForm from "../RoomForm"
 import RoomList from "../RoomList"
 import { withFirebase } from "../Firebase"
+import S from "./style"
 
 class Lobby extends Component {
     constructor(props) {
@@ -31,12 +32,11 @@ class Lobby extends Component {
     }
     render() {
         return(
-            <div>
-                {console.log(this.state.lobbies, "lobbies")}
+            <S.Container1>
                 <input type="submit" value="log out" onClick={this.props.signOut}></input>
                 <RoomForm currentUser={this.props.currentUser}/>
                 <RoomList lobbies={this.state.lobbies} setUserRoomId={this.setUserRoomId}/>
-            </div>
+            </S.Container1>
         )
     }
 }

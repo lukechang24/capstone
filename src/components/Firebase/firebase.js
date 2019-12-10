@@ -55,7 +55,7 @@ class Firebase {
 
   chatRef = () => this.db.collection("chats")
 
-  findMessages = chatId => this.db.collection("chats").doc(chatId)
+  findChatLogs = roomId => this.db.collection("chats").where("roomId", "==", roomId)
 
   signOut = () => this.auth.signOut()
 }

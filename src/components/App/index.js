@@ -14,7 +14,7 @@ class App extends Component {
   componentDidMount() {
     this.props.firebase.auth.onAuthStateChanged(authUser => {
       if(authUser) {
-        console.log(authUser, "Authuser")
+        console.log("auth changed state")
         this.props.firebase.findUser(authUser.uid).get()
           .then(snapshot => {
             this.setState({
@@ -35,18 +35,18 @@ class App extends Component {
     })
   }
   setUserStatusOnline = () => {
-    this.props.firebase.connectionRef()
-      .on("value", snapshot => {
-        if(snapshot.val() === false) {
-          this.props.firebase.userStatusDatabaseRef().set({isOnline: false})
-          return
-        } else {
-          this.props.firebase.userStatusDatabaseRef().onDisconnect().set({isOnline: false})
-            .then(() => {
-              this.props.firebase.userStatusDatabaseRef().set({isOnline: true})
-            })
-        }
-      })
+    // this.props.firebase.connectionRef()
+    //   .on("value", snapshot => {
+    //     if(snapshot.val() === false) {
+    //       this.props.firebase.userStatusDatabaseRef().set({isOnline: false})
+    //       return
+    //     } else { 
+    //       this.props.firebase.userStatusDatabaseRef().onDisconnect().set({isOnline: false})
+    //         .then(() => {
+    //           this.props.firebase.userStatusDatabaseRef().set({isOnline: true})
+    //         })
+    //     }
+    //   })
     this.props.firebase.connectionRef()
       .on("value", snapshot => {
         if(snapshot.val() === false) {
