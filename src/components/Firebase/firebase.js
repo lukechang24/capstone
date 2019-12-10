@@ -35,6 +35,8 @@ class Firebase {
 
   userStatusFirestoreRef = () => this.db.doc(`/status/${this.auth.currentUser.uid}`)
 
+  userRef = () => this.db.collection("users")
+
   findUser = uid => this.db.collection("users").doc(uid)
 
   findUsers = roomId => this.db.collection("users").where("currentRoomId", "==", roomId)

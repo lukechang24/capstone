@@ -19,11 +19,10 @@ class App extends Component {
           .then(snapshot => {
             this.setState({
               currentUser: {
-                ...this.state.currentUser,
-                id: authUser.uid,
-                email: snapshot.data().email,
-                displayName: snapshot.data().displayName,
+                ...snapshot.data()
               }
+            }, () => {
+              this.checkForUserChanges()
             })
           })
         this.setUserStatusOnline()
@@ -33,6 +32,18 @@ class App extends Component {
         })
       }
     })
+  }
+  checkForUserChanges = () => {
+    if(this.state.currentUser.id) {
+      this.props.firebase.findUser(this.state.currentUser.id)
+        .onSnapshot(snapshot => {
+          this.setState({
+            currentUser: {
+              ...snapshot.data()
+            }
+          })
+        })
+    }
   }
   setUserStatusOnline = () => {
     // this.props.firebase.connectionRef()

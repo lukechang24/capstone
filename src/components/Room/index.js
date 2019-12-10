@@ -53,12 +53,12 @@ class Room extends Component {
                 if(snapshot1.data().users.indexOf(this.props.currentUser.id) === -1) {
                     updatedUsers.push(this.props.currentUser.id)
                 }
-                this.props.firebase.findRoom(snapshot1.data().id).update({...snapshot1.data(), users: [...updatedUsers]})
-            })
-        this.props.firebase.findUser(this.props.currentUser.id).update({currentRoomId: this.props.match.params.id, joinedAt: Date.now()})
-        this.props.firebase.findUser(this.props.currentUser.id).get()
-            .then(snapshot => {
-                this.props.setCurrentUser({...snapshot.data(), id: this.props.currentUser.id, currentRoomId: this.props.match.params.id})
+                this.props.firebase.findRoom(snapshot1.data().id).update({users: [...updatedUsers]})
+                // console.log(snapshot1.data().users, "userid")
+                // console.log(this.props.currentUser.id,"theuserid")
+                const isMaster = !snapshot1.data().users[0]
+                console.log(isMaster," ismaster")
+                this.props.firebase.findUser(this.props.currentUser.id).update({currentRoomId: this.props.match.params.id, joinedAt: Date.now(), isMaster})
             })
         this.props.firebase.findChatLogs(this.props.match.params.id).get()
             .then(snapshot1 => {
@@ -77,17 +77,19 @@ class Room extends Component {
             })
     }
     // assignRoomMaster = () => {
-    //     this.props.firebase.findRoom()
+    //     this.props.firebase.findRoom(this.props.match.params.id)
+    //         .onSnapshot(snapshot => {
+    //             this.props
+    //         })
     // }
     removeUserFromRoom = () => {
         this.props.firebase.findRoom(this.props.match.params.id).get()
             .then(snapshot => {
                 const updatedUsers = [...snapshot.data().users]
                 updatedUsers.splice(updatedUsers.indexOf(this.props.currentUser.id), 1)
-                console.log(updatedUsers)
-                this.props.firebase.findRoom(snapshot.data().id).update({...snapshot.data(), users: [...updatedUsers]})
+                this.props.firebase.findRoom(snapshot.data().id).update({users: [...updatedUsers]})
             })
-        this.props.firebase.findUser(this.props.currentUser.id).update({currentRoomId: null})
+        this.props.firebase.findUser(this.props.currentUser.id).update({currentRoomId: null, joinedAt: null, isMaster: null})
         this.props.firebase.findChatLogs(this.props.match.params.id).get()
             .then(snapshot1 => {
                 const introStatement = {

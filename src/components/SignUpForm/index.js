@@ -21,7 +21,10 @@ class SignUpForm extends Component {
                 this.props.firebase.findUser(cred.user.uid).set({
                     email,
                     displayName,
-                    currentRoomId: null
+                    currentRoomId: null,
+                    id: cred.user.uid,
+                    joinedAt: null,
+                    isMaster: false
                 })
                 this.props.history.push("/lobby")
             })
