@@ -89,7 +89,7 @@ class App extends Component {
   render() {
     return (
       <S.AppContainer>
-        {console.log(this.state.currentUser, "currentUSer")}
+        {console.log(this.state.currentUser, "IM USER")}
         <Switch>
           <Route exact path="/auth/signup" render={() => <SignUpForm />}></Route>
           <Route exact path="/auth/signin" render={() => <SignInForm />}></Route>

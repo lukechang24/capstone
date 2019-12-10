@@ -2,10 +2,10 @@ import React from "react"
 import S from "./style"
 
 const UserList = (props) => {
-    const userList = props.userList.map((user,i) => {
+    const userList = props.userList.sort((a,b) => a.joinedAt - b.joinedAt).map((user,i) => {
         return(
                 <S.Username key={i}>
-                    {i === 0 ? <i className="fas fa-crown"></i> : null}
+                    {user.isMaster && props.waiting ? <i className="fas fa-crown"></i> : null}
                     {user.displayName}
                 </S.Username>
         )

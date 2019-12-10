@@ -21,7 +21,7 @@ const ChatLog = (props) => {
         }
     })
     return(
-        <S.ChatBox className="chatlog">
+        <S.ChatBox className="chatbox">
             {messageList}
         </S.ChatBox>
     )

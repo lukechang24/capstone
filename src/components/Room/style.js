@@ -3,22 +3,22 @@ import styled from "styled-components"
 const S = {}
 
 S.Container1 = styled.div`
-    height: 50rem;
-    width: 100%;
+    height: 100vh;
+    width: 100vw;
     display: flex;
     justify-content: space-around;
     align-items: center;
 `
 
 S.Container2 = styled.div`
-    height: 90%;
+    height: 45rem;
     width: 65rem;
     display: flex;
     justify-content: space-between;
 `
 
 S.ChatContainer = styled.div`
-    height: 90%;
+    height: 45rem;
     width: 23rem;
     background-color: rgb(235, 235, 235);
     display: flex;
@@ -27,17 +27,27 @@ S.ChatContainer = styled.div`
 `
 
 S.MessageForm = styled.form`
+    position: relative;
     width: 100%;
-    height: 10%;
+    height: 6rem;
     display: flex;
-    justify-content: center;
-    align-items: flex-end;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+`
+S.MoreMessages = styled.span`
+    width: 100%;
+    color: blue;
+    text-decoration: underline;
+    text-align: center;
 `
 
 S.MessageInput = styled.input`
+    position: absolute;
+    bottom: 0;
     width: 90%;
     font-size: 1rem;
-    margin: 0.5rem;
+    margin: 0.5rem auto;
     padding: 0.5rem;
     border: none;
     border-radius: 0.3rem;

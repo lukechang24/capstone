@@ -3,9 +3,10 @@ import styled from "styled-components"
 const S = {}
 
 S.ChatBox = styled.div`
-    width: 100%;
     height: 100%;
     background-color: rgb(235, 235, 235);
+    border-top: 1rem solid black;
+    border-color: black;
     padding: 0.5rem;
     overflow-y: auto;
 `

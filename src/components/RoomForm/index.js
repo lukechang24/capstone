@@ -1,4 +1,5 @@
 import React, { Component } from "react"
+import { withRouter } from "react-router-dom"
 import { withFirebase } from "../Firebase"
  
 class RoomForm extends Component {
@@ -15,6 +16,9 @@ class RoomForm extends Component {
     }
     handleSubmit = e => {
         e.preventDefault()
+        if(!this.state.roomName) {
+            return
+        }
         const roomInfo = {
             ...this.state, 
             users: [],
@@ -30,6 +34,7 @@ class RoomForm extends Component {
                     .then(doc => {
                         this.props.firebase.chatRef().doc(doc.id).update({id: doc.id})
                         this.props.firebase.findRoom(room.id).update({id: room.id, chatId: doc.id})
+                        this.props.history.push(`/lobby/${room.id}`)
                     })
             })
     }
@@ -46,4 +51,4 @@ class RoomForm extends Component {
     }
 }
 
-export default withFirebase(RoomForm)
+export default withRouter(withFirebase(RoomForm))

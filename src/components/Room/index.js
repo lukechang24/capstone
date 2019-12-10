@@ -15,11 +15,14 @@ class Room extends Component {
         waiting: true,
         phase: 1,
         loading: true,
+        showMoreMessages: false
     }
     componentDidMount() {
+        console.log("i mounted!")
         setTimeout(() => {
             this.addUsertoRoom()
             this.getUsers()
+            this.updateRoomMaster()
             this.getChatLog()
             this.setState({
                 loading: false
@@ -42,7 +45,19 @@ class Room extends Component {
         this.props.firebase.findChatLogs(this.props.match.params.id)
             .onSnapshot(snapshot => {
                 snapshot.forEach(doc => {
-                    this.setState({chatLog: doc.data().messages})
+                    this.setState({chatLog: doc.data().messages}, () => {
+                        const chatDiv = document.querySelector(".chatbox")
+                        if(chatDiv.scrollTop > chatDiv.scrollHeight-700) {
+                            chatDiv.scrollTop = chatDiv.scrollHeight
+                            this.setState({
+                                showMoreMessages: false
+                            })
+                        } else {
+                            this.setState({
+                                showMoreMessages: true
+                            })
+                        }
+                    })
                 })
             })
     }
@@ -54,34 +69,36 @@ class Room extends Component {
                     updatedUsers.push(this.props.currentUser.id)
                 }
                 this.props.firebase.findRoom(snapshot1.data().id).update({users: [...updatedUsers]})
-                // console.log(snapshot1.data().users, "userid")
-                // console.log(this.props.currentUser.id,"theuserid")
                 const isMaster = !snapshot1.data().users[0]
-                console.log(isMaster," ismaster")
                 this.props.firebase.findUser(this.props.currentUser.id).update({currentRoomId: this.props.match.params.id, joinedAt: Date.now(), isMaster})
-            })
-        this.props.firebase.findChatLogs(this.props.match.params.id).get()
-            .then(snapshot1 => {
-                const introStatement = {
-                    content: `${this.props.currentUser.displayName} has joined the room.`,
-                    isSpecial: true,
-                    createdAt: Date.now()
+                if(isMaster) {
+                    return
                 }
-                snapshot1.forEach(doc => {
-                    this.props.firebase.chatRef().doc(doc.id).get()
-                        .then(snapshot2 => {
-                            const updatedChatLog = [...snapshot2.data().messages, introStatement]
-                            this.props.firebase.chatRef().doc(snapshot2.id).update({messages: updatedChatLog})
+                this.props.firebase.findChatLogs(this.props.match.params.id).get()
+                    .then(snapshot1 => {
+                        const introStatement = {
+                            content: `${this.props.currentUser.displayName} has joined the room.`,
+                            isSpecial: true,
+                            createdAt: Date.now()
+                        }
+                        snapshot1.forEach(doc => {
+                            this.props.firebase.chatRef().doc(doc.id).get()
+                                .then(snapshot2 => {
+                                    console.log(snapshot2.data(), "hi1")
+                                    const updatedChatLog = [...snapshot2.data().messages, introStatement]
+                                    this.props.firebase.chatRef().doc(snapshot2.id).update({messages: updatedChatLog})
+                                })
                         })
-                })
+                    })
             })
     }
-    // assignRoomMaster = () => {
-    //     this.props.firebase.findRoom(this.props.match.params.id)
-    //         .onSnapshot(snapshot => {
-    //             this.props
-    //         })
-    // }
+    updateRoomMaster = () => {
+        this.props.firebase.findRoom(this.props.match.params.id)
+            .onSnapshot(snapshot => {
+                const isMaster = this.props.currentUser.id === snapshot.data().users[0]
+                this.props.firebase.findUser(this.props.currentUser.id).update({isMaster})
+            })
+    }
     removeUserFromRoom = () => {
         this.props.firebase.findRoom(this.props.match.params.id).get()
             .then(snapshot => {
@@ -121,10 +138,12 @@ class Room extends Component {
     }
     handleSubmit = e => {
         e.preventDefault()
+        if(!this.state.message) {
+            return
+        }
         this.props.firebase.chatRef().where("roomId", "==", this.props.match.params.id).get()
             .then(snapshot => {
                 snapshot.forEach(doc => {
-                    console.log(this.state.message)
                     const newMessage = {
                         content: this.state.message,
                         userId: this.props.currentUser.id,
@@ -139,6 +158,13 @@ class Room extends Component {
                     })
                 })
             })
+    }
+    scrollToBottomOfChat = () => {
+        const chatBox = document.querySelector(".chatbox")
+        chatBox.scrollTop = chatBox.scrollHeight
+        this.setState({
+            showMoreMessages: false
+        })
     }
     render() {
         return(
@@ -157,8 +183,14 @@ class Room extends Component {
                             }
                         </S.Container2>
                         <S.ChatContainer>
-                            <ChatLog currentUser={this.props.currentUser} chatLog={this.state.chatLog}/>
+                            <ChatLog currentUser={this.props.currentUser} chatLog={this.state.chatLog} showMoreMessages={this.state.showMoreMessages}/>
                             <S.MessageForm onSubmit={this.handleSubmit}>
+                                {this.state.showMoreMessages 
+                                    ?
+                                        <S.MoreMessages onClick={this.scrollToBottomOfChat}>Show recent messages</S.MoreMessages> 
+                                    :
+                                        null
+                                }
                                 <S.MessageInput type="text" onChange={this.handleInput} value={this.state.message} placeholder="Type your message here..."></S.MessageInput>
                             </S.MessageForm>
                         </S.ChatContainer>
