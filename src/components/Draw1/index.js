@@ -68,9 +68,6 @@ class Draw1 extends Component {
     startDrawing = (e) => {
         const mouseX = e.pageX - e.target.offsetLeft
         const mouseY = e.pageY - e.target.offsetTop
-        console.log(e.target.offsetTop, "offset")
-        console.log(e.pageY, "page")
-        console.log(e.clientY, "client")
         this.setState({
             paint: true
         })

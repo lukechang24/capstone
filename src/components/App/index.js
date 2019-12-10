@@ -9,14 +9,17 @@ import S from "./style"
 
 class App extends Component {
   state = {
-    currentUser: {},
+    currentUser: JSON.parse(localStorage.getItem("savedUser")) || {}
   }
   componentDidMount() {
+    console.log(localStorage.getItem("savedUser"), "saved")
     this.props.firebase.auth.onAuthStateChanged(authUser => {
       if(authUser) {
         console.log("auth changed state")
         this.props.firebase.findUser(authUser.uid).get()
           .then(snapshot => {
+            const userJson = JSON.stringify({...snapshot.data()})
+            localStorage.setItem("savedUser", userJson)
             this.setState({
               currentUser: {
                 ...snapshot.data()
@@ -58,18 +61,40 @@ class App extends Component {
     //         })
     //     }
     //   })
+    // this.props.firebase.connectionRef()
+    //   .on("value", snapshot => {
+    //     if(snapshot.val() === false) {
+    //       this.props.firebase.userStatusFirestoreRef().set({isOnline: false})
+    //       return
+    //     }
+
+    //     this.props.firebase.userStatusDatabaseRef().onDisconnect().set({isOnline: false})
+    //       .then(() => {
+    //         this.props.firebase.userStatusDatabaseRef().set({isOnline: true})
+    //         this.props.firebase.userStatusFirestoreRef().set({isOnline: true})
+    //       })
+    //   })
+    const onlineStatus = {
+      isOnline: true,
+      // last_changed:  this.props.firebase.db.serverTimestamp() 
+    }
+    const offlineStatus = {
+      isOnline: false,
+      // last_changed:  this.props.firestore.db.serverTimestamp() 
+    }
+    this.props.firebase.test()
     this.props.firebase.connectionRef()
       .on("value", snapshot => {
         if(snapshot.val() === false) {
-          this.props.firebase.userStatusFirestoreRef().set({isOnline: false})
-          return
-        } else {
-          this.props.firebase.userStatusDatabaseRef().onDisconnect().set({isOnline: false})
-            .then(() => {
-              this.props.firebase.userStatusDatabaseRef().set({isOnline: true})
-              this.props.firebase.userStatusFirestoreRef().set({isOnline: true});
-            })
+            this.props.firebase.userStatusFirestoreRef().set(offlineStatus)
+            return
         }
+
+        this.props.firebase.userStatusDatabaseRef().onDisconnect().set(offlineStatus)
+          .then(() => {
+            this.props.firebase.userStatusDatabaseRef().set(onlineStatus)
+            this.props.firebase.userStatusFirestoreRef().set(onlineStatus)
+        })
       })
   }
   setCurrentUser = currentUser => {

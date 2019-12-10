@@ -21,7 +21,7 @@ const UserList = (props) => {
             <S.UserContainer className={props.waiting ? "big" : "small"}>
                 {userList}
             </S.UserContainer>
-            {props.waiting 
+            {props.waiting && props.isMaster
                 ?
                     <button onClick={() => {props.startGame()}}>Start Game</button> 
                 : 

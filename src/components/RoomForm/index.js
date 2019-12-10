@@ -7,7 +7,8 @@ class RoomForm extends Component {
         canvasId: "",
         roomName: "",
         password: "",
-        started: false
+        waiting: true,
+        phase: 0
     }
     handleInput = e => {
         this.setState({

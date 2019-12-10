@@ -13,21 +13,20 @@ class Room extends Component {
         chatLog: [],
         message: "",
         waiting: true,
-        phase: 1,
+        phase: null,
         loading: true,
         showMoreMessages: false
     }
     componentDidMount() {
         console.log("i mounted!")
-        setTimeout(() => {
-            this.addUsertoRoom()
-            this.getUsers()
-            this.updateRoomMaster()
-            this.getChatLog()
-            this.setState({
-                loading: false
-            })
-        }, 1000)
+        this.addUsertoRoom()
+        this.getUsers()
+        this.checkForRoomUpdates()
+        this.updateRoomMaster()
+        this.getChatLog()
+        this.setState({
+            loading: false
+        })
     }
     getUsers = () => {
         this.props.firebase.findUsers(this.props.match.params.id)
@@ -47,7 +46,9 @@ class Room extends Component {
                 snapshot.forEach(doc => {
                     this.setState({chatLog: doc.data().messages}, () => {
                         const chatDiv = document.querySelector(".chatbox")
-                        if(chatDiv.scrollTop > chatDiv.scrollHeight-700) {
+                        if(chatDiv.scrollTop > chatDiv.scrollHeight-700 || this.state.chatLog.length === 0) {
+                            console.log(chatDiv.scrollTop, "top")
+                            console.log(chatDiv.scrollHeight, "height")
                             chatDiv.scrollTop = chatDiv.scrollHeight
                             this.setState({
                                 showMoreMessages: false
@@ -127,9 +128,19 @@ class Room extends Component {
         this.removeUserFromRoom()
     }
     startGame = () => {
-        this.setState({
-            waiting: false
-        })
+        this.props.firebase.findRoom(this.props.match.params.id).update({waiting: false, phase: "write"})
+    }
+    checkForRoomUpdates = () => {
+        this.props.firebase.findRoom(this.props.match.params.id)
+            .onSnapshot(snapshot => {
+                this.props.firebase.findRoom(snapshot.id).get()
+                    .then(doc => {
+                        this.setState({
+                            waiting: doc.data().waiting,
+                            phase: doc.data().phase
+                        })
+                    })
+            })
     }
     handleInput = e => {
         this.setState({
@@ -174,7 +185,7 @@ class Room extends Component {
                 :
                     <S.Container1>
                         <S.Container2>
-                            <UserList userList={this.state.userList} waiting={this.state.waiting} startGame={this.startGame}/>
+                            <UserList userList={this.state.userList} waiting={this.state.waiting} startGame={this.startGame} isMaster={this.props.currentUser.isMaster}/>
                             {this.state.waiting 
                                 ? 
                                     null
