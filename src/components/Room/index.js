@@ -151,12 +151,7 @@ class Room extends Component {
                 console.log(userChoices)
                 this.props.firebase.findUser(this.props.currentUser.id).update({givenPrompts: userChoices})
                     .then(() => {
-                        this.props.firebase.findRoom(this.props.match.params.id).update({phase: "selection", timer: 20})
-                            .then(() => {
-                                if(this.props.currentUser.isMaster) {
-                                    this.startTimer()
-                                } 
-                            })
+                        this.props.firebase.findRoom(this.props.match.params.id).update({phase: "selection"})
                     })
             })
     }
@@ -166,11 +161,16 @@ class Room extends Component {
                 .then(snapshot => {
                     const updatedTime = snapshot.data().timer - 1
                     this.props.firebase.findRoom(this.props.match.params.id).update({timer: updatedTime})
+                    if(this.state.timer === 1 || this.state.timer <= 0) {
+                        const phase = snapshot.data().phase === "write" ? "writeFinished" : snapshot.data().phase === "selection" ? "draw" : "finished"
+                        clearInterval(timer)
+                        setTimeout(() => {
+                            const setTime = snapshot.data().phase === "write" ? 20 : snapshot.data().phase === "selection" ? 50 : 5
+                            this.props.firebase.findRoom(this.props.match.params.id).update({phase: phase, timer: setTime})
+                            this.startTimer()
+                        }, 1000)
+                    }
                 })
-            if(this.state.timer === 1) {
-                this.props.firebase.findRoom(this.props.match.params.id).update({phase: "writeFinished"})
-                clearInterval(timer)
-            }
         },1000)
     }
     checkForRoomUpdates = () => {
