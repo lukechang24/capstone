@@ -3,12 +3,20 @@ import WaitingRoom from "../WaitingRoom"
 import UserList from "../UserList"
 import ChatLog from "../ChatLog"
 import PromptForm from "../PromptForm"
+import PromptSelection from "../PromptSelection"
 import Draw1 from "../Draw1"
 import { withRouter } from "react-router-dom"
 import { withFirebase } from "../Firebase"
 import S from "./style"
 
 class Room extends Component {
+    constructor(props) {
+        super(props)
+        this.unsubscribe1 = null
+        this.unsubscribe2 = null
+        this.unsubscribe3 = null
+        this.unsubscribe4 = null
+    }
     state = {
         userList: [],
         chatLog: [],
@@ -18,21 +26,15 @@ class Room extends Component {
         showMoreMessages: false,
         timer: 20,
     }
-    startTimer = () => {
-        
-    }
     componentDidMount() {
         this.addUsertoRoom()
         this.getUsers()
         this.checkForRoomUpdates()
         this.updateRoomMaster()
         this.getChatLog()
-        this.setState({
-            loading: false
-        })
     }
     getUsers = () => {
-        this.props.firebase.findUsers(this.props.match.params.id)
+        this.unsubscribe1 = this.props.firebase.findUsers(this.props.match.params.id)
             .onSnapshot(snapshot => {
                 const userList = []
                 snapshot.forEach(doc => {
@@ -44,7 +46,7 @@ class Room extends Component {
             })
     }
     getChatLog = () => {
-        this.props.firebase.findChatLogs(this.props.match.params.id)
+        this.unsubscribe2 = this.props.firebase.findChatLogs(this.props.match.params.id)
             .onSnapshot(snapshot => {
                 snapshot.forEach(doc => {
                     this.setState({chatLog: doc.data().messages}, () => {
@@ -97,7 +99,7 @@ class Room extends Component {
             })
     }
     updateRoomMaster = () => {
-        this.props.firebase.findRoom(this.props.match.params.id)
+        this.unsubscribe3 = this.props.firebase.findRoom(this.props.match.params.id)
             .onSnapshot(snapshot => {
                 const isMaster = this.props.currentUser.id === snapshot.data().users[0]
                 this.props.firebase.findUser(this.props.currentUser.id).update({isMaster})
@@ -110,7 +112,7 @@ class Room extends Component {
                 updatedUsers.splice(updatedUsers.indexOf(this.props.currentUser.id), 1)
                 this.props.firebase.findRoom(snapshot.data().id).update({users: [...updatedUsers]})
             })
-        this.props.firebase.findUser(this.props.currentUser.id).update({currentRoomId: null, joinedAt: null, isMaster: null})
+        this.props.firebase.findUser(this.props.currentUser.id).update({currentRoomId: null, joinedAt: null, isMaster: null, givenPrompts: {}})
         this.props.firebase.findChatLogs(this.props.match.params.id).get()
             .then(snapshot1 => {
                 const introStatement = {
@@ -127,26 +129,36 @@ class Room extends Component {
                 })
             })
     }
-    componentWillUnmount() {
-        this.removeUserFromRoom()
-    }
     startGame = () => {
         this.props.firebase.findRoom(this.props.match.params.id).update({waiting: false, phase: "write"})
         this.startTimer()
-        // this.setState({
-        //     startTimer: () => {
-        //         setInterval(() => {
-        //             console.log("im running")
-        //             this.props.firebase.findRoom(this.props.match.params.id).get()
-        //                 .then(snapshot => {
-        //                     const updatedTime = snapshot.data().timer - 1
-        //                     this.props.firebase.findRoom(this.props.match.params.id).update({timer: updatedTime})
-        //                 })
-        //         },1000)
-        //     } 
-        // }, () => {
-        //     this.state.startTimer()
-        // })
+    }
+    assignUserPrompts = () => {
+        this.props.firebase.findRoom(this.props.match.params.id).get()
+            .then(snapshot => {
+                const userChoices = {
+                    nouns: [],
+                    verbs: [],
+                    adjectives: []
+                }
+                const prompts = {...snapshot.data().prompts}
+                for(let key in prompts) {
+                    for(let i = 0; i < 3; i++) {
+                        const randomNum = Math.floor(Math.random()*prompts[key].length)
+                        userChoices[key].push(prompts[key].splice(randomNum, 1)[0])
+                    }
+                }
+                console.log(userChoices)
+                this.props.firebase.findUser(this.props.currentUser.id).update({givenPrompts: userChoices})
+                    .then(() => {
+                        this.props.firebase.findRoom(this.props.match.params.id).update({phase: "selection", timer: 20})
+                            .then(() => {
+                                if(this.props.currentUser.isMaster) {
+                                    this.startTimer()
+                                } 
+                            })
+                    })
+            })
     }
     startTimer = () => {
         const timer = setInterval(() => {
@@ -156,21 +168,24 @@ class Room extends Component {
                     this.props.firebase.findRoom(this.props.match.params.id).update({timer: updatedTime})
                 })
             if(this.state.timer === 1) {
-                this.props.firebase.findRoom(this.props.match.params.id).update({phase: "draw"})
+                this.props.firebase.findRoom(this.props.match.params.id).update({phase: "writeFinished"})
                 clearInterval(timer)
             }
         },1000)
     }
     checkForRoomUpdates = () => {
-        this.props.firebase.findRoom(this.props.match.params.id)
+        this.unsubscribe4 = this.props.firebase.findRoom(this.props.match.params.id)
             .onSnapshot(snapshot => {
                 this.props.firebase.findRoom(snapshot.id).get()
                     .then(doc => {
                         this.setState({
                             waiting: doc.data().waiting,
                             phase: doc.data().phase,
-                            timer: doc.data().timer
+                            timer: doc.data().timer,
                         })
+                        if(doc.data().phase === "writeFinished") {
+                            this.assignUserPrompts()
+                        }
                     })
             })
     }
@@ -209,6 +224,13 @@ class Room extends Component {
             showMoreMessages: false
         })
     }
+    componentWillUnmount() {
+        this.removeUserFromRoom()
+        this.unsubscribe1()
+        this.unsubscribe2()
+        this.unsubscribe3()
+        this.unsubscribe4()
+    }
     render() {
         return(
             <S.Container1>
@@ -223,6 +245,12 @@ class Room extends Component {
                 {this.state.phase === "write" 
                     ? 
                         <PromptForm />
+                    :
+                        null
+                }
+                {this.state.phase === "selection" 
+                    ?
+                        <PromptSelection currentUser={this.props.currentUser}/>
                     :
                         null
                 }

@@ -37,15 +37,16 @@ class PromptForm extends Component {
                         verbs: updatedVerbs,
                         adjectives: updatedAdjectives
                     }
+                }).then(() => {
+                    this.setState({
+                        prompt: {
+                            noun: "",
+                            verb: "",
+                            adjective: ""
+                        }
+                    })
                 })
             })
-        this.setState({
-            prompt: {
-                noun: "",
-                verb: "",
-                adjective: ""
-            }
-        })
     }
     render() {
         return(

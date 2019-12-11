@@ -4,6 +4,10 @@ import { withFirebase } from "../Firebase"
 import S from "./style"
 
 class Draw1 extends Component {
+    constructor(props) {
+        super(props)
+        this.unsubscribe = null
+    }
     state = {
         canvas: {
             clickX: [],
@@ -18,10 +22,11 @@ class Draw1 extends Component {
         curSize: 1,
         paint: false,
         strokes: 0,
-        strokeCount: []
+        strokeCount: [],
+        doNotMove: false,
     }
     componentDidMount() {
-        this.props.firebase.findCanvases(this.props.match.params.id)
+        this.unsubscribe = this.props.firebase.findCanvases(this.props.match.params.id)
             .where("userId", "==", this.props.currentUser.id)
                 .onSnapshot(snapshot => {
                     let exists = false
@@ -109,14 +114,16 @@ class Draw1 extends Component {
         })
     }
     redraw = () => {
+        if(this.state.doNotDraw) {
+            return
+        }
         const { ctx } = this.state
         const { clickX, clickY, clickDrag, clickColor, clickSize, backgroundColor } = this.state.canvas
 
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
         ctx.lineJoin = "round"
         ctx.fillStyle = backgroundColor
-        ctx.fillRect(0, 0, 550, 550);
-                    
+        ctx.fillRect(0, 0, 550, 550)
         for(var i = 0; i < clickX.length; i++) {		
             ctx.beginPath()
             if(clickDrag[i] && i) {
@@ -130,6 +137,13 @@ class Draw1 extends Component {
             ctx.lineWidth = clickSize[i]
             ctx.stroke()
         }
+        this.setState({
+            doNotDraw: true
+        }, () => {
+            setTimeout(() => {
+                this.setState({doNotDraw: false})
+            },10)
+        })
     }
     changeColor = (e) => {
         this.setState({
@@ -183,6 +197,9 @@ class Draw1 extends Component {
                     this.props.firebase.findCanvas(doc.id).update({canvas: {...canvasInfo}})
                 })
             })
+    }
+    componentWillUnmount() {
+        this.unsubscribe()
     }
     render() {
         return(

@@ -14,7 +14,7 @@ class RoomForm extends Component {
             verbs: [],
             adjectives: []
         },
-        timer: 20
+        timer: 40
     }
     handleInput = e => {
         this.setState({
