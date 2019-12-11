@@ -13,6 +13,7 @@ S.Container1 = styled.div`
     }
     background-color: rgb(167, 218, 250);
 `
+
 S.UserContainer = styled.div`
     &.big {
         height: 90%;

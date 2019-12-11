@@ -2,6 +2,7 @@ import React, { Component } from "react"
 import WaitingRoom from "../WaitingRoom"
 import UserList from "../UserList"
 import ChatLog from "../ChatLog"
+import PromptForm from "../PromptForm"
 import Draw1 from "../Draw1"
 import { withRouter } from "react-router-dom"
 import { withFirebase } from "../Firebase"
@@ -14,11 +15,13 @@ class Room extends Component {
         message: "",
         waiting: true,
         phase: null,
-        loading: true,
-        showMoreMessages: false
+        showMoreMessages: false,
+        timer: 20,
+    }
+    startTimer = () => {
+        
     }
     componentDidMount() {
-        console.log("i mounted!")
         this.addUsertoRoom()
         this.getUsers()
         this.checkForRoomUpdates()
@@ -129,6 +132,34 @@ class Room extends Component {
     }
     startGame = () => {
         this.props.firebase.findRoom(this.props.match.params.id).update({waiting: false, phase: "write"})
+        this.startTimer()
+        // this.setState({
+        //     startTimer: () => {
+        //         setInterval(() => {
+        //             console.log("im running")
+        //             this.props.firebase.findRoom(this.props.match.params.id).get()
+        //                 .then(snapshot => {
+        //                     const updatedTime = snapshot.data().timer - 1
+        //                     this.props.firebase.findRoom(this.props.match.params.id).update({timer: updatedTime})
+        //                 })
+        //         },1000)
+        //     } 
+        // }, () => {
+        //     this.state.startTimer()
+        // })
+    }
+    startTimer = () => {
+        const timer = setInterval(() => {
+            this.props.firebase.findRoom(this.props.match.params.id).get()
+                .then(snapshot => {
+                    const updatedTime = snapshot.data().timer - 1
+                    this.props.firebase.findRoom(this.props.match.params.id).update({timer: updatedTime})
+                })
+            if(this.state.timer === 1) {
+                this.props.firebase.findRoom(this.props.match.params.id).update({phase: "draw"})
+                clearInterval(timer)
+            }
+        },1000)
     }
     checkForRoomUpdates = () => {
         this.props.firebase.findRoom(this.props.match.params.id)
@@ -137,7 +168,8 @@ class Room extends Component {
                     .then(doc => {
                         this.setState({
                             waiting: doc.data().waiting,
-                            phase: doc.data().phase
+                            phase: doc.data().phase,
+                            timer: doc.data().timer
                         })
                     })
             })
@@ -179,33 +211,43 @@ class Room extends Component {
     }
     render() {
         return(
-            this.state.loading
-                ?
-                    <S.Spinner className="fas fa-spinner fa-pulse"></S.Spinner>
-                :
-                    <S.Container1>
-                        <S.Container2>
-                            <UserList userList={this.state.userList} waiting={this.state.waiting} startGame={this.startGame} isMaster={this.props.currentUser.isMaster}/>
-                            {this.state.waiting 
-                                ? 
-                                    null
-                                : 
-                                    <Draw1 currentUser={this.props.currentUser}/>
-                            }
-                        </S.Container2>
-                        <S.ChatContainer>
-                            <ChatLog currentUser={this.props.currentUser} chatLog={this.state.chatLog} showMoreMessages={this.state.showMoreMessages}/>
-                            <S.MessageForm onSubmit={this.handleSubmit}>
-                                {this.state.showMoreMessages 
-                                    ?
-                                        <S.MoreMessages onClick={this.scrollToBottomOfChat}>Show recent messages</S.MoreMessages> 
-                                    :
-                                        null
-                                }
-                                <S.MessageInput type="text" onChange={this.handleInput} value={this.state.message} placeholder="Type your message here..."></S.MessageInput>
-                            </S.MessageForm>
-                        </S.ChatContainer>
-                    </S.Container1>
+            <S.Container1>
+                {!this.state.waiting 
+                    ?
+                        <S.TimerContainer>
+                            <S.Timer>{this.state.timer}</S.Timer>
+                        </S.TimerContainer>
+                    :
+                        null
+                }
+                {this.state.phase === "write" 
+                    ? 
+                        <PromptForm />
+                    :
+                        null
+                }
+                <S.Container2>
+                    <UserList userList={this.state.userList} waiting={this.state.waiting} startGame={this.startGame} isMaster={this.props.currentUser.isMaster}/>
+                    {this.state.waiting 
+                        ? 
+                            null
+                        : 
+                            <Draw1 currentUser={this.props.currentUser}/>
+                    }
+                </S.Container2>
+                <S.ChatContainer>
+                    <ChatLog currentUser={this.props.currentUser} chatLog={this.state.chatLog} showMoreMessages={this.state.showMoreMessages}/>
+                    <S.MessageForm onSubmit={this.handleSubmit}>
+                        {this.state.showMoreMessages 
+                            ?
+                                <S.MoreMessages onClick={this.scrollToBottomOfChat}>Show recent messages</S.MoreMessages> 
+                            :
+                                null
+                        }
+                        <S.MessageInput type="text" onChange={this.handleInput} value={this.state.message} placeholder="Type your message here..."></S.MessageInput>
+                    </S.MessageForm>
+                </S.ChatContainer>
+            </S.Container1>
         )
     }
 }

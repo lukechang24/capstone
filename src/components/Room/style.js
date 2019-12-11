@@ -57,4 +57,23 @@ S.Spinner = styled.i`
     font-size: 3rem;
 `
 
+S.TimerContainer = styled.div`
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    height: 3rem;
+    width: 3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1rem solid black;
+    border-radius: 2rem;
+    background-color: white;
+    z-index: 5;
+`
+
+S.Timer = styled.h1`
+    padding-bottom: 5px;
+`
+
 export default S

@@ -12,7 +12,6 @@ class App extends Component {
     currentUser: JSON.parse(localStorage.getItem("savedUser")) || {}
   }
   componentDidMount() {
-    console.log(localStorage.getItem("savedUser"), "saved")
     this.props.firebase.auth.onAuthStateChanged(authUser => {
       if(authUser) {
         console.log("auth changed state")
@@ -104,11 +103,10 @@ class App extends Component {
   }
   signOut = () => {
     if(this.props.firebase.auth.currentUser) {
+      localStorage.removeItem("savedUser")
+      this.props.firebase.userStatusDatabaseRef().set({isOnline: false})
       this.props.firebase.signOut()
-        .then(
-          this.props.firebase.userStatusDatabaseRef().set({isOnline: false})
-        )
-      this.props.history.push("/lobby")
+      this.props.history.push("/auth/signin")
     }
   }
   render() {
