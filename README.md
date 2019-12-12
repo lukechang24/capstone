@@ -8,7 +8,7 @@ To start, you must be registered to create a room, where you wait for other play
 
 ## Technologies Used
 
-ReactJS, Firebase(Real-Time Database, Cloud Firestore, Cloud Functions, Authentication), 
+Javascript, CSS, HTML, Styled-Components, ReactJS, Firebase(Real-Time Database, Cloud Firestore, Cloud Functions, Authentication), 
 
 
 
