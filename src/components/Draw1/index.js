@@ -4,10 +4,7 @@ import { withFirebase } from "../Firebase"
 import S from "./style"
 
 class Draw1 extends Component {
-    constructor(props) {
-        super(props)
-        this.unsubscribe = null
-    }
+    unsubscribe = null
     state = {
         canvas: {
             clickX: [],
@@ -16,6 +13,7 @@ class Draw1 extends Component {
             clickColor: [],
             clickSize: [],
             backgroundColor: "white",
+            prompt: ""
         },
         ctx: null,
         curColor: "black",
@@ -38,7 +36,8 @@ class Draw1 extends Component {
                             }
                             this.setState({
                                 ...this.state,
-                                canvas: {...canvasInfo}
+                                canvas: {...canvasInfo},
+                                prompt: doc.data().prompt
                             })
                         }
                     })
@@ -52,7 +51,8 @@ class Draw1 extends Component {
                                         }
                                         this.setState({
                                             ...this.state,
-                                            canvas: {...canvasInfo}
+                                            canvas: {...canvasInfo},
+                                            prompt: ""
                                         })
                                     })
                             })
@@ -169,11 +169,12 @@ class Draw1 extends Component {
         const recentStroke = this.state.strokeCount.pop()
         const { clickX, clickY, clickDrag, clickColor, clickSize } = this.state.canvas
         const canvasInfo = {
+            ...this.state.canvas,
             clickX: clickX.slice(0, clickX.length - recentStroke),
             clickY: clickY.slice(0, clickY.length - recentStroke),
             clickDrag: clickDrag.slice(0, clickDrag.length-recentStroke),
             clickColor: clickColor.slice(0, clickColor.length - recentStroke),
-            clickSize: clickSize.slice(0, clickSize.length - recentStroke)
+            clickSize: clickSize.slice(0, clickSize.length - recentStroke),
         }
         this.props.firebase.findCanvases(this.props.match.params.id).where("userId", "==", this.props.currentUser.id).get()
             .then(snapshot => {
@@ -209,24 +210,34 @@ class Draw1 extends Component {
                 </S.UtilityLeft>
                 <S.Container2>
                     <S.UtilityTop>
-                        <S.BackgroundColor
-                            className={`${this.state.backgroundColor === "white" ? "selected" : ""}`}
-                            name="white" 
-                            color="white" 
-                            onClick={this.changeBackgroundColor}
-                        ></S.BackgroundColor>
-                        <S.BackgroundColor 
-                            className={`${this.state.backgroundColor === "black" ? "selected" : ""}`}
-                            name="black" 
-                            color="black" 
-                            onClick={this.changeBackgroundColor}
-                        ></S.BackgroundColor>
-                        <S.BackgroundColor 
-                            className={`${this.state.backgroundColor === "grey" ? "selected" : ""}`}
-                            name="grey" 
-                            color="grey" 
-                            onClick={this.changeBackgroundColor}
-                        ></S.BackgroundColor>
+                        {this.props.phase !== "selection" 
+                            ?
+                                <S.PromptHeader>
+                                    Draw: <S.Prompt>{this.state.canvas.prompt}</S.Prompt>
+                                </S.PromptHeader>
+                            :
+                                null
+                        }
+                        <S.BackgroundColorDiv>
+                            <S.BackgroundColor
+                                className={`${this.state.backgroundColor === "white" ? "selected" : ""}`}
+                                name="white" 
+                                color="white" 
+                                onClick={this.changeBackgroundColor}
+                            ></S.BackgroundColor>
+                            <S.BackgroundColor 
+                                className={`${this.state.backgroundColor === "black" ? "selected" : ""}`}
+                                name="black" 
+                                color="black" 
+                                onClick={this.changeBackgroundColor}
+                            ></S.BackgroundColor>
+                            <S.BackgroundColor 
+                                className={`${this.state.backgroundColor === "grey" ? "selected" : ""}`}
+                                name="grey" 
+                                color="grey" 
+                                onClick={this.changeBackgroundColor}
+                            ></S.BackgroundColor>
+                        </S.BackgroundColorDiv>
                     </S.UtilityTop>
                     <S.Canvas 
                         className="canvas"

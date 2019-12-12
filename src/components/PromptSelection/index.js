@@ -1,4 +1,5 @@
 import React, { Component } from "react"
+import { withFirebase } from "../Firebase"
 import S from "./style"
 
 class PromptSelection extends Component {
@@ -39,15 +40,22 @@ class PromptSelection extends Component {
                 adjective: this.props.currentUser.givenPrompts.adjectives[0],
                 noun: this.props.currentUser.givenPrompts.nouns[0],
             }
+        }, () => {
+            const { verb, adjective, noun } = this.state.chosenPrompt
+            const phrase = `${verb} ${adjective} ${noun}`
+            this.props.firebase.findUser(this.props.currentUser.id).update({chosenPrompt: phrase})
         })
     }
     handleChange = e => {
-        console.log(e.target.value)
         this.setState({
             chosenPrompt: {
                 ...this.state.chosenPrompt,
                 [e.target.name]: e.target.value
             } 
+        }, () => {
+            const { verb, adjective, noun } = this.state.chosenPrompt
+            const phrase = `${verb} ${adjective} ${noun}`
+            this.props.firebase.findUser(this.props.currentUser.id).update({chosenPrompt: phrase})
         })
     }
     render() {
@@ -55,17 +63,18 @@ class PromptSelection extends Component {
         const phrase = `${verb} ${adjective} ${noun}`
         return(
             <S.Container1>
-                {console.log(this.state.chosenPrompt)}
                 <S.SelectionForm>
                     <S.Heading>Create your prompt</S.Heading>
                     <S.Container2>
                         {this.state.promptList}
                     </S.Container2>
-                    <S.ChosenWord>{phrase}</S.ChosenWord>
+                    <S.ChosenWordHeader>
+                        Your Prompt: <S.ChosenWord>{phrase}</S.ChosenWord>
+                    </S.ChosenWordHeader>
                 </S.SelectionForm>
             </S.Container1>
         )
     }
 }
 
-export default PromptSelection
+export default withFirebase(PromptSelection)

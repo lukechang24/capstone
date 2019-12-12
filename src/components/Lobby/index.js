@@ -5,10 +5,7 @@ import { withFirebase } from "../Firebase"
 import S from "./style"
 
 class Lobby extends Component {
-    constructor(props) {
-        super(props)
-        this.unsubscribe = null
-    }
+    unsubscribe = null
     state = {
         lobbies: [],
     }

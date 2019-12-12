@@ -26,7 +26,6 @@ class PromptForm extends Component {
         }
         this.props.firebase.findRoom(this.props.match.params.id).get()
             .then(snapshot => {
-                console.log(snapshot.data(), "currroomt")
                 const { noun, verb, adjective } = this.state.prompt
                 const updatedNouns = [...snapshot.data().prompts.nouns, noun]
                 const updatedVerbs = [...snapshot.data().prompts.verbs, verb]

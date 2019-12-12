@@ -8,7 +8,7 @@ class RoomForm extends Component {
         roomName: "",
         password: "",
         waiting: true,
-        phase: 0,
+        phase: "",
         prompts: {
             nouns: [],
             verbs: [],

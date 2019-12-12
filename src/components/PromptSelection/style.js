@@ -41,8 +41,13 @@ S.Heading = styled.h3`
     text-align: center;
 `
 
-S.ChosenWord = styled.p`
+S.ChosenWordHeader = styled.h3`
     text-align: center;
+`
+
+S.ChosenWord = styled.span`
+    text-align: center;
+    font-weight: 400;
 `
 
 export default S

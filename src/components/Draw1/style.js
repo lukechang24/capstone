@@ -41,10 +41,12 @@ S.Canvas = styled.canvas`
 `
 
 S.UtilityTop = styled.div`
+    position: relative;
     height: 5rem;
     width: 100%;
     display: flex;
-    align-items: flex-end;
+    justify-content: center;
+    align-items: center;
 `
 
 S.UtilityBottom = styled.div`
@@ -67,6 +69,14 @@ S.Color = styled.button`
     &:hover {
         cursor: pointer;
     }
+`
+
+S.BackgroundColorDiv = styled.div`
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    display: flex;
+    align-items: flex-end;
 `
 
 S.BackgroundColor = styled.button`
@@ -137,6 +147,14 @@ S.ClearCanvas = styled.i`
     &:hover {
         color: white;
     }
+`
+
+S.PromptHeader = styled.h3`
+
+`
+
+S.Prompt = styled.span`
+    font-weight: 400;
 `
 
 
