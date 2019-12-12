@@ -212,7 +212,7 @@ class Room extends Component {
                             }})
                         }
                         setTimeout(() => {
-                            const setTime = snapPhase === "write" ? 5 : snapPhase === "selection" ? 10 : snapPhase === "draw" || snapPhase === "vote1" || snapPhase === "vote2" || snapPhase === "vote3" || snapPhase === "vote4" || snapPhase === "vote5" || snapPhase === "vote6" || snapPhase === "vote7" || snapPhase === "vote8" ? 15 : 0
+                            const setTime = snapPhase === "write" ? 20 : snapPhase === "selection" ? 80 : snapPhase === "draw" || snapPhase === "vote1" || snapPhase === "vote2" || snapPhase === "vote3" || snapPhase === "vote4" || snapPhase === "vote5" || snapPhase === "vote6" || snapPhase === "vote7" || snapPhase === "vote8" ? 15 : 0
                             this.props.firebase.findRoom(this.props.match.params.id).update({phase: phase, timer: setTime})
                             this.startTimer()
                         }, 3000)

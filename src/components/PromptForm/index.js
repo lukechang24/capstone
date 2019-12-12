@@ -51,7 +51,7 @@ class PromptForm extends Component {
         return(
             <S.Container1>
                 <S.PromptForm onSubmit={this.handleSubmit}>
-                    <S.PromptHeading>Fill in the prompts below</S.PromptHeading>
+                    <S.PromptHeading>Submit as many sets of words as you can</S.PromptHeading>
                     <S.Container2>
                         <S.Grammer>Noun</S.Grammer><S.PromptInput name="noun" value={this.state.prompt.noun} onChange={this.handleInput}></S.PromptInput>
                         <S.Grammer>Verb ending in '-ing'</S.Grammer> <S.PromptInput name="verb" value={this.state.prompt.verb} onChange={this.handleInput}></S.PromptInput>

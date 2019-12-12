@@ -37,9 +37,9 @@ class SignUpForm extends Component {
             <div>
                 <Navbar currentUser={this.props.currentUser}/>
                 <form onSubmit={this.handleSubmit}>
-                    <input name="email" placeholder="email" onChange={this.handleInput}></input>
-                    <input name="password" placeholder="password" onChange={this.handleInput}></input>
-                    <input name="displayName" placeholder="display name" onChange={this.handleInput}></input>
+                    <input name="email" placeholder="email" autocomplete="off" onChange={this.handleInput}></input>
+                    <input type="password" name="password" placeholder="password" autocomplete="off" onChange={this.handleInput}></input>
+                    <input name="displayName" placeholder="display name" autocomplete="off" onChange={this.handleInput}></input>
                     <input type="submit"></input>
                 </form>
             </div>

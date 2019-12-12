@@ -6,15 +6,22 @@ const RoomList = (props) => {
     const lobbyList = props.lobbies.map((lobby, i) => {
         return(
             <S.RoomContainer>
-                <NavLink to={`/lobby/${lobby.id}`} key={i}>
-                    <h1>{lobby.roomName}</h1>
+                <S.RoomLink to={`/lobby/${lobby.id}`} key={i}>
+                    <S.RoomName>{lobby.roomName}</S.RoomName>
+                    <p>{lobby.waiting ? "Waiting..." : "In progress..."}</p>
                     <p>{lobby.users.length}/4</p>
-                </NavLink>
+                </S.RoomLink>
             </S.RoomContainer>
         )
     })
     return(
         <S.Container1>
+            {lobbyList.length === 0 
+                ?
+                    <S.NoRoom>No rooms available</S.NoRoom>
+                :
+                    null
+            }
             {lobbyList}
         </S.Container1>
     )

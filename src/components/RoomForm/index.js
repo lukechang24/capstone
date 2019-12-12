@@ -57,10 +57,10 @@ class RoomForm extends Component {
                 <S.RoomCancel onClick={() => {this.props.toggleForm()}} className="fas fa-times"></S.RoomCancel>
                     <S.InputContainer>
                         <S.RoomHeading>
-                            Room Name: <S.RoomInput name="roomName" value={this.state.roomName} onChange={this.handleInput}></S.RoomInput> <S.Required>*</S.Required>
+                            Room Name: <S.RoomInput name="roomName" value={this.state.roomName} autocomplete="off" onChange={this.handleInput}></S.RoomInput> <S.Required>*</S.Required>
                         </S.RoomHeading>
                         <S.RoomHeading>
-                            Password: <S.RoomInput name="password" value={this.state.password} onChange={this.handleInput}></S.RoomInput>
+                            Password: <S.RoomInput name="password" value={this.state.password} autocomplete="off" onChange={this.handleInput}></S.RoomInput>
                         </S.RoomHeading>
                         <S.RoomHeading>
                             Number of Rounds (1-5): <S.RoomInput type="number" width="1rem" align="center" name="rounds" value={this.state.rounds} pattern="[1-5]" title="Only Numbers 1 - 5" onChange={this.handleInput}></S.RoomInput> <S.Required>*</S.Required>

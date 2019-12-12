@@ -14,6 +14,8 @@ S.Container1 = styled.div`
 `
 
 S.CanvasContainer = styled.div`
+    position: relative;
+    right: 3.5rem;
     height: 45rem;
     width: 45rem;
     display: flex;

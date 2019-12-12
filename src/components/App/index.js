@@ -75,11 +75,9 @@ class App extends Component {
     //   })
     const onlineStatus = {
       isOnline: true,
-      // last_changed:  this.props.firebase.db.serverTimestamp() 
     }
     const offlineStatus = {
       isOnline: false,
-      // last_changed:  this.props.firestore.db.serverTimestamp() 
     }
     this.props.firebase.test()
     this.props.firebase.connectionRef()
