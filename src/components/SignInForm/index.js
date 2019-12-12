@@ -1,4 +1,5 @@
 import React, { Component } from "react"
+import Navbar from "../Navbar"
 import { withFirebase } from "../Firebase"
 import { withRouter } from "react-router-dom"
 
@@ -23,11 +24,14 @@ class SignUpForm extends Component {
     }
     render() {
         return(
-           <form onSubmit={this.handleSubmit}>
-                <input name="email" placeholder="email" onChange={this.handleInput}></input>
-                <input name="password" placeholder="password" onChange={this.handleInput}></input>
-                <input type="submit"></input>
-            </form>
+            <div>
+                <Navbar currentUser={this.props.currentUser}/>
+                <form onSubmit={this.handleSubmit}>
+                    <input name="email" placeholder="email" onChange={this.handleInput}></input>
+                    <input name="password" placeholder="password" onChange={this.handleInput}></input>
+                    <input type="submit"></input>
+                </form>
+            </div>
         )
     }
 }

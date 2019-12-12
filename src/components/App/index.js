@@ -114,8 +114,8 @@ class App extends Component {
       <S.AppContainer>
         {console.log(this.state.currentUser, "IM USER")}
         <Switch>
-          <Route exact path="/auth/signup" render={() => <SignUpForm />}></Route>
-          <Route exact path="/auth/signin" render={() => <SignInForm />}></Route>
+          <Route exact path="/auth/signup" render={() => <SignUpForm currentUser={this.state.currentUser}/>}></Route>
+          <Route exact path="/auth/signin" render={() => <SignInForm currentUser={this.state.currentUser}/>}></Route>
           <Route exact path="/lobby" render={() => <Lobby currentUser={this.state.currentUser} signOut={this.signOut} />}></Route>
           <Route exact path="/lobby/:id" render={() => <Room currentUser={this.state.currentUser} setCurrentUser={this.setCurrentUser} />}></Route>
         </Switch>

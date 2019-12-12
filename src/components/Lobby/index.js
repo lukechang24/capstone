@@ -1,4 +1,5 @@
 import React, { Component } from "react"
+import Navbar from "../Navbar"
 import RoomForm from "../RoomForm"
 import RoomList from "../RoomList"
 import { withFirebase } from "../Firebase"
@@ -8,6 +9,7 @@ class Lobby extends Component {
     unsubscribe = null
     state = {
         lobbies: [],
+        showForm: false
     }
     componentDidMount() {
         this.getLobbies()
@@ -27,12 +29,25 @@ class Lobby extends Component {
                 })
             })
     }
+    toggleForm = () => {
+        this.setState({
+            showForm: !this.state.showForm
+        })
+    }
     render() {
         return(
             <S.Container1>
-                <input type="submit" value="log out" onClick={this.props.signOut}></input>
-                <RoomForm currentUser={this.props.currentUser}/>
-                <RoomList lobbies={this.state.lobbies} setUserRoomId={this.setUserRoomId}/>
+                <Navbar currentUser={this.props.currentUser} signOut={this.props.signOut}/>
+                <S.Container2>
+                    <S.CreateRoomButton type="submit" onClick={this.toggleForm} value="Create Room">Make a Room</S.CreateRoomButton>
+                    {this.state.showForm 
+                        ?
+                            <RoomForm currentUser={this.props.currentUser} toggleForm={this.toggleForm}/>
+                        :
+                            null
+                    }
+                    <RoomList lobbies={this.state.lobbies} setUserRoomId={this.setUserRoomId}/>
+                </S.Container2>
             </S.Container1>
         )
     }

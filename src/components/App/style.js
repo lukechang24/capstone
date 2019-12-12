@@ -5,7 +5,7 @@ const S = {}
 S.AppContainer = styled.div`
     height: 100vh;
     width: 100vw;
-    background-color: grey;
+    background-color: lightslategrey;
     display: flex; 
     justify-content: center;
     align-items: center;

@@ -1,12 +1,14 @@
 import React, { Component } from "react"
 import { withRouter } from "react-router-dom"
 import { withFirebase } from "../Firebase"
- 
+import S from "./style"
+
 class RoomForm extends Component {
     state = {
         canvasId: "",
-        roomName: "",
+        roomName: `${this.props.currentUser.displayName}'s room`,
         password: "",
+        rounds: 3,
         waiting: true,
         phase: "",
         prompts: {
@@ -17,13 +19,16 @@ class RoomForm extends Component {
         timer: 40
     }
     handleInput = e => {
+        if(e.target.name === "rounds" && e.target.value.length > 1) {
+            return
+        }
         this.setState({
             [e.target.name]: e.target.value
         })
     }
     handleSubmit = e => {
         e.preventDefault()
-        if(!this.state.roomName) {
+        if(!this.state.roomName || !this.state.rounds) {
             return
         }
         const roomInfo = {
@@ -47,13 +52,23 @@ class RoomForm extends Component {
     }
     render() {
         return(
-            <div>
-                <form onSubmit={this.handleSubmit}>
-                    Room Name: <input name="roomName" onChange={this.handleInput}></input><br/>
-                    Password: <input name="password" onChange={this.handleInput}></input> *optional<br/>
-                    <input type="submit"></input>
-                </form>
-            </div>
+            <S.Container1>
+                <S.RoomForm onSubmit={this.handleSubmit}>
+                <S.RoomCancel onClick={() => {this.props.toggleForm()}} className="fas fa-times"></S.RoomCancel>
+                    <S.InputContainer>
+                        <S.RoomHeading>
+                            Room Name: <S.RoomInput name="roomName" value={this.state.roomName} onChange={this.handleInput}></S.RoomInput> <S.Required>*</S.Required>
+                        </S.RoomHeading>
+                        <S.RoomHeading>
+                            Password: <S.RoomInput name="password" value={this.state.password} onChange={this.handleInput}></S.RoomInput>
+                        </S.RoomHeading>
+                        <S.RoomHeading>
+                            Number of Rounds (1-5): <S.RoomInput type="number" width="1rem" align="center" name="rounds" value={this.state.rounds} pattern="[1-5]" title="Only Numbers 1 - 5" onChange={this.handleInput}></S.RoomInput> <S.Required>*</S.Required>
+                        </S.RoomHeading>
+                    </S.InputContainer>
+                    <S.RoomSubmit type="submit"></S.RoomSubmit>
+                </S.RoomForm>
+            </S.Container1>
         )
     }
 }

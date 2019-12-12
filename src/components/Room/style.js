@@ -24,6 +24,7 @@ S.ChatContainer = styled.div`
     display: flex;
     flex-direction: column;
     overflow-y: auto;
+    z-index: 4;
 `
 
 S.MessageForm = styled.form`

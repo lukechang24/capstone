@@ -9,10 +9,10 @@ class ShowCanvas extends Component {
     }
     componentDidMount() {
         this.setState({
+            mounted: true,
             ctx: document.querySelector(".canvas2").getContext("2d")
-        }, () => {
-            this.redraw()
         })
+        console.log(document.querySelector(".canvas2").getContext("2d"))
     }
     redraw = () => {
         const ctx = this.state.ctx

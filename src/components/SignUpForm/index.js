@@ -1,4 +1,5 @@
 import React, { Component } from "react"
+import Navbar from "../Navbar"
 import { withFirebase } from "../Firebase"
 import { withRouter } from "react-router-dom"
 
@@ -24,7 +25,8 @@ class SignUpForm extends Component {
                     currentRoomId: null,
                     id: cred.user.uid,
                     joinedAt: null,
-                    isMaster: false
+                    isMaster: false,
+                    points: 0
                 })
                 this.props.history.push("/lobby")
             })
@@ -32,12 +34,15 @@ class SignUpForm extends Component {
     }
     render() {
         return(
-           <form onSubmit={this.handleSubmit}>
-                <input name="email" placeholder="email" onChange={this.handleInput}></input>
-                <input name="password" placeholder="password" onChange={this.handleInput}></input>
-                <input name="displayName" placeholder="display name" onChange={this.handleInput}></input>
-                <input type="submit"></input>
-            </form>
+            <div>
+                <Navbar currentUser={this.props.currentUser}/>
+                <form onSubmit={this.handleSubmit}>
+                    <input name="email" placeholder="email" onChange={this.handleInput}></input>
+                    <input name="password" placeholder="password" onChange={this.handleInput}></input>
+                    <input name="displayName" placeholder="display name" onChange={this.handleInput}></input>
+                    <input type="submit"></input>
+                </form>
+            </div>
         )
     }
 }
