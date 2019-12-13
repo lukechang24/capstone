@@ -29,8 +29,9 @@ class Draw1 extends Component {
                 .onSnapshot(snapshot => {
                     let exists = false
                     snapshot.forEach(doc => {
-                        if(doc.data().userId === this.props.currentUser.id) {
+                        if(doc.data().userId === this.props.currentUser.id && doc.data().roomId === this.props.match.params.id) {
                             exists = true
+                            console.log(doc.data().canvas, "canvASSS", doc.data().roomId)
                             const canvasInfo = {
                                 ...doc.data().canvas
                             }
@@ -42,7 +43,17 @@ class Draw1 extends Component {
                         }
                     })
                     if(!exists) {
-                        this.props.firebase.createCanvas({canvas: this.state.canvas, roomId: this.props.match.params.id, userId: this.props.currentUser.id})
+                        console.log("making new canvas...")
+                        const newCanvas = {
+                            clickX: [],
+                            clickY: [],
+                            clickDrag: [],
+                            clickColor: [],
+                            clickSize: [],
+                            backgroundColor: "white",
+                            prompt: ""
+                        }
+                        this.props.firebase.createCanvas({canvas: newCanvas, roomId: this.props.match.params.id, userId: this.props.currentUser.id})
                             .then(doc => {
                                 this.props.firebase.findCanvas(doc.id).get()
                                     .then(snapshot => {

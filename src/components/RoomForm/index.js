@@ -9,6 +9,7 @@ class RoomForm extends Component {
         roomName: `${this.props.currentUser.displayName}'s room`,
         password: "",
         rounds: 3,
+        currentRound: 1,
         waiting: true,
         phase: "",
         prompts: {

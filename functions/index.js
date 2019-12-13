@@ -24,18 +24,18 @@ exports.deleteUserFromRoom = functions.firestore
     .onUpdate(change => {
         const data = change.after.data()
 
-        const roomFirestoreRef = db.collection("rooms")
+        const roomRef = db.collection("rooms")
         const batch = db.batch()
 
         if(!data.isOnline) {
             console.log("im offline...")
-            roomFirestoreRef.where("users", "array-contains", `${change.after.id}`).get()
+            roomRef.where("users", "array-contains", `${change.after.id}`).get()
                 .then(snapshot => {
                     snapshot.forEach(doc => {
                         console.log(doc.data().users, "usssers")
                         const updatedUsers = [...doc.data().users]
                         updatedUsers.splice(updatedUsers.indexOf(change.after.id), 1)
-                        batch.update(roomFirestoreRef.doc(doc.id), {users: updatedUsers})
+                        batch.update(roomRef.doc(doc.id), {users: updatedUsers})
                     })
                     return batch.commit()
                 })
@@ -81,7 +81,7 @@ exports.deleteEmptyRooms = functions.firestore
         if(dataBefore.users.length === 1 && !dataAfter.users[0]) {
         
             const ref = db.collection("rooms").doc(change.after.id)
-
+            
             batch.delete(ref, dataAfter)
 
             return batch.commit()
@@ -91,22 +91,18 @@ exports.deleteEmptyRooms = functions.firestore
     })
 
 exports.deleteEmptyCanvases = functions.firestore
-    .document("canvas/{canvasId}")
+    .document("canvases/{canvasId}")
     .onUpdate(change => {
-        // const dataBefore = change.before.data()
-        // const dataAfter = change.after.data()
+        const data = change.after.data()
         
-        // const batch = db.batch()
-        console.log(change.after.data(), "this be the change")
-        // if(dataBefore.users.length === 1 && !dataAfter.users[0]) {
-        
-        //     const ref = db.collection("rooms").doc(change.after.id)
+        const canvasRef = db.collection("canvases").doc(change.after.id)
+        const batch = db.batch()
 
-        //     batch.delete(ref, dataAfter)
-
-        //     return batch.commit()
-        // } else {
-        //     return null
-        // }   
-        return
+        if(!data.canvas.clickX[0] && !data.roomId) {
+            console.log("DEALTING CNAVAS")
+            batch.delete(canvasRef)
+            return batch.commit()
+        } else {
+            return null
+        }
 })

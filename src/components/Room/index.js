@@ -13,7 +13,6 @@ import S from "./style"
 class Room extends Component {
     unsubscribe1 = null
     unsubscribe2 = null
-    // unsubscribe3 = null
     unsubscribe4 = null
     timer = null
     state = {
@@ -94,24 +93,6 @@ class Room extends Component {
                     updatedUsers.push(this.props.currentUser.id)
                 }
                 this.props.firebase.findRoom(snapshot1.data().id).update({users: [...updatedUsers]})
-                this.props.firebase.findCanvases(this.props.match.params.id).where("userId", "==", this.props.currentUser.id).get()
-                    .then(canvases => {
-                        if(canvases.size === 0) {
-                            this.props.firebase.createCanvas({
-                                canvas: {
-                                    clickX: [],
-                                    clickY: [],
-                                    clickDrag: [],
-                                    clickColor: [],
-                                    clickSize: [],
-                                    backgroundColor: "white",
-                                    prompt: ""
-                                }, 
-                                roomId: this.props.match.params.id, 
-                                userId: this.props.currentUser.id
-                            })
-                        } 
-                    })
                 const isMaster = !snapshot1.data().users[0]
                 this.props.firebase.findUser(this.props.currentUser.id).update({currentRoomId: this.props.match.params.id, joinedAt: Date.now(), isMaster, points: 0, chosenPrompt: null, givenPrompts: {}})
                 if(isMaster) {
@@ -190,29 +171,21 @@ class Room extends Component {
                     const updatedTime = snapshot.data().timer - 1
                     this.props.firebase.findRoom(this.props.match.params.id).update({timer: updatedTime})
                     const snapPhase = snapshot.data().phase
-                    if(this.state.timer === 1 || this.state.timer <= 0) {
+                    if(this.state.timer <= 1) {
+                        clearInterval(this.timer)
                         let newPhase = snapPhase === "write" ? "writeFinished" : snapPhase === "selection" ? "draw" : snapPhase === "draw" ? "vote1" : snapPhase === "vote1" ? "vote2" : snapPhase === "vote2" ? "vote3" : snapPhase === "vote3" ? "vote4" : "finished"
                         if(snapPhase === `vote${snapshot.data().users.length}`) {
                             newPhase = "write"
+                            this.props.firebase.findRoom(this.props.match.params.id).get()
+                                .then(snapshot => {
+                                    this.props.firebase.findRoom(this.props.match.params.id).update({currentRound: snapshot.data().currentRound+1})
+                                })
                             this.props.firebase.findCanvases(this.props.match.params.id).get()
                                 .then(snapshot => {
                                     snapshot.forEach(doc => {
                                         this.props.firebase.findCanvas(doc.id).update({roomId: null})
                                     })
                                 })
-                            this.props.firebase.createCanvas({
-                                canvas: {
-                                    clickX: [],
-                                    clickY: [],
-                                    clickDrag: [],
-                                    clickColor: [],
-                                    clickSize: [],
-                                    backgroundColor: "white",
-                                    prompt: ""
-                                }, 
-                                roomId: this.props.match.params.id, 
-                                userId: this.props.currentUser.id
-                            })
                             this.props.firebase.findRoom(this.props.match.params.id).update({currentCanvas: {
                                 clickX: [],
                                 clickY: [],
@@ -229,7 +202,9 @@ class Room extends Component {
                         }
                         const setTime = snapPhase === "write" ? 5 : snapPhase ===  "selection" ? 15 : snapPhase === "draw" || snapPhase === "vote1" || snapPhase === "vote2" || snapPhase === "vote3" || snapPhase === "vote4" || snapPhase === "vote5" || snapPhase === "vote6" || snapPhase === "vote7" || snapPhase === "vote8" ? 10 : 0
                         this.props.firebase.findRoom(this.props.match.params.id).update({phase: newPhase})
-                        clearInterval(this.timer)
+                        // if(newPhase === "finished") {
+
+                        // }
                         setTimeout(() => {
                             this.props.firebase.findRoom(this.props.match.params.id).update({timer: setTime})
                             this.startTimer()

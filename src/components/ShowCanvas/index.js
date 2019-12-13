@@ -10,10 +10,7 @@ class ShowCanvas extends Component {
     componentDidMount() {
         this.setState({
             ctx: document.querySelector(".canvas2").getContext("2d")
-        }, () => {
-            this.redraw()
         })
-        console.log(this.props.currentCanvas, "CURR CANVAS")
     }
     redraw = () => {
         const ctx = this.state.ctx
@@ -39,7 +36,7 @@ class ShowCanvas extends Component {
     render() {
         setTimeout(() => {
             this.redraw()
-        }, 500)
+        }, 1000)
         return(
             <S.Container1>
                 <S.CanvasContainer>

@@ -3,14 +3,13 @@ import 'firebase/firebase-firestore'
 import 'firebase/database'
 import "firebase/auth"
 
-
 const config = {
-  apiKey: process.env.REACT_APP_API_KEY,
-  authDomain: process.env.REACT_APP_AUTH_DOMAIN,
-  databaseURL: process.env.REACT_APP_DATABASE_URL,
-  projectId: process.env.REACT_APP_PROJECT_ID,
-  storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
-  messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
+  apiKey: "AIzaSyALOv6caotWiVrGkKfjrKjS_tY16cFuhRA",
+  authDomain: "capstone-ab1a2.firebaseapp.com",
+  databaseURL: "https://capstone-ab1a2.firebaseio.com",
+  projectId: "capstone-ab1a2",
+  storageBucket: "capstone-ab1a2.appspot.com",
+  messagingSenderId: 105595358454,
 }
 
 class Firebase {
