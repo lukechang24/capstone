@@ -16,7 +16,7 @@ class RoomForm extends Component {
             verbs: [],
             adjectives: []
         },
-        timer: 40
+        timer: 10
     }
     handleInput = e => {
         if(e.target.name === "rounds" && e.target.value.length > 1) {

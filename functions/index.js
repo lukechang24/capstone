@@ -9,33 +9,40 @@ exports.changeUserStatus = functions.database.ref("/status/{uid}").onUpdate(
         const eventStatus = change.after.val()
 
         const userStatusFirestoreRef = db.doc(`status/${context.params.uid}`)
-        const roomFirestoreRef = db.collection("rooms")
-        const userBatch = db.batch()
-        const roomBatch = db.batch();
-        console.log(eventStatus.isOnline, "status")
+        const userRef = db.doc(`users/${context.params.uid}`)
+        const batch = db.batch()
         if(!eventStatus.isOnline) {
-            console.log("The user went offline")
-            roomFirestoreRef.where("users", "array-contains", `${context.params.uid}`).get()
+            console.log("he is offline")
+            batch.set(userRef, {currentRoomId: null, isMaster: null, joinedAt: null}, {merge: true})
+        }
+        batch.set(userStatusFirestoreRef, eventStatus)
+        return batch.commit()
+    })
+
+exports.deleteUserFromRoom = functions.firestore
+    .document("status/{uid}")
+    .onUpdate(change => {
+        const data = change.after.data()
+
+        const roomFirestoreRef = db.collection("rooms")
+        const batch = db.batch()
+
+        if(!data.isOnline) {
+            console.log("im offline...")
+            roomFirestoreRef.where("users", "array-contains", `${change.after.id}`).get()
                 .then(snapshot => {
                     snapshot.forEach(doc => {
                         console.log(doc.data().users, "usssers")
                         const updatedUsers = [...doc.data().users]
-                        updatedUsers.splice(updatedUsers.indexOf(context.params.uid), 1)
-                        roomBatch.update(roomFirestoreRef.doc(doc.id), {users: updatedUsers})
-                        console.log(updatedUsers, "updaed users")
-                        console.log(doc.id, "room id")
+                        updatedUsers.splice(updatedUsers.indexOf(change.after.id), 1)
+                        batch.update(roomFirestoreRef.doc(doc.id), {users: updatedUsers})
                     })
+                    return batch.commit()
                 })
+                return null
+        } else {
+            return null
         }
-        userBatch.set(userStatusFirestoreRef, eventStatus)
-        for(let i = 0; i < 2; i++) {
-            if(i === 0) {
-                userBatch.commit()
-            } else {
-                roomBatch.commit()
-            }
-        }
-        return null
     })
 
 exports.archiveChat = functions.firestore
@@ -55,7 +62,7 @@ exports.archiveChat = functions.firestore
         
             const ref = db.collection("chats").doc(change.after.id)
 
-            batch.set(ref, data, { merge: true })
+            batch.set(ref, data, {merge: true})
 
             return batch.commit()
         } else {
@@ -82,3 +89,24 @@ exports.deleteEmptyRooms = functions.firestore
             return null
         }   
     })
+
+exports.deleteEmptyCanvases = functions.firestore
+    .document("canvas/{canvasId}")
+    .onUpdate(change => {
+        // const dataBefore = change.before.data()
+        // const dataAfter = change.after.data()
+        
+        // const batch = db.batch()
+        console.log(change.after.data(), "this be the change")
+        // if(dataBefore.users.length === 1 && !dataAfter.users[0]) {
+        
+        //     const ref = db.collection("rooms").doc(change.after.id)
+
+        //     batch.delete(ref, dataAfter)
+
+        //     return batch.commit()
+        // } else {
+        //     return null
+        // }   
+        return
+})
