@@ -173,9 +173,11 @@ class Room extends Component {
                     const snapPhase = snapshot.data().phase
                     if(this.state.timer <= 1) {
                         clearInterval(this.timer)
-                        let newPhase = snapPhase === "write" ? "writeFinished" : snapPhase === "selection" ? "draw" : snapPhase === "draw" ? "vote1" : snapPhase === "vote1" ? "vote2" : snapPhase === "vote2" ? "vote3" : snapPhase === "vote3" ? "vote4" : "finished"
+                        // let newPhase = snapPhase === "write" ? "writeFinished" : snapPhase === "selection" ? "draw" : snapPhase === "draw" ? "vote1" : snapPhase === "vote1" ? "vote2" : snapPhase === "vote2" ? "vote3" : snapPhase === "vote3" ? "vote4" : "finished"
+                        let newPhase = snapPhase === "write" ? "writeFinished" : snapPhase === "selection" ? "draw" : snapPhase === "draw" ? "vote1" : `vote${parseInt(snapshot.data().phase.replace("vote", ""))+1}`
+
                         if(snapPhase === `vote${snapshot.data().users.length}`) {
-                            newPhase = "write"
+                            newPhase = snapshot.data().rounds === snapshot.data().currentRound ? "finished" : "write"
                             this.props.firebase.findRoom(this.props.match.params.id).get()
                                 .then(snapshot => {
                                     this.props.firebase.findRoom(this.props.match.params.id).update({currentRound: snapshot.data().currentRound+1})
@@ -186,25 +188,27 @@ class Room extends Component {
                                         this.props.firebase.findCanvas(doc.id).update({roomId: null})
                                     })
                                 })
-                            this.props.firebase.findRoom(this.props.match.params.id).update({currentCanvas: {
-                                clickX: [],
-                                clickY: [],
-                                clickDrag: [],
-                                clickColor: [],
-                                clickSize: [],
-                                backgroundColor: "white",
-                                prompt: ""
-                            }})
+                            if(newPhase === "write") {
+                                this.props.firebase.findRoom(this.props.match.params.id).update({currentCanvas: {
+                                    clickX: [],
+                                    clickY: [],
+                                    clickDrag: [],
+                                    clickColor: [],
+                                    clickSize: [],
+                                    backgroundColor: "white",
+                                    prompt: ""
+                                }})
+                            }
                         }
                         if(newPhase.indexOf("vote") !== -1) {
                             console.log("getting canvas...")
                             this.setCurrentCanvas()
                         }
-                        const setTime = snapPhase === "write" ? 5 : snapPhase ===  "selection" ? 15 : snapPhase === "draw" || snapPhase === "vote1" || snapPhase === "vote2" || snapPhase === "vote3" || snapPhase === "vote4" || snapPhase === "vote5" || snapPhase === "vote6" || snapPhase === "vote7" || snapPhase === "vote8" ? 10 : 0
+                        const setTime = snapPhase === "write" ? 5 : snapPhase ===  "selection" ? 15 : snapPhase === "draw" || snapPhase.indexOf("vote") !== -1 ? 10 : 0
                         this.props.firebase.findRoom(this.props.match.params.id).update({phase: newPhase})
-                        // if(newPhase === "finished") {
-
-                        // }
+                        if(newPhase === "finished") {
+                            return
+                        }
                         setTimeout(() => {
                             this.props.firebase.findRoom(this.props.match.params.id).update({timer: setTime})
                             this.startTimer()
@@ -226,7 +230,7 @@ class Room extends Component {
                         const isMaster = this.props.currentUser.id === snapshot.data().users[0] || !snapshot.data().users
                         this.props.firebase.findUser(this.props.currentUser.id).get()
                             .then(user => {
-                                if((!user.data().isMaster && isMaster) && snapshot.data().waiting === false) {
+                                if((!user.data().isMaster && isMaster) && snapshot.data().waiting === false && snapshot.data().phase !== "finished") {
                                     this.startTimer()
                                 }
                             })

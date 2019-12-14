@@ -221,7 +221,7 @@ class Draw1 extends Component {
                 </S.UtilityLeft>
                 <S.Container2>
                     <S.UtilityTop>
-                        {this.props.phase !== "selection" 
+                        {this.props.phase === "draw" 
                             ?
                                 <S.PromptHeader>
                                     Draw: <S.Prompt>{this.state.canvas.prompt}</S.Prompt>

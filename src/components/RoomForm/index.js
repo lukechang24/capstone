@@ -23,6 +23,12 @@ class RoomForm extends Component {
         if(e.target.name === "rounds" && e.target.value.length > 1) {
             return
         }
+        if(e.target.name === "rounds") {
+            this.setState({
+                rounds: parseInt(e.target.value)
+            })
+            return
+        }
         this.setState({
             [e.target.name]: e.target.value
         })
