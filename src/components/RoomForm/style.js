@@ -53,7 +53,7 @@ S.RoomSubmit = styled.input`
     width: 5rem;
 `
 
-S.RoomCancel = styled.i`
+S.CancelForm = styled.i`
     position: absolute;
     right: 7.5px;
     top: 5px;

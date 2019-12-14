@@ -76,5 +76,20 @@ S.TimerContainer = styled.div`
 S.Timer = styled.h1`
     padding-bottom: 5px;
 `
+S.WaitingContainer = styled.div`
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    z-index: 10;
+`
+
+S.Waiting = styled.h1`
+    text-align: center;
+    color: white;
+`
 
 export default S

@@ -2,7 +2,7 @@ import React from "react"
 import S from "./style"
 
 const UserList = (props) => {
-    const userList = props.userList.sort((a,b) => a.joinedAt - b.joinedAt).map((user,i) => {
+    const userList = props.userList.map((user,i) => {
         return(
                 <S.Username key={i}>
                     {user.isMaster && props.waiting ? <i className="fas fa-crown"></i> : null}
@@ -10,6 +10,7 @@ const UserList = (props) => {
                 </S.Username>
         )
     })
+    // const waitingList
     return(
         <S.Container1 className={props.waiting ? "big" : "small"}>
             {props.waiting 
@@ -20,6 +21,7 @@ const UserList = (props) => {
             }
             <S.UserContainer className={props.waiting ? "big" : "small"}>
                 {userList}
+                {/* {props.} */}
             </S.UserContainer>
             {props.waiting && props.isMaster
                 ?

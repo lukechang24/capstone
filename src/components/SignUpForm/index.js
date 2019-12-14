@@ -25,8 +25,10 @@ class SignUpForm extends Component {
                     currentRoomId: null,
                     id: cred.user.uid,
                     joinedAt: null,
-                    isMaster: false,
-                    points: 0
+                    isMaster: null,
+                    chosenPrompt: null,
+                    points: null,
+                    waiting: null
                 })
                 this.props.history.push("/lobby")
             })

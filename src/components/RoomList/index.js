@@ -3,26 +3,26 @@ import { NavLink } from "react-router-dom"
 import S from "./style"
 
 const RoomList = (props) => {
-    const lobbyList = props.lobbies.map((lobby, i) => {
+    const roomList = props.lobbies.map((room, i) => {
         return(
             <S.RoomContainer>
-                <S.RoomLink to={`/lobby/${lobby.id}`} key={i}>
-                    <S.RoomName>{lobby.roomName}</S.RoomName>
-                    <p>{lobby.waiting ? "Waiting..." : "In progress..."}</p>
-                    <p>{lobby.users.length}/4</p>
+                <S.RoomLink to={`/lobby/${room.id}`} key={i}>
+                    <S.RoomName>{room.roomName}</S.RoomName>
+                    <p>{room.waiting ? "Waiting..." : "In progress..."}</p>
+                    <p>{room.userList.length+room.waitingList.length}/4</p>
                 </S.RoomLink>
             </S.RoomContainer>
         )
     })
     return(
         <S.Container1>
-            {lobbyList.length === 0 
+            {roomList.length === 0 
                 ?
                     <S.NoRoom>No rooms available</S.NoRoom>
                 :
                     null
             }
-            {lobbyList}
+            {roomList}
         </S.Container1>
     )
 }

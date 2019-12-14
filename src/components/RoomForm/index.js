@@ -5,19 +5,9 @@ import S from "./style"
 
 class RoomForm extends Component {
     state = {
-        canvasId: "",
         roomName: `${this.props.currentUser.displayName}'s room`,
         password: "",
         rounds: 3,
-        currentRound: 1,
-        waiting: true,
-        phase: "",
-        prompts: {
-            nouns: [],
-            verbs: [],
-            adjectives: []
-        },
-        timer: 10
     }
     handleInput = e => {
         if(e.target.name === "rounds" && e.target.value.length > 1) {
@@ -39,8 +29,19 @@ class RoomForm extends Component {
             return
         }
         const roomInfo = {
-            ...this.state, 
-            users: [],
+            ...this.state,
+            canvasId: "",
+            userList: [],
+            waitingList: [],
+            currentRound: 1,
+            waiting: true,
+            phase: "",
+            prompts: {
+                nouns: [],
+                verbs: [],
+                adjectives: []
+            },
+            timer: 10
         }
         this.props.firebase.createRoom(roomInfo)
             .then(room => {
@@ -61,7 +62,7 @@ class RoomForm extends Component {
         return(
             <S.Container1>
                 <S.RoomForm onSubmit={this.handleSubmit}>
-                <S.RoomCancel onClick={() => {this.props.toggleForm()}} className="fas fa-times"></S.RoomCancel>
+                <S.CancelForm onClick={() => {this.props.toggleForm()}} className="fas fa-times"></S.CancelForm>
                     <S.InputContainer>
                         <S.RoomHeading>
                             Room Name: <S.RoomInput name="roomName" value={this.state.roomName} autocomplete="off" onChange={this.handleInput}></S.RoomInput> <S.Required>*</S.Required>

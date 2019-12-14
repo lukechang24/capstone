@@ -27,6 +27,9 @@ class Draw1 extends Component {
         this.unsubscribe = this.props.firebase.findCanvases(this.props.match.params.id)
             .where("userId", "==", this.props.currentUser.id)
                 .onSnapshot(snapshot => {
+                    if(this.props.currentUser.waiting || this.props.phase === "finished") {
+                        return
+                    }
                     let exists = false
                     snapshot.forEach(doc => {
                         if(doc.data().userId === this.props.currentUser.id && doc.data().roomId === this.props.match.params.id) {

@@ -2,6 +2,7 @@ import React, { Component } from "react"
 import Navbar from "../Navbar"
 import RoomForm from "../RoomForm"
 import RoomList from "../RoomList"
+import { withRouter } from "react-router-dom"
 import { withFirebase } from "../Firebase"
 import S from "./style"
 
@@ -13,6 +14,13 @@ class Lobby extends Component {
     }
     componentDidMount() {
         this.getLobbies()
+        // setTimeout(() => {
+        //     if(!this.props.currentUser.id) {
+        //         this.props.setError("You must be logged in to create/join a room")
+        //         this.props.history.push("/auth/signin")
+        //         return
+        //     }
+        // }, 500)
     }
     componentWillUnmount() {
         this.unsubscribe()
@@ -30,6 +38,11 @@ class Lobby extends Component {
             })
     }
     toggleForm = () => {
+        if(!this.props.currentUser.id) {
+            this.props.setError("You must be logged in to create/join a room")
+            this.props.history.push("/auth/signin")
+            return
+        }
         this.setState({
             showForm: !this.state.showForm
         })
@@ -53,4 +66,4 @@ class Lobby extends Component {
     }
 }
 
-export default withFirebase(Lobby)
+export default withRouter(withFirebase(Lobby))

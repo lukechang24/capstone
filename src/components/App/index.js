@@ -9,7 +9,8 @@ import S from "./style"
 
 class App extends Component {
   state = {
-    currentUser: JSON.parse(localStorage.getItem("savedUser")) || {}
+    currentUser: JSON.parse(localStorage.getItem("savedUser")) || {},
+    error: null
   }
   componentDidMount() {
     this.props.firebase.auth.onAuthStateChanged(authUser => {
@@ -48,31 +49,6 @@ class App extends Component {
     }
   }
   setUserStatusOnline = () => {
-    // this.props.firebase.connectionRef()
-    //   .on("value", snapshot => {
-    //     if(snapshot.val() === false) {
-    //       this.props.firebase.userStatusDatabaseRef().set({isOnline: false})
-    //       return
-    //     } else { 
-    //       this.props.firebase.userStatusDatabaseRef().onDisconnect().set({isOnline: false})
-    //         .then(() => {
-    //           this.props.firebase.userStatusDatabaseRef().set({isOnline: true})
-    //         })
-    //     }
-    //   })
-    // this.props.firebase.connectionRef()
-    //   .on("value", snapshot => {
-    //     if(snapshot.val() === false) {
-    //       this.props.firebase.userStatusFirestoreRef().set({isOnline: false})
-    //       return
-    //     }
-
-    //     this.props.firebase.userStatusDatabaseRef().onDisconnect().set({isOnline: false})
-    //       .then(() => {
-    //         this.props.firebase.userStatusDatabaseRef().set({isOnline: true})
-    //         this.props.firebase.userStatusFirestoreRef().set({isOnline: true})
-    //       })
-    //   })
     const onlineStatus = {
       isOnline: true,
     }
@@ -99,6 +75,16 @@ class App extends Component {
       currentUser
     })
   }
+  setError = (newError) => {
+    this.setState({
+      error: newError
+    })
+  }
+  resetError = () => {
+    this.setState({
+      error: null
+    })
+  }
   signOut = () => {
     if(this.props.firebase.auth.currentUser) {
       localStorage.removeItem("savedUser")
@@ -110,12 +96,23 @@ class App extends Component {
   render() {
     return (
       <S.AppContainer>
+        {this.state.error 
+          ?
+            <S.Container1>
+              <S.ErrorContainer>
+                <S.CancelError onClick={this.resetError} className="fas fa-times"></S.CancelError>
+                <S.Error>{this.state.error}</S.Error>
+              </S.ErrorContainer>
+            </S.Container1>
+          :
+            null
+        }
         {console.log(this.state.currentUser, "IM USER")}
         <Switch>
           <Route exact path="/auth/signup" render={() => <SignUpForm currentUser={this.state.currentUser}/>}></Route>
           <Route exact path="/auth/signin" render={() => <SignInForm currentUser={this.state.currentUser}/>}></Route>
-          <Route exact path="/lobby" render={() => <Lobby currentUser={this.state.currentUser} signOut={this.signOut} />}></Route>
-          <Route exact path="/lobby/:id" render={() => <Room currentUser={this.state.currentUser} setCurrentUser={this.setCurrentUser} />}></Route>
+          <Route exact path="/lobby" render={() => <Lobby currentUser={this.state.currentUser} setError={this.setError} signOut={this.signOut} />}></Route>
+          <Route exact path="/lobby/:id" render={() => <Room currentUser={this.state.currentUser} setCurrentUser={this.setCurrentUser} setError={this.setError}/>}></Route>
         </Switch>
       </S.AppContainer>
     )

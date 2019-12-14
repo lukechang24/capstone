@@ -13,7 +13,7 @@ exports.changeUserStatus = functions.database.ref("/status/{uid}").onUpdate(
         const batch = db.batch()
         if(!eventStatus.isOnline) {
             console.log("he is offline")
-            batch.set(userRef, {currentRoomId: null, isMaster: null, joinedAt: null}, {merge: true})
+            batch.set(userRef, {currentRoomId: null, isMaster: null, joinedAt: null, points: null, givenPrompts: {}}, {merge: true})
         }
         batch.set(userStatusFirestoreRef, eventStatus)
         return batch.commit()
@@ -29,17 +29,24 @@ exports.deleteUserFromRoom = functions.firestore
 
         if(!data.isOnline) {
             console.log("im offline...")
-            roomRef.where("users", "array-contains", `${change.after.id}`).get()
+            roomRef.where("userList", "array-contains", `${change.after.id}`).get()
                 .then(snapshot => {
                     snapshot.forEach(doc => {
-                        console.log(doc.data().users, "usssers")
-                        const updatedUsers = [...doc.data().users]
-                        updatedUsers.splice(updatedUsers.indexOf(change.after.id), 1)
-                        batch.update(roomRef.doc(doc.id), {users: updatedUsers})
+                        const updatedUserList = [...doc.data().userList]
+                        updatedUserList.splice(updatedUserList.indexOf(change.after.id), 1)
+                        batch.update(roomRef.doc(doc.id), {userList: updatedUserList})
                     })
                     return batch.commit()
                 })
-                return null
+            roomRef.where("waitingList", "array-contains", `${change.after.id}`).get()
+            .then(snapshot => {
+                snapshot.forEach(doc => {
+                    const updatedWaitingList = [...doc.data().waitingList]
+                    updatedWaitingList.splice(updatedWaitingList.indexOf(change.after.id), 1)
+                    batch.update(roomRef.doc(doc.id), {waitingList: updatedWaitingList})
+                })
+                return batch.commit()
+            })
         } else {
             return null
         }
@@ -78,7 +85,7 @@ exports.deleteEmptyRooms = functions.firestore
         
         const batch = db.batch()
 
-        if(dataBefore.users.length === 1 && !dataAfter.users[0]) {
+        if(dataBefore.userList.length === 1 && !dataAfter.userList[0]) {
         
             const ref = db.collection("rooms").doc(change.after.id)
             
@@ -89,6 +96,18 @@ exports.deleteEmptyRooms = functions.firestore
             return null
         }   
     })
+
+exports.deleteChat = functions.firestore
+    .document("rooms/{roomId}")
+    .onDelete(change => {
+        const deletedData = change.data()
+        
+        const chatRef = db.collection("chats").doc(deletedData.chatId)
+        const batch = db.batch()
+
+        batch.delete(chatRef)
+        return batch.commit()
+})
 
 exports.deleteEmptyCanvases = functions.firestore
     .document("canvases/{canvasId}")
