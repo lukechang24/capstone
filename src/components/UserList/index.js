@@ -4,13 +4,19 @@ import S from "./style"
 const UserList = (props) => {
     const userList = props.userList.map((user,i) => {
         return(
-                <S.Username key={i}>
-                    {user.isMaster && props.waiting ? <i className="fas fa-crown"></i> : null}
-                    {user.displayName}
-                </S.Username>
+            <S.Username key={i}>
+                {user.isMaster && props.waiting ? <i className="fas fa-crown"></i> : null}
+                {user.displayName}
+            </S.Username>
         )
     })
-    // const waitingList
+    const waitingList = props.waitingList.map((user,i) => {
+        return(
+            <S.Username key={i}>
+                {user.displayName}
+            </S.Username>
+        )
+    })
     return(
         <S.Container1 className={props.waiting ? "big" : "small"}>
             {props.waiting 
@@ -20,12 +26,22 @@ const UserList = (props) => {
                     null
             }
             <S.UserContainer className={props.waiting ? "big" : "small"}>
-                {userList}
-                {/* {props.} */}
+                <S.PlayingUsers className={props.waiting ? "big" : "small"}>
+                    {userList}
+                </S.PlayingUsers>
+                {!props.waiting && props.waitingList[0]
+                    ? 
+                        <S.WaitingUsers>
+                            WAITING
+                            {waitingList}
+                        </S.WaitingUsers>
+                    :
+                        null
+                }
             </S.UserContainer>
-            {props.waiting && props.isMaster
+            {props.waiting
                 ?
-                    <button onClick={() => {props.startGame()}}>Start Game</button> 
+                    <S.StartButton onClick={() => {props.startGame()}} disabled={!props.isMaster}>Start Game</S.StartButton> 
                 : 
                     null
             }

@@ -29,23 +29,27 @@ exports.deleteUserFromRoom = functions.firestore
 
         if(!data.isOnline) {
             console.log("im offline...")
-            roomRef.where("userList", "array-contains", `${change.after.id}`).get()
+            roomRef.where("userList", "array-contains", change.after.id).get()
                 .then(snapshot => {
                     snapshot.forEach(doc => {
                         const updatedUserList = [...doc.data().userList]
-                        updatedUserList.splice(updatedUserList.indexOf(change.after.id), 1)
-                        batch.update(roomRef.doc(doc.id), {userList: updatedUserList})
+                        if(updatedUserList.indexOf(change.after.id) !== -1) {
+                            updatedUserList.splice(updatedUserList.indexOf(change.after.id), 1)
+                            batch.update(roomRef.doc(doc.id), {userList: updatedUserList})
+                            return batch.commit()
+                        }
                     })
-                    return batch.commit()
                 })
-            roomRef.where("waitingList", "array-contains", `${change.after.id}`).get()
+            roomRef.where("waitingList", "array-contains", change.after.id).get()
             .then(snapshot => {
                 snapshot.forEach(doc => {
                     const updatedWaitingList = [...doc.data().waitingList]
-                    updatedWaitingList.splice(updatedWaitingList.indexOf(change.after.id), 1)
-                    batch.update(roomRef.doc(doc.id), {waitingList: updatedWaitingList})
+                    if(updatedWaitingList.indexOf(change.afterid) !== -1) {
+                        updatedWaitingList.splice(updatedWaitingList.indexOf(change.after.id), 1)
+                        batch.update(roomRef.doc(doc.id), {waitingList: updatedWaitingList})
+                        return batch.commit()
+                    }
                 })
-                return batch.commit()
             })
         } else {
             return null

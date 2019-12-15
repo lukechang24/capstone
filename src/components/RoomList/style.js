@@ -4,11 +4,13 @@ import { NavLink } from "react-router-dom"
 const S = {}
 
 S.Container1 = styled.div`
+    height: 30rem;
     width: 75rem;
     display: flex;
     flex-wrap: wrap;
 `
 S.RoomContainer = styled.div`
+    height: 8rem;
     width: 17rem;
     display: flex;
     justify-content: flex-start;

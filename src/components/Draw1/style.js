@@ -4,7 +4,12 @@ import paintBrush from "../../images/paint-brush.png"
 const S = {};
 
 S.Container1 = styled.div`
-    height: 100%;
+    user-select: none;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -o-user-select: none;
+    height: 45rem;
     width: 45rem;
     display: flex;
     justify-content: center;

@@ -32,7 +32,6 @@ class PromptSelection extends Component {
         const verbSelection = <S.SelectContainer key={1} name="verb" onChange={this.handleChange}>{verbs}</S.SelectContainer>
         const adjectiveSelection = <S.SelectContainer key={2} name="adjective" onChange={this.handleChange}>{adjectives}</S.SelectContainer>
         const promptOptions = [verbSelection, adjectiveSelection, nounSelection]
-        console.log(this.props.currentUser.givenPrompts.adjectives, "given")
         this.setState({
             promptList: promptOptions,
             chosenPrompt: {

@@ -92,4 +92,9 @@ S.Waiting = styled.h1`
     color: white;
 `
 
+S.DudDiv = styled.div`
+    height: 100%;
+    width: 45rem;
+`
+
 export default S

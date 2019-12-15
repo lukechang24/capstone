@@ -58,6 +58,8 @@ class Firebase {
 
   findChatLogs = roomId => this.db.collection("chats").where("roomId", "==", roomId)
 
+  wordBankRef = () => this.db.collection("wordBank")
+
   signOut = () => this.auth.signOut()
 }
 export default Firebase;

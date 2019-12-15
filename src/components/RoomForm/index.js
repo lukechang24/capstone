@@ -13,12 +13,6 @@ class RoomForm extends Component {
         if(e.target.name === "rounds" && e.target.value.length > 1) {
             return
         }
-        if(e.target.name === "rounds") {
-            this.setState({
-                rounds: parseInt(e.target.value)
-            })
-            return
-        }
         this.setState({
             [e.target.name]: e.target.value
         })
@@ -29,7 +23,9 @@ class RoomForm extends Component {
             return
         }
         const roomInfo = {
-            ...this.state,
+            roomName: this.state.roomName.trim(),
+            password: this.state.password.trim(),
+            rounds: parseInt(this.state.rounds),
             canvasId: "",
             userList: [],
             waitingList: [],
@@ -64,15 +60,27 @@ class RoomForm extends Component {
                 <S.RoomForm onSubmit={this.handleSubmit}>
                 <S.CancelForm onClick={() => {this.props.toggleForm()}} className="fas fa-times"></S.CancelForm>
                     <S.InputContainer>
-                        <S.RoomHeading>
-                            Room Name: <S.RoomInput name="roomName" value={this.state.roomName} autocomplete="off" onChange={this.handleInput}></S.RoomInput> <S.Required>*</S.Required>
-                        </S.RoomHeading>
-                        <S.RoomHeading>
-                            Password: <S.RoomInput name="password" value={this.state.password} autocomplete="off" onChange={this.handleInput}></S.RoomInput>
-                        </S.RoomHeading>
-                        <S.RoomHeading>
-                            Number of Rounds (1-5): <S.RoomInput type="number" width="1rem" align="center" name="rounds" value={this.state.rounds} pattern="[1-5]" title="Only Numbers 1 - 5" onChange={this.handleInput}></S.RoomInput> <S.Required>*</S.Required>
-                        </S.RoomHeading>
+                        <S.Container2>
+                            <S.Options>Room Name:</S.Options>
+                            <S.RoomInput name="roomName" value={this.state.roomName} autocomplete="off" onChange={this.handleInput}></S.RoomInput> <S.Required>*</S.Required>
+                        </S.Container2>
+                        <S.Container2>
+                            <S.Options>Password:</S.Options>
+                            <S.RoomInput name="password" value={this.state.password} autocomplete="off" onChange={this.handleInput}></S.RoomInput>
+                        </S.Container2>
+                        <S.Container2>
+                            <S.Options>Number of Rounds:</S.Options>
+                            <select name="rounds" onChange={this.handleInput}>
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                                <option>5</option>
+                                <option>6</option>
+                                <option>7</option>
+                                <option>8</option>
+                            </select>
+                        </S.Container2>
                     </S.InputContainer>
                     <S.RoomSubmit type="submit"></S.RoomSubmit>
                 </S.RoomForm>

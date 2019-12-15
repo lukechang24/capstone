@@ -30,14 +30,19 @@ S.InputContainer = styled.div`
     display: flex;
     flex-direction: column;
 `
+S.Container2 = styled.div`
+    display: flex;
+    align-items: center;
+`
 
-S.RoomHeading = styled.h3`
-    width: 100%;
+S.Options = styled.h3`
     text-align: left;
     padding: 0.25rem;
+    margin-right: 0.5rem;
 `
 
 S.RoomInput = styled.input`
+    height: 60%;
     width: ${props => props.width ? props.width : "7.5rem"};
     text-align: ${props => props.align ? props.align : "left" };
     vertical-align: bottom;

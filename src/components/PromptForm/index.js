@@ -30,11 +30,14 @@ class PromptForm extends Component {
                 const updatedNouns = [...snapshot.data().prompts.nouns, noun]
                 const updatedVerbs = [...snapshot.data().prompts.verbs, verb]
                 const updatedAdjectives = [...snapshot.data().prompts.adjectives, adjective]
+                const uniqueNouns = [...new Set(updatedNouns)]
+                const uniqueVerbs = [...new Set(updatedVerbs)]
+                const uniqueAdjectives = [...new Set(updatedAdjectives)]
                 this.props.firebase.findRoom(snapshot.id).update({
                     prompts: {
-                        nouns: updatedNouns,
-                        verbs: updatedVerbs,
-                        adjectives: updatedAdjectives
+                        nouns: uniqueNouns,
+                        verbs: uniqueVerbs,
+                        adjectives: uniqueAdjectives
                     }
                 }).then(() => {
                     this.setState({
