@@ -62,10 +62,10 @@ S.UtilityBottom = styled.div`
     align-items: center;
 `
 S.Color = styled.button`
-    width: 2.5rem;
-    height: 2.5rem;
+    width: 2.3rem;
+    height: 2.3rem;
     margin: 0.25rem;
-    border-radius: 0.5rem;
+    border-radius: 5px;
     background-color: ${props => props.color};
     border: 0.08rem solid black;
     &.selected {
@@ -89,10 +89,10 @@ S.BackgroundColor = styled.button`
     height: 2.5rem;
     background-color: ${props => props.color};
     border: 0;
-    border-radius: 0.75rem 0.75rem 0 0;
+    border-radius: 10px 10px 0 0;
     margin-right: 0.05rem;
     &.selected {
-        height: 3.5rem;
+        height: 3rem;
     }
 `
 S.WhiteSquare = styled.div`
@@ -102,12 +102,12 @@ S.WhiteSquare = styled.div`
     justify-content: center;
     align-items: center;
     background-color: white;
-    margin-top: 5rem;
+    margin-top: 10rem;
 `
 
 S.PaintSize = styled.button`
     border: none;
-    border-radius: 100rem;
+    border-radius: 50px;
     background-color: black;
     &.small {
         height: 0.8rem;

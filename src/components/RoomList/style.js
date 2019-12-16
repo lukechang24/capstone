@@ -1,5 +1,4 @@
 import styled from "styled-components"
-import { NavLink } from "react-router-dom"
 
 const S = {}
 
@@ -13,23 +12,27 @@ S.RoomContainer = styled.div`
     height: 8rem;
     width: 17rem;
     display: flex;
-    justify-content: flex-start;
-    align-items: center;
+    flex-direction: column;
     background-color: lightskyblue;
-    border-radius: 2rem;
+    border-radius: 20px;
     margin: 1rem 0.35rem;
-    padding: 0.5rem;
-`
-
-S.RoomLink = styled(NavLink)`
-    text-decoration: none;
-    margin-left: 1rem;
+    padding: 0.5rem 1rem;
 `
 
 S.RoomName = styled.h1`
-    width: 100%;
-    border-bottom: 0.1rem solid blue;
-    padding: auto;
+    width: 1rem;
+    border-bottom: 0.1rem solid white;
+    color: white;
+    &:hover {
+        cursor: pointer;
+    }
+`
+S.Phase = styled.span`
+    color: ${props => props.waiting ? "white" : "#ff8c00"};
+`
+
+S.NumOfPlayers = styled.span`
+    color: white;
 `
 
 export default S

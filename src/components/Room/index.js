@@ -277,7 +277,6 @@ class Room extends Component {
                                     })
                         }
                         if(newPhase.indexOf("vote") !== -1) {
-                            console.log("getting canvas...")
                             this.setCurrentCanvas()
                         }
                         const setTime = snapPhase.indexOf("write") !== -1 ? 20 : snapPhase ===  "selection" ? 100 : newPhase === "writeNouns" ? 20 : snapPhase === "draw" || snapPhase.indexOf("vote") !== -1 ? 10 : 0

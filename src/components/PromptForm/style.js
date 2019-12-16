@@ -54,7 +54,7 @@ S.SubmitPrompt = styled.input`
     color: white;
     background-color: lightskyblue;
     border: none;
-    border-radius: 0.3rem;
+    border-radius: 5px;
     padding: 0.25rem;
     margin: 0.2rem;
     &:hover {

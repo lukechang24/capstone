@@ -6,11 +6,9 @@ const RoomList = (props) => {
     const roomList = props.lobbies.map((room, i) => {
         return(
             <S.RoomContainer>
-                <S.RoomLink to={`/lobby/${room.id}`} key={i}>
-                    <S.RoomName>{room.roomName}</S.RoomName>
-                    <p>{room.waiting ? "Waiting..." : "In progress..."}</p>
-                    <p>{room.userList.length+room.waitingList.length}/4</p>
-                </S.RoomLink>
+                <S.RoomName onClick={() => {props.sendUserToRoom(room.id)}}>{room.roomName}</S.RoomName>
+                <S.NumOfPlayers>{room.userList.length+room.waitingList.length} / 8</S.NumOfPlayers>
+                <S.Phase waiting={room.waiting}>{room.waiting ? "Waiting..." : "In progress..."}</S.Phase>
             </S.RoomContainer>
         )
     })

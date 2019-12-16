@@ -17,7 +17,7 @@ class Draw1 extends Component {
         },
         ctx: null,
         curColor: "black",
-        curSize: 1,
+        curSize: 5,
         paint: false,
         strokes: 0,
         strokeCount: [],
@@ -234,19 +234,19 @@ class Draw1 extends Component {
                         }
                         <S.BackgroundColorDiv>
                             <S.BackgroundColor
-                                className={`${this.state.backgroundColor === "white" ? "selected" : ""}`}
+                                className={`${this.state.canvas.backgroundColor === "white" ? "selected" : ""}`}
                                 name="white" 
                                 color="white" 
                                 onClick={this.changeBackgroundColor}
                             ></S.BackgroundColor>
                             <S.BackgroundColor 
-                                className={`${this.state.backgroundColor === "black" ? "selected" : ""}`}
+                                className={`${this.state.canvas.backgroundColor === "black" ? "selected" : ""}`}
                                 name="black" 
                                 color="black" 
                                 onClick={this.changeBackgroundColor}
                             ></S.BackgroundColor>
                             <S.BackgroundColor 
-                                className={`${this.state.backgroundColor === "grey" ? "selected" : ""}`}
+                                className={`${this.state.canvas.backgroundColor === "grey" ? "selected" : ""}`}
                                 name="grey" 
                                 color="grey" 
                                 onClick={this.changeBackgroundColor}
@@ -282,6 +282,18 @@ class Draw1 extends Component {
                             onClick={this.changeColor}
                         ></S.Color>
                         <S.Color 
+                            className={`${this.state.curColor === "lightgreen" ? "selected" : ""}`} 
+                            name="lightgreen" 
+                            color="lightgreen" 
+                            onClick={this.changeColor}
+                        ></S.Color>
+                        <S.Color 
+                            className={`${this.state.curColor === "lightblue" ? "selected" : ""}`} 
+                            name="lightblue" 
+                            color="lightblue" 
+                            onClick={this.changeColor}
+                        ></S.Color>
+                        <S.Color 
                             className={`${this.state.curColor === "green" ? "selected" : ""}`} 
                             name="green" 
                             color="green" 
@@ -300,9 +312,21 @@ class Draw1 extends Component {
                             onClick={this.changeColor}
                         ></S.Color>
                         <S.Color 
+                            className={`${this.state.curColor === "brown" ? "selected" : ""}`} 
+                            name="brown" 
+                            color="brown" 
+                            onClick={this.changeColor}
+                        ></S.Color>
+                        <S.Color 
                             className={`${this.state.curColor === "black" ? "selected" : ""}`} 
                             name="black" 
                             color="black" 
+                            onClick={this.changeColor}
+                        ></S.Color>
+                        <S.Color 
+                            className={`${this.state.curColor === "grey" ? "selected" : ""}`} 
+                            name="grey" 
+                            color="grey" 
                             onClick={this.changeColor}
                         ></S.Color>
                         <S.Color 

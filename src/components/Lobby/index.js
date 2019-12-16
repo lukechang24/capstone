@@ -46,31 +46,31 @@ class Lobby extends Component {
             showForm: !this.state.showForm
         })
     }
-
+    sendUserToRoom = roomId => {
+        this.props.history.push(`/lobby/${roomId}`)
+    }
     render() {
         return(
             <S.Container1>
                 <Navbar currentUser={this.props.currentUser} signOut={this.props.signOut}/>
-                {/* <S.Container2> */}
-                    <S.CreateRoomButton type="submit" onClick={this.toggleForm} value="Create Room">Make a Room</S.CreateRoomButton>
-                    <button onClick={() => {this.getLobbies()}}>Refresh</button>
-                    {this.state.showForm 
-                        ?
-                            <RoomForm currentUser={this.props.currentUser} toggleForm={this.toggleForm}/>
-                        :
-                            null
-                    }
-                    {this.state.loading 
-                        ?
-                            <S.Loading className="fas fa-spinner fa-pulse"></S.Loading>
-                        :
-                    this.state.lobbies.length === 0 
-                        ?
-                            <S.NoRoom>No rooms available</S.NoRoom>
-                        :
-                            <RoomList lobbies={this.state.lobbies} setUserRoomId={this.setUserRoomId}/>
-                    }
-                {/* </S.Container2> */}
+                <S.CreateRoomButton type="submit" onClick={this.toggleForm} value="Create Room">Make a Room</S.CreateRoomButton>
+                <button onClick={() => {this.getLobbies()}}>Refresh</button>
+                {this.state.showForm 
+                    ?
+                        <RoomForm currentUser={this.props.currentUser} toggleForm={this.toggleForm}/>
+                    :
+                        null
+                }
+                {this.state.loading 
+                    ?
+                        <S.Loading className="fas fa-spinner fa-pulse"></S.Loading>
+                    :
+                this.state.lobbies.length === 0 
+                    ?
+                        <S.NoRoom>No rooms available</S.NoRoom>
+                    :
+                        <RoomList lobbies={this.state.lobbies} setUserRoomId={this.setUserRoomId} sendUserToRoom={this.sendUserToRoom}/>
+                }
             </S.Container1>
         )
     }

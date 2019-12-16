@@ -21,7 +21,7 @@ S.CreateRoomButton = styled.button`
     background-color: steelblue;
     color: white;
     border: none;
-    border-radius: 1rem;
+    border-radius: 10px;
     font-size: 1rem;
     margin: 5rem 0 1rem;
     &:hover {

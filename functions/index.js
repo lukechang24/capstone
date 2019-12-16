@@ -12,8 +12,7 @@ exports.changeUserStatus = functions.database.ref("/status/{uid}").onUpdate(
         const userRef = db.doc(`users/${context.params.uid}`)
         const batch = db.batch()
         if(!eventStatus.isOnline) {
-            console.log("he is offline")
-            batch.set(userRef, {currentRoomId: null, isMaster: null, joinedAt: null, points: null, givenPrompts: {}}, {merge: true})
+            batch.set(userRef, {currentRoomId: null, isMaster: null, joinedAt: null, points: null, givenPrompts: {}, chosenPrompt: ""}, {merge: true})
         }
         batch.set(userStatusFirestoreRef, eventStatus)
         return batch.commit()
@@ -28,7 +27,6 @@ exports.deleteUserFromRoom = functions.firestore
         const batch = db.batch()
 
         if(!data.isOnline) {
-            console.log("im offline...")
             roomRef.where("userList", "array-contains", change.after.id).get()
                 .then(snapshot => {
                     snapshot.forEach(doc => {

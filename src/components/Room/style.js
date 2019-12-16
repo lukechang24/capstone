@@ -51,7 +51,7 @@ S.MessageInput = styled.input`
     margin: 0.5rem auto;
     padding: 0.5rem;
     border: none;
-    border-radius: 0.3rem;
+    border-radius: 10px;
 `
 
 S.Spinner = styled.i`
@@ -60,15 +60,15 @@ S.Spinner = styled.i`
 
 S.TimerContainer = styled.div`
     position: absolute;
-    top: 1rem;
-    right: 1rem;
+    top: 0.25rem;
+    right: 0.25rem;
     height: 3rem;
     width: 3rem;
     display: flex;
     justify-content: center;
     align-items: center;
     border: 1rem solid black;
-    border-radius: 2rem;
+    border-radius: 25px;
     background-color: white;
     z-index: 5;
 `
