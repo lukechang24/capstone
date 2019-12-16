@@ -26,14 +26,19 @@ S.PromptHeading = styled.h3`
     font-weight: bold;
 `
 
-S.Container2 = styled.div`
+S.GrammerContainer = styled.div`
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
 `
+// S.GrammarContainer = styled.div`
+//     display: flex;
+//     justify-content: center;
 
-S.Grammer = styled.span`
+// `
+
+S.Grammer = styled.h3`
     font-weight: 500;
 `
 

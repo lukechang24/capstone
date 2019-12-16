@@ -51,7 +51,7 @@ class Lobby extends Component {
         return(
             <S.Container1>
                 <Navbar currentUser={this.props.currentUser} signOut={this.props.signOut}/>
-                <S.Container2>
+                {/* <S.Container2> */}
                     <S.CreateRoomButton type="submit" onClick={this.toggleForm} value="Create Room">Make a Room</S.CreateRoomButton>
                     <button onClick={() => {this.getLobbies()}}>Refresh</button>
                     {this.state.showForm 
@@ -62,11 +62,15 @@ class Lobby extends Component {
                     }
                     {this.state.loading 
                         ?
-                            "loading"
+                            <S.Loading className="fas fa-spinner fa-pulse"></S.Loading>
+                        :
+                    this.state.lobbies.length === 0 
+                        ?
+                            <S.NoRoom>No rooms available</S.NoRoom>
                         :
                             <RoomList lobbies={this.state.lobbies} setUserRoomId={this.setUserRoomId}/>
                     }
-                </S.Container2>
+                {/* </S.Container2> */}
             </S.Container1>
         )
     }

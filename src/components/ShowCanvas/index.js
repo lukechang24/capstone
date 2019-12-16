@@ -43,9 +43,6 @@ class ShowCanvas extends Component {
                     <S.UtilityLeft></S.UtilityLeft>
                     <S.Container2>
                         <S.UtilityTop>
-                            <S.DrawnByHeading>
-                                Drawn By: <S.DrawnBy>{this.props.currentCanvas.displayName}</S.DrawnBy>
-                            </S.DrawnByHeading>
                         </S.UtilityTop>
                         <S.Canvas 
                             className="canvas2"

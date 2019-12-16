@@ -16,12 +16,6 @@ const RoomList = (props) => {
     })
     return(
         <S.Container1>
-            {roomList.length === 0 
-                ?
-                    <S.NoRoom>No rooms available</S.NoRoom>
-                :
-                    null
-            }
             {roomList}
         </S.Container1>
     )

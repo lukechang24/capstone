@@ -32,9 +32,4 @@ S.RoomName = styled.h1`
     padding: auto;
 `
 
-S.NoRoom = styled.h1`
-    margin: 10rem auto;
-`
-
-
 export default S

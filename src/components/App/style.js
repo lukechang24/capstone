@@ -18,6 +18,7 @@ S.Container1 = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 10;
 `
 
 S.ErrorContainer = styled.div`

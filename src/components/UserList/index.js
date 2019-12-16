@@ -5,8 +5,7 @@ const UserList = (props) => {
     const userList = props.userList.map((user,i) => {
         return(
             <S.Username key={i}>
-                {user.isMaster && props.waiting ? <i className="fas fa-crown"></i> : null}
-                {user.displayName}
+                {user.isMaster && props.waiting ? <i className="fas fa-crown"></i> : null} {user.displayName}
             </S.Username>
         )
     })

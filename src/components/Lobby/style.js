@@ -23,11 +23,26 @@ S.CreateRoomButton = styled.button`
     border: none;
     border-radius: 1rem;
     font-size: 1rem;
-    margin: 1.5rem;
+    margin: 5rem 0 1rem;
     &:hover {
         background-color: lightseagreen;
 
     }
+`
+
+S.LoadingContainer = styled.div`
+    
+`
+
+S.Loading = styled.i`
+    position: fixed;
+    top: calc(100vh / 2);
+    font-size: 3rem;
+    z-index: 1;
+`
+S.NoRoom = styled.h1`
+    position: fixed;
+    top: calc(100vh / 2);
 `
 
 export default S
