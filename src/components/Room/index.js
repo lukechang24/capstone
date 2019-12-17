@@ -236,36 +236,32 @@ class Room extends Component {
                                 .then(snapshot => {
                                     this.props.firebase.findRoom(this.props.match.params.id).update({currentRound: snapshot.data().currentRound+1})
                                 })
-                            if(newPhase === "writeNouns") {
-                                this.props.firebase.findRoom(this.props.match.params.id).update({currentCanvas: null})
-                                this.props.firebase.findCanvases(this.props.match.params.id).get()
-                                    .then(snapshot => {
-                                        snapshot.forEach(doc => {
-                                            this.props.firebase.findCanvas(doc.id).get()
-                                                .then(canvas => {
-                                                    this.props.firebase.findUser(canvas.data().userId).get()
-                                                        .then(user => {
-                                                            let totalPoints = user.data().points
-                                                            console.log(user.data(), "this userrr")
-                                                            canvas.data().votes.forEach(vote => {
-                                                                if(vote === "accurate") {
-                                                                    totalPoints += 100
-                                                                }
-                                                            })
-                                                            this.props.firebase.findUser(user.id).update({points: totalPoints})
-                                                                .then(() => {
-                                                                    this.props.firebase.findCanvas(canvas.id).delete()
-                                                                })
+                            this.props.firebase.findRoom(this.props.match.params.id).update({currentCanvas: null})
+                            this.props.firebase.findCanvases(this.props.match.params.id).get()
+                                .then(snapshot => {
+                                    snapshot.forEach(doc => {
+                                        this.props.firebase.findCanvas(doc.id).get()
+                                            .then(canvas => {
+                                                this.props.firebase.findUser(canvas.data().userId).get()
+                                                    .then(user => {
+                                                        let totalPoints = user.data().points
+                                                        let extraPoints = ((this.state.userList.length-1) - canvas.data().votes.length) * 50
+                                                        console.log(user.data(), "this userrr")
+                                                        canvas.data().votes.forEach(vote => {
+                                                            if(vote === "accurate") {
+                                                                totalPoints += 100
+                                                            }
                                                         })
-                                                })
-                                        })
+                                                        totalPoints += extraPoints
+                                                        this.props.firebase.findUser(user.id).update({points: totalPoints})
+                                                            .then(() => {
+                                                                this.props.firebase.findCanvas(canvas.id).delete()
+                                                            })
+                                                    })
+                                            })
                                     })
-                                // this.props.firebase.findCanvases(this.props.match.params.id).get()
-                                // .then(snapshot => {
-                                //     snapshot.forEach(doc => {
-                                //         this.props.firebase.findCanvas(doc.id).delete()
-                                //     })
-                                // })
+                                })
+                            if(newPhase === "writeNouns") {
                                 this.props.firebase.findUsers(this.props.match.params.id).where("waiting", "==", true).get()
                                     .then(snapshot => {
                                         snapshot.forEach(doc => {
