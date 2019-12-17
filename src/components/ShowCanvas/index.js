@@ -1,4 +1,5 @@
 import React, { Component } from "react"
+import VoteForm from "../VoteForm"
 import { withRouter } from "react-router-dom"
 import { withFirebase } from "../Firebase"
 import S from "./style"
@@ -14,7 +15,7 @@ class ShowCanvas extends Component {
     }
     redraw = () => {
         const ctx = this.state.ctx
-        const { clickX, clickY, clickDrag, clickColor, clickSize, backgroundColor } = this.props.currentCanvas
+        const { clickX, clickY, clickDrag, clickColor, clickSize, backgroundColor } = this.props.currentCanvas.canvas
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
         ctx.lineJoin = "round"
         ctx.fillStyle = backgroundColor
@@ -39,6 +40,12 @@ class ShowCanvas extends Component {
         }, 1000)
         return(
             <S.Container1>
+                {this.props.currentUser.id !== this.props.currentCanvas.userId && !this.props.currentUser.waiting
+                    ?
+                        <VoteForm currentUser={this.props.currentUser} currentCanvas={this.props.currentCanvas}/>
+                    :
+                        null
+                }
                 <S.CanvasContainer>
                     <S.UtilityLeft></S.UtilityLeft>
                     <S.Container2>
@@ -51,7 +58,7 @@ class ShowCanvas extends Component {
                         >
                         </S.Canvas>
                         <S.UtilityBottom>
-                            <S.Prompt>{this.props.currentCanvas.prompt}</S.Prompt>
+                            <S.Prompt>{this.props.currentCanvas.canvas.prompt}</S.Prompt>
                         </S.UtilityBottom>
                     </S.Container2>
                     <S.UtilityRight>

@@ -48,8 +48,8 @@ S.MessageInput = styled.input`
     bottom: 0;
     width: 90%;
     font-size: 1rem;
-    margin: 0.5rem auto;
-    padding: 0.5rem;
+    margin: 0 auto 0.5rem;
+    padding: 0.25rem;
     border: none;
     border-radius: 10px;
 `

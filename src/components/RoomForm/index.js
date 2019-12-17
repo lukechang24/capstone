@@ -37,7 +37,7 @@ class RoomForm extends Component {
                 verbs: [],
                 adjectives: []
             },
-            timer: 20
+            timer: 5
         }
         this.props.firebase.createRoom(roomInfo)
             .then(room => {
@@ -73,7 +73,7 @@ class RoomForm extends Component {
                             <select name="rounds" onChange={this.handleInput}>
                                 <option>1</option>
                                 <option>2</option>
-                                <option>3</option>
+                                <option selected="selected">3</option>
                                 <option>4</option>
                                 <option>5</option>
                                 <option>6</option>

@@ -20,7 +20,6 @@ S.RoomContainer = styled.div`
 `
 
 S.RoomName = styled.h1`
-    width: 1rem;
     border-bottom: 0.1rem solid white;
     color: white;
     &:hover {

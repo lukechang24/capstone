@@ -4,9 +4,17 @@ import S from "./style"
 const UserList = (props) => {
     const userList = props.userList.map((user,i) => {
         return(
-            <S.Username key={i}>
-                {user.isMaster && props.waiting ? <i className="fas fa-crown"></i> : null} {user.displayName}
-            </S.Username>
+            <S.UserContainer className={props.waiting ? "big" : "small"}>
+                <S.Username key={i}>
+                    {user.isMaster && props.waiting ? <i className="fas fa-crown"></i> : null} {user.displayName}
+                </S.Username>
+                {!props.waiting 
+                    ?
+                        <S.Points>{user.points}</S.Points>
+                    :
+                        null
+                }
+            </S.UserContainer>
         )
     })
     const waitingList = props.waitingList.map((user,i) => {
@@ -24,7 +32,7 @@ const UserList = (props) => {
                 : 
                     null
             }
-            <S.UserContainer className={props.waiting ? "big" : "small"}>
+            <S.UsersContainer className={props.waiting ? "big" : "small"}>
                 <S.PlayingUsers className={props.waiting ? "big" : "small"}>
                     {userList}
                 </S.PlayingUsers>
@@ -37,7 +45,7 @@ const UserList = (props) => {
                     :
                         null
                 }
-            </S.UserContainer>
+            </S.UsersContainer>
             {props.waiting
                 ?
                     <S.StartButton onClick={() => {props.startGame()}} disabled={!props.isMaster}>Start Game</S.StartButton> 

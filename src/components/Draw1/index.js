@@ -46,7 +46,6 @@ class Draw1 extends Component {
                         }
                     })
                     if(!exists) {
-                        console.log("making new canvas...")
                         const newCanvas = {
                             clickX: [],
                             clickY: [],
@@ -56,7 +55,7 @@ class Draw1 extends Component {
                             backgroundColor: "white",
                             prompt: ""
                         }
-                        this.props.firebase.createCanvas({canvas: newCanvas, roomId: this.props.match.params.id, userId: this.props.currentUser.id})
+                        this.props.firebase.createCanvas({canvas: newCanvas, roomId: this.props.match.params.id, userId: this.props.currentUser.id, votes: []})
                             .then(doc => {
                                 this.props.firebase.findCanvas(doc.id).get()
                                     .then(snapshot => {

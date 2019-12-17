@@ -22,21 +22,23 @@ S.Container1 = styled.div`
     background-color: rgb(167, 218, 250);
 `
 
-S.UserContainer = styled.div`
+S.UsersContainer = styled.div`
+    display: flex;
     &.big {
         width: 70%;
-        display: flex;
         flex-wrap: wrap;
         justify-content: center;
         align-items: center;
     }
     &.small {
         height: 100%;
+        width: 100%;
+        flex-direction: column;
     }
 `
 S.PlayingUsers = styled.div`
+    width: 100%;
     &.big {
-        width: 100%;
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
@@ -50,13 +52,26 @@ S.WaitingUsers = styled.div`
     height: 50%;
 `
 
+S.UserContainer = styled.div`
+    display: flex;
+    justify-content: space-between;
+    &.small {
+        background-color: white;
+        border-radius: 5px;
+        margin: 0.5rem;
+    }
+`
+
 S.Username = styled.h3`
-    margin: 1rem;
+    margin: 0rem 1rem;
+`
+S.Points = styled.p`
+    vertical-align: middle;
+    margin: 0rem 1rem;
 `
 
 S.Heading = styled.h1`
     text-align: center;
-    margin: 1rem;
 `
 
 S.StartButton = styled.button`

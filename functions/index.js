@@ -120,7 +120,6 @@ exports.deleteEmptyCanvases = functions.firestore
         const batch = db.batch()
 
         if(!data.canvas.clickX[0] && !data.roomId) {
-            console.log("DEALTING CNAVAS")
             batch.delete(canvasRef)
             return batch.commit()
         } else {
