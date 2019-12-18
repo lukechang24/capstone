@@ -289,7 +289,7 @@ class Room extends Component {
                         if(newPhase.indexOf("vote") !== -1) {
                             this.setCurrentCanvas()
                         }
-                        const setTime = snapPhase.indexOf("write") !== -1 ? 5 : snapPhase ===  "selection" ? 5 : newPhase === "writeNouns" ? 20 : snapPhase === "draw" || snapPhase.indexOf("vote") !== -1 ? 10 : 0
+                        const setTime = snapPhase.indexOf("write") !== -1 ? 20 : snapPhase ===  "selection" ? 100 : newPhase === "writeNouns" ? 20 : snapPhase === "draw" || snapPhase.indexOf("vote") !== -1 ? 10 : 0
                         this.props.firebase.findRoom(this.props.match.params.id).update({phase: newPhase})
                         if(newPhase === "finished") {
                             setTimeout(() => {
