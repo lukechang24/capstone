@@ -70,7 +70,7 @@ class Draw1 extends Component {
                             })
                     }
                 })
-        document.addEventListener("keydown", (e) => this.undo(e))
+        document.addEventListener("keydown", this.undo)
         this.setState({
             ctx: document.querySelector(".canvas").getContext("2d")
         })
@@ -173,8 +173,8 @@ class Draw1 extends Component {
             curSize: curSize === 1 ? 5 : curSize === 5 ? 10 : 1
         })
     }
-    undo = e => {
-        if(e.ctrlKey && e.which === 90) {
+    undo = (e, click) => {
+        if(e.ctrlKey && e.which === 90 || click) {
             const recentStroke = this.state.strokeCount.pop()
             const { clickX, clickY, clickDrag, clickColor, clickSize } = this.state.canvas
             const canvasInfo = {
@@ -252,8 +252,8 @@ class Draw1 extends Component {
                     </S.UtilityTop>
                     <S.Canvas 
                         className="canvas"
-                        width="550" 
-                        height="550" 
+                        width="500" 
+                        height="500" 
                         onMouseDown={this.startDrawing}
                         onMouseMove={this.drawing}
                         onMouseUp={this.stopDrawing}
@@ -340,7 +340,7 @@ class Draw1 extends Component {
                             className={`${this.state.curSize === 1 ? "small" : this.state.curSize === 5 ? "medium" : "large"}`} 
                         ></S.PaintSize>
                     </S.WhiteSquare>
-                    <S.Undo className="fas fa-undo" onClick={this.undo}></S.Undo>
+                    <S.Undo className="fas fa-undo" onClick={(e) => this.undo(e, "click")}></S.Undo>
                 </S.UtilityRight>
             </S.Container1>
         )

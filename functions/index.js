@@ -111,6 +111,21 @@ exports.deleteChat = functions.firestore
         return batch.commit()
 })
 
+exports.deleteCanvases = functions.firestore
+    .document("rooms/{roomId}")
+    .onDelete((change, context) => {
+        const deletedData = change.data()
+        const canvasRef = db.collection("canvases")
+        const batch = db.batch()
+        canvasRef.where("roomId", "==", context.params.roomId).get()
+            .then(snapshot => {
+                snapshot.forEach(doc => {
+                    batch.delete(canvasRef.doc(doc.id))
+                })
+            })
+        return batch.commit()
+})
+
 exports.deleteEmptyCanvases = functions.firestore
     .document("canvases/{canvasId}")
     .onUpdate(change => {
