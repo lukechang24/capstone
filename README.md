@@ -1,6 +1,7 @@
 # Drawing Game
 
 A website where you can draw silly prompts with your friends
+https://capstone-ab1a2.firebaseapp.com/lobby
 
 ## How to Play
 
