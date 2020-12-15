@@ -60,7 +60,6 @@ class Room extends Component {
     getUsers = () => {
         this.unsubscribe1 = this.props.firebase.findUsers(this.props.match.params.id)
             .onSnapshot(snapshot => {
-                console.log("got users")
                 const userList = []
                 const waitingList = []
                 snapshot.forEach(doc => {
@@ -72,8 +71,6 @@ class Room extends Component {
                 })
                 userList.sort((a,b) => a.joinedAt - b.joinedAt)
                 waitingList.sort((a,b) => a.joinedAt - b.joinedAt)
-                console.log(userList, "userlist")
-                console.log(waitingList, "waitinglist")
                 this.setState({
                     userList,
                     waitingList
@@ -221,6 +218,7 @@ class Room extends Component {
     }
     startTimer = () => {
         this.timer = setInterval(() => {
+            console.log("timer is going on")
             this.props.firebase.findRoom(this.props.match.params.id).get()
                 .then(snapshot => {
                     const updatedTime = snapshot.data().timer - 1
@@ -246,7 +244,6 @@ class Room extends Component {
                                                     .then(user => {
                                                         let totalPoints = user.data().points
                                                         let extraPoints = ((this.state.userList.length-1) - canvas.data().votes.length) * 50
-                                                        console.log(user.data(), "this userrr")
                                                         canvas.data().votes.forEach(vote => {
                                                             if(vote === "accurate") {
                                                                 totalPoints += 100
@@ -330,7 +327,6 @@ class Room extends Component {
                             const isMaster = this.props.currentUser.id === snapshot.data().userList[0] || !snapshot.data().userList
                             this.props.firebase.findUser(this.props.currentUser.id).get()
                                 .then(user => {
-                                    console.log(isMaster, user.data().displayName)
                                     if((!user.data().isMaster && isMaster) && snapshot.data().waiting === false && snapshot.data().phase !== "finished") {
                                         this.startTimer()    
                                     }

@@ -15,7 +15,6 @@ class App extends Component {
   componentDidMount() {
     this.props.firebase.auth.onAuthStateChanged(authUser => {
       if(authUser) {
-        console.log("auth changed state")
         this.props.firebase.findUser(authUser.uid).get()
           .then(snapshot => {
             const userJson = JSON.stringify({...snapshot.data()})
@@ -107,7 +106,6 @@ class App extends Component {
           :
             null
         }
-        {console.log(this.state.currentUser, "IM USER")}
         <Switch>
           <Route exact path="/auth/signup" render={() => <SignUpForm currentUser={this.state.currentUser}/>}></Route>
           <Route exact path="/auth/signin" render={() => <SignInForm currentUser={this.state.currentUser}/>}></Route>

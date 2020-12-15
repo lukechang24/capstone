@@ -132,6 +132,7 @@ class Draw1 extends Component {
         ctx.lineJoin = "round"
         ctx.fillStyle = backgroundColor
         ctx.fillRect(0, 0, 550, 550)
+        
         for(var i = 0; i < clickX.length; i++) {		
             ctx.beginPath()
             if(clickDrag[i] && i) {
@@ -160,6 +161,12 @@ class Draw1 extends Component {
     }
     changeBackgroundColor = (e) => {
         e.persist()
+        this.setState({
+            canvas: {
+                ...this.state.canvas,
+                backgroundColor: e.target.name
+            }
+        })
         this.props.firebase.findCanvases(this.props.match.params.id).where("userId", "==", this.props.currentUser.id).get()
             .then(snapshot => {
                 snapshot.forEach(doc => {
@@ -174,7 +181,7 @@ class Draw1 extends Component {
         })
     }
     undo = (e, click) => {
-        if(e.ctrlKey && e.which === 90 || click) {
+        if(e.ctrlKey && e.which === 90 || click === "click") {
             const recentStroke = this.state.strokeCount.pop()
             const { clickX, clickY, clickDrag, clickColor, clickSize } = this.state.canvas
             const canvasInfo = {
@@ -210,7 +217,7 @@ class Draw1 extends Component {
             })
     }
     componentWillUnmount() {
-        this.unsubscribe()
+        // this.unsubscribe()
         document.removeEventListener("keydown", this.undo)
     }
     render() {

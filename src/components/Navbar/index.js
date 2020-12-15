@@ -2,7 +2,6 @@ import React from "react"
 import S from "./style"
 
 const Navbar = (props) => {
-    console.log(props.currentUser, "TJIS CURRENT")
     return(
         <S.NavContainer>
             <S.Title>

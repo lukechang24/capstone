@@ -16,6 +16,9 @@ class SignUpForm extends Component {
     }
     handleSubmit = e => {
         e.preventDefault()
+        if(this.state.password.length < 6) {
+            return
+        }
         const { email, password, displayName } = this.state
         this.props.firebase.createUser(email, password)
             .then(cred => {
@@ -44,6 +47,8 @@ class SignUpForm extends Component {
                     <input name="displayName" placeholder="display name" autocomplete="off" onChange={this.handleInput}></input>
                     <input type="submit"></input>
                 </form>
+                <h1 style={{color: "maroon"}}>Please use fake gmail/password</h1>
+                <h4 style={{color: "maroon"}}>Password must be at least 6 characters long</h4>
             </div>
         )
     }

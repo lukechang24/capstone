@@ -16,7 +16,6 @@ class Lobby extends Component {
         this.getLobbies()
     }
     getLobbies = () => {
-        console.log("got game")
         this.setState({
             loading: true
         })
