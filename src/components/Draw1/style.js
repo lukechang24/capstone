@@ -4,42 +4,56 @@ import paintBrush from "../../images/paint-brush.png"
 const S = {};
 
 S.Container1 = styled.div`
-    user-select: none;
-    -moz-user-select: none;
-    -khtml-user-select: none;
-    -webkit-user-select: none;
-    -o-user-select: none;
-    height: 45rem;
-    width: 45rem;
+    max-width: 750px;
+    max-height: 750px;
     display: flex;
     justify-content: center;
-    align-items: center;
     background-color: rgb(167, 218, 250);
+    margin: 25px 25px 0;
 `
 
 S.UtilityLeft = styled.div`
-    height: 100%;
+    /* height: 100%; */
     width: 5rem;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
+    align-items: center;
+    @media only screen and (max-width: 700px) {
+        width: 3.5rem
+    }
 `
 
 S.UtilityRight = styled.div`
-    height: 100%;
+    /* height: auto; */
     width: 5rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
+    @media only screen and (max-width: 700px) {
+        width: 3.5rem
+    }
 `
 S.Container2 = styled.div`
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
 `
 
+S.Container3 = styled.div`
+    max-width: 600px;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`
+
 S.Canvas = styled.canvas`
+    max-width: 1000px;
+    width: 100%;
+    height: auto;
     &:hover {
         cursor: url(${paintBrush}) 2 20, auto;
     }
@@ -60,12 +74,15 @@ S.UtilityBottom = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    @media only screen and (max-width: 700px) {
+        height: 3.5rem;
+    }
 `
 S.Color = styled.button`
-    width: 2.3rem;
-    height: 2.3rem;
+    width: 2.5rem;
+    height: 2.5rem;
     margin: 0.25rem;
-    border-radius: 5px;
+    border-radius: 0.5rem;
     background-color: ${props => props.color};
     border: 0.08rem solid black;
     &.selected {
@@ -73,6 +90,10 @@ S.Color = styled.button`
     }
     &:hover {
         cursor: pointer;
+    }
+    @media only screen and (max-width: 700px) {
+        width: 2rem;
+        height: 2rem;
     }
 `
 
@@ -89,10 +110,17 @@ S.BackgroundColor = styled.button`
     height: 2.5rem;
     background-color: ${props => props.color};
     border: 0;
-    border-radius: 10px 10px 0 0;
+    border-radius: 0.75rem 0.75rem 0 0;
     margin-right: 0.05rem;
     &.selected {
         height: 3rem;
+    }
+    @media only screen and (max-width: 700px) {
+        width: 2rem;
+        height: 2rem;
+        &.selected {
+            height: 2.5rem;
+        }
     }
 `
 S.WhiteSquare = styled.div`
@@ -102,12 +130,16 @@ S.WhiteSquare = styled.div`
     justify-content: center;
     align-items: center;
     background-color: white;
-    margin-top: 10rem;
+    margin-top: 5rem;
+    @media only screen and (max-width: 700px) {
+        width: 2rem;
+        height: 2rem;
+    }
 `
 
 S.PaintSize = styled.button`
     border: none;
-    border-radius: 50px;
+    border-radius: 100rem;
     background-color: black;
     &.small {
         height: 0.8rem;
@@ -124,6 +156,20 @@ S.PaintSize = styled.button`
     &:focus {
         outline: 0;
     }
+    @media only screen and (max-width: 700px) {
+        &.small {
+            height: 0.25rem;
+            width: 0.25rem;
+        }
+        &.medium {
+            height: 0.5rem;
+            width: 0.5rem;
+        }
+        &.large {
+            height: 0.75rem;
+            width: 0.75rem;
+        }
+    }
 `
 
 S.Undo = styled.i`
@@ -133,10 +179,14 @@ S.Undo = styled.i`
     justify-content: center;
     align-items: center;
     color: black;
-    margin: 1rem;
+    margin: 1rem 0;
     transition: 0.1s ease-in-out;
     &:hover {
         color: white;
+    }
+    @media only screen and (max-width: 700px) {
+        font-size: 1.5rem;
+        margin: 0.5rem;
     }
 `
 
@@ -144,7 +194,7 @@ S.ClearCanvas = styled.i`
     height: 2.8rem;
     width: 2.8rem;
     font-size: 2rem;
-    margin: 1rem;
+    margin: 1rem 0;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -152,10 +202,17 @@ S.ClearCanvas = styled.i`
     &:hover {
         color: white;
     }
+    @media only screen and (max-width: 700px) {
+        font-size: 1.5rem;
+        margin: 0.5rem 0;
+    }
 `
 
 S.PromptHeader = styled.h3`
-
+    text-align: center;
+    @media only screen and (max-width: 700px) {
+        font-size: 17.5px;
+    }
 `
 
 S.Prompt = styled.span`

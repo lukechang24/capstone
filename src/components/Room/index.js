@@ -25,8 +25,9 @@ class Room extends Component {
         waiting: true,
         phase: "",
         showMoreMessages: false,
-        timer: 20,
+        timer: 5,
         createNewCanvas: true,
+        showChat: true,
     }
     componentDidMount() {
         this.props.firebase.findRoom(this.props.match.params.id).get()
@@ -60,6 +61,7 @@ class Room extends Component {
     getUsers = () => {
         this.unsubscribe1 = this.props.firebase.findUsers(this.props.match.params.id)
             .onSnapshot(snapshot => {
+                console.log("got users")
                 const userList = []
                 const waitingList = []
                 snapshot.forEach(doc => {
@@ -71,6 +73,8 @@ class Room extends Component {
                 })
                 userList.sort((a,b) => a.joinedAt - b.joinedAt)
                 waitingList.sort((a,b) => a.joinedAt - b.joinedAt)
+                console.log(userList, "userlist")
+                console.log(waitingList, "waitinglist")
                 this.setState({
                     userList,
                     waitingList
@@ -218,7 +222,6 @@ class Room extends Component {
     }
     startTimer = () => {
         this.timer = setInterval(() => {
-            console.log("timer is going on")
             this.props.firebase.findRoom(this.props.match.params.id).get()
                 .then(snapshot => {
                     const updatedTime = snapshot.data().timer - 1
@@ -244,6 +247,7 @@ class Room extends Component {
                                                     .then(user => {
                                                         let totalPoints = user.data().points
                                                         let extraPoints = ((this.state.userList.length-1) - canvas.data().votes.length) * 50
+                                                        console.log(user.data(), "this userrr")
                                                         canvas.data().votes.forEach(vote => {
                                                             if(vote === "accurate") {
                                                                 totalPoints += 100
@@ -286,14 +290,14 @@ class Room extends Component {
                         if(newPhase.indexOf("vote") !== -1) {
                             this.setCurrentCanvas()
                         }
-                        const setTime = snapPhase.indexOf("write") !== -1 ? 20 : snapPhase ===  "selection" ? 100 : newPhase === "writeNouns" ? 20 : snapPhase === "draw" || snapPhase.indexOf("vote") !== -1 ? 10 : 0
+                        const setTime = snapPhase.indexOf("write") !== -1 ? 5 : snapPhase ===  "selection" ? 100 : newPhase === "writeNouns" ? 5 : snapPhase === "draw" || snapPhase.indexOf("vote") !== -1 ? 10 : 0
                         this.props.firebase.findRoom(this.props.match.params.id).update({phase: newPhase})
                         if(newPhase === "finished") {
                             setTimeout(() => {
                                 this.props.firebase.findRoom(this.props.match.params.id).update({
                                     phase: "", 
                                     waiting: true, 
-                                    timer: 20, 
+                                    timer: 5, 
                                     currentRound: 1, 
                                     currentCanvas: null, 
                                     prompts: {
@@ -327,6 +331,7 @@ class Room extends Component {
                             const isMaster = this.props.currentUser.id === snapshot.data().userList[0] || !snapshot.data().userList
                             this.props.firebase.findUser(this.props.currentUser.id).get()
                                 .then(user => {
+                                    console.log(isMaster, user.data().displayName)
                                     if((!user.data().isMaster && isMaster) && snapshot.data().waiting === false && snapshot.data().phase !== "finished") {
                                         this.startTimer()    
                                     }
@@ -393,6 +398,12 @@ class Room extends Component {
             showMoreMessages: false
         })
     }
+    toggleChat = () => {
+        // let chat = document.querySelector(".chat")
+        this.setState({
+            showChat: !this.state.showChat
+        })
+    }
     componentWillUnmount() {
         this.removeUserFromRoom()
         clearInterval(this.timer)
@@ -402,7 +413,7 @@ class Room extends Component {
     }
     render() {
         return(
-            <S.Container1>
+            <S.Container1 phase={this.state.phase}>
                 {this.props.currentUser.waiting 
                     ?
                         <S.WaitingContainer>
@@ -449,18 +460,24 @@ class Room extends Component {
                     :
                         null
                 }
-                <S.ChatContainer>
-                    <ChatLog currentUser={this.props.currentUser} chatLog={this.state.chatLog} showMoreMessages={this.state.showMoreMessages}/>
-                    <S.MessageForm onSubmit={this.handleSubmit}>
-                        {this.state.showMoreMessages 
-                            ?
-                                <S.MoreMessages onClick={this.scrollToBottomOfChat}>Show recent messages</S.MoreMessages> 
-                            :
-                                null
-                        }
-                        <S.MessageInput type="text" onChange={this.handleInput} value={this.state.message} placeholder="Type your message here..."></S.MessageInput>
-                    </S.MessageForm>
-                </S.ChatContainer>
+                <S.Container2 className={!this.state.showChat ? "hide" : ""}>
+                    <S.ToggleChat onClick={() => this.toggleChat()}>
+                        <S.Arrow className={this.state.showChat ? "fas fa-caret-left hide" : "fas fa-caret-left"}></S.Arrow>
+                        {/* <S.Arrow className={this.state.showChat ? "fas fa-caret-right" : ""}></S.Arrow> */}
+                    </S.ToggleChat>
+                    <S.ChatContainer>
+                        <ChatLog currentUser={this.props.currentUser} chatLog={this.state.chatLog} showMoreMessages={this.state.showMoreMessages}/>
+                        <S.MessageForm onSubmit={this.handleSubmit}>
+                            {this.state.showMoreMessages 
+                                ?
+                                    <S.MoreMessages onClick={this.scrollToBottomOfChat}>Show recent messages</S.MoreMessages> 
+                                :
+                                    null
+                            }
+                            <S.MessageInput type="text" onChange={this.handleInput} value={this.state.message} placeholder="Type your message here..."></S.MessageInput>
+                        </S.MessageForm>
+                    </S.ChatContainer>
+                </S.Container2>
             </S.Container1>
         )
     }

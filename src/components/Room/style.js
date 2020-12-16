@@ -6,25 +6,66 @@ S.Container1 = styled.div`
     height: 100vh;
     width: 100vw;
     display: flex;
-    justify-content: space-around;
-    align-items: center;
+    justify-content: center;
+    align-items: flex-start;
 `
 
+// S.Container2 = styled.div`
+//     height: 100%;
+//     width: 65rem;
+//     display: flex;
+//     justify-content: space-between;
+// `
+
 S.Container2 = styled.div`
-    height: 45rem;
-    width: 65rem;
+    height: calc(100% - 50px);
+    min-height: 500px;
+    position: absolute;
+    right: 0;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 25px;
+    transition: 0.5s;
+    z-index: 15;
+    &.hide {
+        transform: translateX(20rem);
+    }
+`
+
+S.ToggleChat = styled.div`
+    width: 25px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: grey;
+    border: 2px solid black;
+    border-right: 0;
+    border-radius: 10px 0 0 10px;
+    z-index: 15;
+    :hover {
+        background-color: slategrey;
+    }
+`
+
+S.Arrow = styled.i`
+    font-size: 20px;
+    transition: 1s;
+    &.hide {
+        transform: rotateY(180deg);
+    }
 `
 
 S.ChatContainer = styled.div`
-    height: 45rem;
-    width: 23rem;
+    height: 100%;
+    width: 20rem;
     background-color: rgb(235, 235, 235);
     display: flex;
     flex-direction: column;
     overflow-y: auto;
     z-index: 4;
+        /* margin-top: 15px; */
 `
 
 S.MessageForm = styled.form`
@@ -46,10 +87,10 @@ S.MoreMessages = styled.span`
 S.MessageInput = styled.input`
     position: absolute;
     bottom: 0;
-    width: 90%;
+    width: 85%;
     font-size: 1rem;
     margin: 0 auto 0.5rem;
-    padding: 0.25rem;
+    padding: 0.5rem 0.75rem;
     border: none;
     border-radius: 10px;
 `
@@ -70,7 +111,7 @@ S.TimerContainer = styled.div`
     border: 1rem solid black;
     border-radius: 25px;
     background-color: white;
-    z-index: 5;
+    z-index: 20;
 `
 
 S.Timer = styled.h1`

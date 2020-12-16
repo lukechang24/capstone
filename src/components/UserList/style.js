@@ -3,7 +3,7 @@ import styled from "styled-components"
 const S = {}
 
 S.Container1 = styled.div`
-    height: 45rem;
+    height: calc(100% - 50px);
     &.big {
         width: 65rem;
         display: flex;
@@ -17,8 +17,9 @@ S.Container1 = styled.div`
         -khtml-user-select: none;
         -webkit-user-select: none;
         -o-user-select: none;
-        width: 23rem;
+        width: 15rem;
     }
+    margin-top: 25px;
     background-color: rgb(167, 218, 250);
 `
 
