@@ -3,7 +3,9 @@ import styled from "styled-components"
 const S = {}
 
 S.Container1 = styled.div`
-    height: calc(100% - 50px);
+    height: 100%;
+    min-height: 500px;
+    max-height: 700px;
     &.big {
         width: 65rem;
         display: flex;

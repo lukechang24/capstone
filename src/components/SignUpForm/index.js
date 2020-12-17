@@ -2,12 +2,19 @@ import React, { Component } from "react"
 import Navbar from "../Navbar"
 import { withFirebase } from "../Firebase"
 import { withRouter } from "react-router-dom"
+import S from "./style"
 
 class SignUpForm extends Component {
     state = {
         email: "",
         password: "",
         displayName: "",
+        errors: []
+    }
+    componentDidMount() {
+        if(window.location.href.indexOf("signup") !== -1 && this.props.currentUser.id) {
+            this.props.history.push("/lobby")
+        }
     }
     handleInput = e => {
         this.setState({
@@ -16,40 +23,67 @@ class SignUpForm extends Component {
     }
     handleSubmit = e => {
         e.preventDefault()
-        if(this.state.password.length < 6) {
-            return
-        }
         const { email, password, displayName } = this.state
         this.props.firebase.createUser(email, password)
             .then(cred => {
-                this.props.firebase.findUser(cred.user.uid).set({
-                    email,
-                    displayName,
-                    currentRoomId: null,
-                    id: cred.user.uid,
-                    joinedAt: null,
-                    isMaster: null,
-                    chosenPrompt: null,
-                    points: null,
-                    waiting: null
-                })
-                this.props.history.push("/lobby")
+                if(!this.state.displayName) {
+                    this.setState({
+                        errors: [...this.state.errors, "displayName"]
+                    })
+                } else {
+                    this.props.firebase.findUser(cred.user.uid).set({
+                        email,
+                        displayName,
+                        currentRoomId: null,
+                        id: cred.user.uid,
+                        joinedAt: null,
+                        isMaster: null,
+                        chosenPrompt: null,
+                        points: null,
+                        waiting: null
+                    })
+                    this.props.history.push("/lobby")
+                }
             })
-            .catch(err => console.log(err))
+            .catch(err => {
+                const errors = []
+                console.log(err)
+                if(err.code.indexOf("weak-password") !== -1) {
+                    errors.push("weak-password")
+                }
+                if(err.code.indexOf("invalid-email") !== -1) {
+                    errors.push("invalid-email")
+                }
+                if(err.code.indexOf("in-use") !== -1) {
+                    errors.push("in-use")
+                }
+                this.setState({
+                    errors
+                }, () => {
+                    console.log(this.state.errors)
+                })
+            })
     }
     render() {
         return(
-            <div>
-                <Navbar currentUser={this.props.currentUser}/>
-                <form onSubmit={this.handleSubmit}>
-                    <input name="email" placeholder="email" autocomplete="off" onChange={this.handleInput}></input>
-                    <input type="password" name="password" placeholder="password" autocomplete="off" onChange={this.handleInput}></input>
-                    <input name="displayName" placeholder="display name" autocomplete="off" onChange={this.handleInput}></input>
-                    <input type="submit"></input>
-                </form>
-                <h1 style={{color: "maroon"}}>Please use fake gmail/password</h1>
-                <h4 style={{color: "maroon"}}>Password must be at least 6 characters long</h4>
-            </div>
+            <S.Container1>
+                <Navbar currentUser={this.props.currentUser} hideSignOut/>
+                <S.SignUpForm onSubmit={this.handleSubmit}>
+                    <S.Heading>Create an Account</S.Heading>
+                    <S.Warning>*Please use a fake Gmail/password</S.Warning>
+                    {/* <S.Warning>Fake password must be at least 6 characters long</S.Warning> */}
+                    <S.InputTitle>Email</S.InputTitle>
+                    <S.Input name="email" autocomplete="off" onChange={this.handleInput}></S.Input>
+                    <S.Error className={this.state.errors.indexOf("in-use") === -1 ? "hide" : ""}>This email is already registered with an account</S.Error>
+                    <S.InputTitle>Password</S.InputTitle>
+                    <S.Input type="password" name="password" autocomplete="off" onChange={this.handleInput}></S.Input>
+                    <S.Error className={this.state.errors.indexOf("weak-password") === -1 ? "hide" : ""}>Password must be 6 characters or more</S.Error>
+                    <S.InputTitle>Display Name</S.InputTitle>
+                    <S.Input name="displayName" autocomplete="off" onChange={this.handleInput}></S.Input>
+                    <S.Error className={this.state.errors.indexOf("displayName") === -1 ? "hide" : ""}>Please enter a display name</S.Error>
+                    <S.Submit type="submit">Submit</S.Submit>
+                </S.SignUpForm>
+            </S.Container1>
         )
     }
 }

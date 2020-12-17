@@ -250,6 +250,7 @@ class Draw1 extends Component {
     }
     componentWillUnmount() {
         window.removeEventListener("resize", this.throttle)
+        this.unsubscribe()
     }
     render() {  
         return(

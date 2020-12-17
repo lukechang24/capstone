@@ -1,6 +1,6 @@
-const admin = require("firebase-admin")
 const functions = require("firebase-functions")
-admin.initializeApp()
+const admin = require("firebase-admin")
+admin.initializeApp(functions.config().firebase)
 
 const db = admin.firestore()
 
@@ -117,13 +117,16 @@ exports.deleteCanvases = functions.firestore
         const deletedData = change.data()
         const canvasRef = db.collection("canvases")
         const batch = db.batch()
-        canvasRef.where("roomId", "==", context.params.roomId).get()
+
+        canvasRef.where("roomId", "==", null).get()
             .then(snapshot => {
                 snapshot.forEach(doc => {
+                    console.log(doc.id)
                     batch.delete(canvasRef.doc(doc.id))
                 })
+            }).then(() => {
+                return batch.commit()
             })
-        return batch.commit()
 })
 
 exports.deleteEmptyCanvases = functions.firestore

@@ -18,8 +18,9 @@ S.Container1 = styled.div`
 // `
 
 S.Container2 = styled.div`
-    height: calc(100% - 50px);
+    height: 100%;
     min-height: 500px;
+    max-height: 700px;
     position: absolute;
     right: 0;
     display: flex;

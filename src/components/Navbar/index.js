@@ -4,14 +4,18 @@ import S from "./style"
 const Navbar = (props) => {
     return(
         <S.NavContainer>
-            <S.Title>
-
-            </S.Title>
+            <S.Title>Accurate or Naw</S.Title>
                 {props.currentUser.id
                     ?
                         <S.AuthContainer>
                             <S.AuthLink to={`/user/${props.currentUser.id}`}>{props.currentUser.displayName}</S.AuthLink>
-                            <S.SignOut onClick={() => {props.signOut()}}>Sign Out</S.SignOut>
+                            {
+                                props.hideSignOut
+                                    ?
+                                    null
+                                    :
+                                    <S.SignOut onClick={() => {props.signOut()}}>Sign Out</S.SignOut>
+                            }
                         </S.AuthContainer>
                     :
                         <S.AuthContainer>

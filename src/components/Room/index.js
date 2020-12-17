@@ -25,7 +25,7 @@ class Room extends Component {
         waiting: true,
         phase: "",
         showMoreMessages: false,
-        timer: 5,
+        timer: 20,
         createNewCanvas: true,
         showChat: true,
     }
@@ -290,14 +290,14 @@ class Room extends Component {
                         if(newPhase.indexOf("vote") !== -1) {
                             this.setCurrentCanvas()
                         }
-                        const setTime = snapPhase.indexOf("write") !== -1 ? 5 : snapPhase ===  "selection" ? 100 : newPhase === "writeNouns" ? 5 : snapPhase === "draw" || snapPhase.indexOf("vote") !== -1 ? 10 : 0
+                        const setTime = snapPhase.indexOf("write") !== -1 ? 20 : snapPhase ===  "selection" ? 100 : newPhase === "writeNouns" ? 20 : snapPhase === "draw" || snapPhase.indexOf("vote") !== -1 ? 10 : 0
                         this.props.firebase.findRoom(this.props.match.params.id).update({phase: newPhase})
                         if(newPhase === "finished") {
                             setTimeout(() => {
                                 this.props.firebase.findRoom(this.props.match.params.id).update({
                                     phase: "", 
                                     waiting: true, 
-                                    timer: 5, 
+                                    timer: 20, 
                                     currentRound: 1, 
                                     currentCanvas: null, 
                                     prompts: {
@@ -449,7 +449,7 @@ class Room extends Component {
                         null
                 }
                 <UserList userList={this.state.userList} waitingList={this.state.waitingList} waiting={this.state.waiting} startGame={this.startGame} isMaster={this.props.currentUser.isMaster}/>
-                {this.state.phase === "draw"
+                {!this.state.waiting
                     ? 
                         <Draw1 currentUser={this.props.currentUser} phase={this.state.phase}/>
                     : 

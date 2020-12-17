@@ -12,9 +12,12 @@ S.NavContainer = styled.div`
     background-color: lightsteelblue;
     display: flex;
     justify-content: space-between;
+    align-items: center;
 `
-S.Title = styled.div`
-    width: 50%;
+
+S.Title = styled.h1`
+    margin-left: 15px;
+    font-weight: bold;
 `
 
 S.AuthContainer = styled.div`

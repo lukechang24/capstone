@@ -22,6 +22,9 @@ class RoomForm extends Component {
         if(!this.state.roomName || !this.state.rounds) {
             return
         }
+        let button = document.querySelector(".submit")
+        console.log(button)
+        button.disabled = true
         const roomInfo = {
             roomName: this.state.roomName.trim(),
             password: this.state.password.trim(),
@@ -37,7 +40,7 @@ class RoomForm extends Component {
                 verbs: [],
                 adjectives: []
             },
-            timer: 5
+            timer: 20,
         }
         this.props.firebase.createRoom(roomInfo)
             .then(room => {
@@ -82,7 +85,7 @@ class RoomForm extends Component {
                             </select>
                         </S.Container2>
                     </S.InputContainer>
-                    <S.RoomSubmit type="submit"></S.RoomSubmit>
+                    <S.RoomSubmit className="submit" type="submit"></S.RoomSubmit>
                 </S.RoomForm>
             </S.Container1>
         )
