@@ -13,7 +13,7 @@ S.Container1 = styled.div`
     align-items: center;
 `
 
-S.CanvasContainer = styled.div`
+S.Container2 = styled.div`
     position: relative;
     height: 45rem;
     width: 45rem;
@@ -45,7 +45,18 @@ S.Container2 = styled.div`
     justify-content: center;
 `
 
+S.CanvasContainer = styled.div`
+    max-width: 600px;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`
+
 S.Canvas = styled.canvas`
+    max-width: 1000px;
+    width: 100%;
+    height: auto;
 `
 
 S.UtilityTop = styled.div`

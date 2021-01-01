@@ -6,8 +6,11 @@ S.Container1 = styled.div`
     height: 100vh;
     width: 100vw;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: flex-start;
+    &.hide {
+        justify-content: center;
+    }
 `
 
 // S.Container2 = styled.div`
@@ -21,15 +24,15 @@ S.Container2 = styled.div`
     height: 100%;
     min-height: 500px;
     max-height: 700px;
-    position: absolute;
-    right: 0;
     display: flex;
     justify-content: flex-end;
     align-items: center;
     margin-top: 25px;
-    transition: 0.5s;
+    transition: 0.25s;
     z-index: 15;
     &.hide {
+        position: absolute;
+        right: 0;
         transform: translateX(20rem);
     }
 `

@@ -7,11 +7,13 @@ S.Container1 = styled.div`
     min-height: 500px;
     max-height: 700px;
     &.big {
-        width: 65rem;
+        width: 1000px;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: space-between;
+        margin-left: 5%;
+        margin-right: 5%;
     }
     &.small {
         user-select: none;

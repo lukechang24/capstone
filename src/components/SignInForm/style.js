@@ -49,6 +49,14 @@ S.Submit = styled.button`
     margin: 25px 25px 50px;
 `
 
+S.Link = styled.a`
+    width: 90%;
+    font-size: 12.5px;
+    text-align: center;
+    color: red;
+    margin-bottom: 15px;
+`
+
 S.Error = styled.span`
     width: 256px;
     font-size: 10px;

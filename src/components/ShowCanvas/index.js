@@ -19,7 +19,7 @@ class ShowCanvas extends Component {
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
         ctx.lineJoin = "round"
         ctx.fillStyle = backgroundColor
-        ctx.fillRect(0, 0, 550, 550)
+        ctx.fillRect(0, 0, 1000, 1000)
         for(var i = 0; i < clickX.length; i++) {		
             ctx.beginPath()
             if(clickDrag[i] && i) {
@@ -40,31 +40,34 @@ class ShowCanvas extends Component {
         }, 1000)
         return(
             <S.Container1>
-                {this.props.currentUser.id !== this.props.currentCanvas.userId && !this.props.currentUser.waiting
-                    ?
-                        <VoteForm currentUser={this.props.currentUser} currentCanvas={this.props.currentCanvas}/>
-                    :
-                        null
-                }
-                <S.CanvasContainer>
-                    <S.UtilityLeft></S.UtilityLeft>
-                    <S.Container2>
-                        <S.UtilityTop>
-                        </S.UtilityTop>
+                <S.UtilityLeft></S.UtilityLeft>
+                <S.Container2>
+                    <S.UtilityTop>
+                        {/* {this.props.phase === "draw"
+                            ?
+                                <S.PromptHeader>
+                                    Draw: <br/><S.Prompt>{this.state.canvas.prompt}</S.Prompt>
+                                </S.PromptHeader>
+                            :
+                                null
+                        } */}
+                    </S.UtilityTop>
+                    <S.CanvasContainer className="container">
                         <S.Canvas 
                             className="canvas2"
-                            height="550"
-                            width="550"
-                        >
-                        </S.Canvas>
-                        <S.UtilityBottom>
-                            <S.Prompt>{this.props.currentCanvas.canvas.prompt}</S.Prompt>
-                        </S.UtilityBottom>
-                    </S.Container2>
-                    <S.UtilityRight>
-
-                    </S.UtilityRight>
-                </S.CanvasContainer>
+                            width="1000" 
+                            height="1000" 
+                            onMouseDown={this.startDrawing}
+                            onMouseMove={this.drawing}
+                            onMouseUp={this.stopDrawing}
+                            onMouseLeave={this.stopDrawing}
+                        ></S.Canvas>
+                    </S.CanvasContainer>
+                    <S.UtilityBottom>
+                        <S.Prompt>Playing league of legends</S.Prompt>
+                    </S.UtilityBottom>
+                </S.Container2>
+                <S.UtilityRight></S.UtilityRight>
             </S.Container1>
         )
     }

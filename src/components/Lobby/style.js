@@ -30,6 +30,15 @@ S.CreateRoomButton = styled.button`
     }
 `
 
+S.RefreshButton = styled.button`
+    padding: 3px 6px;
+    border: none;
+    border-radius: 5px;
+    :hover {
+        background-color: lightgrey;
+    }
+`
+
 S.LoadingContainer = styled.div`
     
 `
@@ -40,6 +49,7 @@ S.Loading = styled.i`
     font-size: 3rem;
     z-index: 1;
 `
+
 S.NoRoom = styled.h1`
     position: fixed;
     top: calc(100vh / 2);

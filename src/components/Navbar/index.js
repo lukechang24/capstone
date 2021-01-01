@@ -5,17 +5,11 @@ const Navbar = (props) => {
     return(
         <S.NavContainer>
             <S.Title>Accurate or Naw</S.Title>
-                {props.currentUser.id
+                {!props.hideSignOut
                     ?
                         <S.AuthContainer>
                             <S.AuthLink to={`/user/${props.currentUser.id}`}>{props.currentUser.displayName}</S.AuthLink>
-                            {
-                                props.hideSignOut
-                                    ?
-                                    null
-                                    :
-                                    <S.SignOut onClick={() => {props.signOut()}}>Sign Out</S.SignOut>
-                            }
+                            <S.SignOut onClick={() => {props.signOut()}}>Sign Out</S.SignOut>
                         </S.AuthContainer>
                     :
                         <S.AuthContainer>

@@ -121,7 +121,6 @@ exports.deleteCanvases = functions.firestore
         canvasRef.where("roomId", "==", null).get()
             .then(snapshot => {
                 snapshot.forEach(doc => {
-                    console.log(doc.id)
                     batch.delete(canvasRef.doc(doc.id))
                 })
             }).then(() => {

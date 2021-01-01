@@ -42,8 +42,8 @@ S.Container2 = styled.div`
     justify-content: center;
 `
 
-S.Container3 = styled.div`
-    max-width: 600px;
+S.CanvasContainer = styled.div`
+    max-width: 650px;
     height: auto;
     display: flex;
     justify-content: center;

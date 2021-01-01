@@ -89,6 +89,9 @@ class App extends Component {
       localStorage.removeItem("savedUser")
       this.props.firebase.userStatusDatabaseRef().set({isOnline: false})
       this.props.firebase.signOut()
+      this.setState({
+        currentUser: {}
+      })
       this.props.history.push("/auth/signin")
     }
   }

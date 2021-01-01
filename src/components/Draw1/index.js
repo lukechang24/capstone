@@ -289,7 +289,7 @@ class Draw1 extends Component {
                             ></S.BackgroundColor>
                         </S.BackgroundColorDiv>
                     </S.UtilityTop>
-                    <S.Container3 className="container">
+                    <S.CanvasContainer className="container">
                         <S.Canvas 
                             className="canvas"
                             width="1000" 
@@ -299,7 +299,7 @@ class Draw1 extends Component {
                             onMouseUp={this.stopDrawing}
                             onMouseLeave={this.stopDrawing}
                         ></S.Canvas>
-                    </S.Container3>
+                    </S.CanvasContainer>
                     <S.UtilityBottom>
                         <S.Color 
                             className={`${this.state.curColor === "red" ? "selected" : ""}`} 

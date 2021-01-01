@@ -42,7 +42,7 @@ class SignUpForm extends Component {
     render() {
         return(
             <S.Container1>
-                <Navbar currentUser={this.props.currentUser}/>
+                <Navbar currentUser={this.props.currentUser} hideSignOut/>
                 <S.SignInForm autocomplete="off" onSubmit={this.handleSubmit}>
                     <S.Heading>Sign In</S.Heading>
                     <S.InputTitle>Email</S.InputTitle>
@@ -53,6 +53,7 @@ class SignUpForm extends Component {
                     <S.Error className={this.state.errors.indexOf("wrong-password") === -1 ? "hide" : ""}>Incorrect password</S.Error>
                     <S.Error className={this.state.errors.indexOf("invalid") === -1 ? "hide" : ""}>Invalid email or password</S.Error>
                     <S.Submit type="submit">Submit</S.Submit>
+                    <S.Link href="/auth/signup">Don't have an account? Click here to register</S.Link>
                 </S.SignInForm>
             </S.Container1>
         )
