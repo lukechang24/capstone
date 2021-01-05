@@ -5,14 +5,13 @@ const S = {}
 S.ChatBox = styled.div`
     height: 100%;
     background-color: rgb(235, 235, 235);
-    border-top: 1rem solid black;
+    border-top: 15px solid black;
     border-color: black;
-    padding: 0.5rem;
+    padding: 5px 2.5px 0;
     overflow-y: auto;
 `
 S.MessageContainer = styled.p`
-    padding: 0.15rem;
-    padding-left: 0.5rem;
+    padding-left: 5px;
     &.bold {
         font-weight: bold;
         color: orange;

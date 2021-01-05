@@ -87,10 +87,12 @@ class Draw1 extends Component {
     }
     resize = () => {
         let container1 = document.querySelector(".container")
-        let newRatio = container1.getBoundingClientRect().width/1000
-        this.setState({
-            ratio: newRatio
-        })
+        setTimeout(() => {
+            let newRatio = container1.getBoundingClientRect().width/700
+            this.setState({
+                ratio: newRatio
+            })
+        }, 500)
     }
     throttle = (callback, limit) => {
         var waiting = false
@@ -105,16 +107,18 @@ class Draw1 extends Component {
         }
     }
     startDrawing = (e) => {
-        const mouseX = (e.pageX - e.currentTarget.offsetLeft)/this.state.ratio
-        const mouseY = (e.pageY - e.currentTarget.offsetTop)/this.state.ratio
+        const gameContainer = document.querySelector(".gameContainer")
+        const mouseX = (e.pageX - e.currentTarget.offsetLeft - gameContainer.offsetLeft)/this.state.ratio
+        const mouseY = (e.pageY - e.currentTarget.offsetTop - gameContainer.offsetTop)/this.state.ratio
         this.setState({
             paint: true
         })
         this.addClick(mouseX, mouseY, false)
     }
     drawing = (e) => {
+        const gameContainer = document.querySelector(".gameContainer")
         if(this.state.paint) {
-            this.addClick((e.pageX - e.currentTarget.offsetLeft)/this.state.ratio, (e.pageY - e.currentTarget.offsetTop)/this.state.ratio, true)
+            this.addClick((e.pageX - e.currentTarget.offsetLeft - gameContainer.offsetLeft)/this.state.ratio, (e.pageY - e.currentTarget.offsetTop - gameContainer.offsetTop)/this.state.ratio, true)
         }
     }
     stopDrawing = () => {
@@ -157,7 +161,7 @@ class Draw1 extends Component {
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
         ctx.lineJoin = "round"
         ctx.fillStyle = backgroundColor
-        ctx.fillRect(0, 0, 1000, 1000);
+        ctx.fillRect(0, 0, 700, 700);
                     
         for(var i = 0; i < clickX.length; i++) {		
             ctx.beginPath()
@@ -255,10 +259,10 @@ class Draw1 extends Component {
     render() {  
         return(
             <S.Container1>
-                <S.UtilityLeft>
+                {/* <S.UtilityLeft>
                     <S.ClearCanvas className="fas fa-trash-alt clear" onClick={this.clearCanvas}></S.ClearCanvas>
-                </S.UtilityLeft>
-                <S.Container2>
+                </S.UtilityLeft> */}
+                {/* <S.Container2>
                     <S.UtilityTop>
                         {this.props.phase === "draw"
                             ?
@@ -288,19 +292,19 @@ class Draw1 extends Component {
                                 onClick={this.changeBackgroundColor}
                             ></S.BackgroundColor>
                         </S.BackgroundColorDiv>
-                    </S.UtilityTop>
+                    </S.UtilityTop> */}
                     <S.CanvasContainer className="container">
                         <S.Canvas 
                             className="canvas"
-                            width="1000" 
-                            height="1000" 
+                            width="700" 
+                            height="700" 
                             onMouseDown={this.startDrawing}
                             onMouseMove={this.drawing}
                             onMouseUp={this.stopDrawing}
                             onMouseLeave={this.stopDrawing}
                         ></S.Canvas>
                     </S.CanvasContainer>
-                    <S.UtilityBottom>
+                    {/* <S.UtilityBottom>
                         <S.Color 
                             className={`${this.state.curColor === "red" ? "selected" : ""}`} 
                             name="red" 
@@ -358,7 +362,7 @@ class Draw1 extends Component {
                         ></S.PaintSize>
                     </S.WhiteSquare>
                     <S.Undo className="fas fa-undo" onClick={this.undo}></S.Undo>
-                </S.UtilityRight>
+                </S.UtilityRight> */}
             </S.Container1>
         )
     }

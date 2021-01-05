@@ -3,25 +3,24 @@ import styled from "styled-components"
 const S = {}
 
 S.Container1 = styled.div`
-    height: 30rem;
-    width: 75rem;
+    width: 80%;
     display: flex;
     flex-wrap: wrap;
 `
 S.RoomContainer = styled.div`
-    height: 8rem;
-    width: 17rem;
+    width: 250px;
     display: flex;
     flex-direction: column;
     background-color: lightskyblue;
     border-radius: 20px;
-    margin: 1rem 0.35rem;
-    padding: 0.5rem 1rem;
+    margin: 5px 15px;
+    padding: 15px;
 `
 
-S.RoomName = styled.h1`
-    border-bottom: 0.1rem solid white;
+S.RoomName = styled.h2`
     color: white;
+    border-bottom: 2.5px solid white;
+    margin: 0 0 25px;
     &:hover {
         cursor: pointer;
     }

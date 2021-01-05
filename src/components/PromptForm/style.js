@@ -14,8 +14,7 @@ S.Container1 = styled.div`
 `
 
 S.PromptForm = styled.form`
-    height: 20rem;
-    width: 30rem;
+    width: 400px;
     background-color: white;
     display: flex;
     flex-direction: column;
@@ -24,6 +23,7 @@ S.PromptForm = styled.form`
 `
 S.PromptHeading = styled.h3`
     font-weight: bold;
+    margin: 15px 0;
 `
 
 S.GrammerContainer = styled.div`
@@ -31,23 +31,19 @@ S.GrammerContainer = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin: 0 0 25px;
 `
-// S.GrammarContainer = styled.div`
-//     display: flex;
-//     justify-content: center;
-
-// `
 
 S.Grammer = styled.h3`
     font-weight: 500;
+    margin: 0 0 5px;
 `
 
 S.PromptInput = styled.input`
     width: 60%;
     text-align: center;
-    font-size: 1rem;
-    margin: 0.3rem 0rem 0.75rem;
-    padding: 0.25rem;
+    font-size: 15px;
+    padding: 5px;
 `
 
 S.SubmitPrompt = styled.input`
@@ -55,8 +51,8 @@ S.SubmitPrompt = styled.input`
     background-color: lightskyblue;
     border: none;
     border-radius: 5px;
-    padding: 0.25rem;
-    margin: 0.2rem;
+    padding: 5px;
+    margin: 0 0 15px;
     &:hover {
         color: white;
         background-color: lightsteelblue;

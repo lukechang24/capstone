@@ -3,79 +3,70 @@ import styled from "styled-components"
 const S = {}
 
 S.Container1 = styled.div`
-    height: 100vh;
-    width: 100vw;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    &.hide {
-        justify-content: center;
-    }
-`
-
-// S.Container2 = styled.div`
-//     height: 100%;
-//     width: 65rem;
-//     display: flex;
-//     justify-content: space-between;
-// `
-
-S.Container2 = styled.div`
+    width: 100%;
     height: 100%;
-    min-height: 500px;
-    max-height: 700px;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    margin-top: 25px;
-    transition: 0.25s;
-    z-index: 15;
-    &.hide {
-        position: absolute;
-        right: 0;
-        transform: translateX(20rem);
-    }
-`
-
-S.ToggleChat = styled.div`
-    width: 25px;
-    height: 50px;
     display: flex;
     justify-content: center;
-    align-items: center;
-    background-color: grey;
-    border: 2px solid black;
-    border-right: 0;
-    border-radius: 10px 0 0 10px;
-    z-index: 15;
-    :hover {
-        background-color: slategrey;
-    }
+    align-items: flex-start;
 `
 
-S.Arrow = styled.i`
-    font-size: 20px;
-    transition: 1s;
-    &.hide {
-        transform: rotateY(180deg);
-    }
+S.Container2 = styled.div`
+    margin: 0 50px;
+`
+
+S.TitleDiv = styled.div`
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+`
+
+S.Title = styled.h1`
+    font-size: 25px;
+`
+
+S.Container3 = styled.div`
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
 `
 
 S.ChatContainer = styled.div`
+    position: absolute;
+    right: 0;
+    width: 300px;
     height: 100%;
-    width: 20rem;
     background-color: rgb(235, 235, 235);
     display: flex;
     flex-direction: column;
     overflow-y: auto;
+    overflow-x: hidden;
     z-index: 4;
-        /* margin-top: 15px; */
+    @media only screen and (max-width: 1350px) {
+        width: 300px;
+    }
+    @media only screen and (max-width: 1000px) {
+        width: 250px;
+    }
+`
+
+S.ChatSpace = styled.div`
+    min-width: 300px;
+    height: 100px;
+    background-color: white;
+    display: block;
+    @media only screen and (max-width: 1350px) {
+        min-width: 300px;
+    }
+    @media only screen and (max-width: 1000px) {
+        min-width: 250px;
+    }
 `
 
 S.MessageForm = styled.form`
     position: relative;
     width: 100%;
-    height: 6rem;
+    height: 100px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -92,27 +83,23 @@ S.MessageInput = styled.input`
     position: absolute;
     bottom: 0;
     width: 85%;
-    font-size: 1rem;
-    margin: 0 auto 0.5rem;
-    padding: 0.5rem 0.75rem;
+    font-size: 15px;
+    margin: 0 0 10px;
+    padding: 10px 15px;
     border: none;
     border-radius: 10px;
 `
 
-S.Spinner = styled.i`
-    font-size: 3rem;
-`
-
 S.TimerContainer = styled.div`
     position: absolute;
-    top: 0.25rem;
-    right: 0.25rem;
-    height: 3rem;
-    width: 3rem;
+    top: 5px;
+    right: 5px;
+    height: 50px;
+    width: 50px;
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 1rem solid black;
+    border: 15px solid black;
     border-radius: 25px;
     background-color: white;
     z-index: 20;
@@ -135,11 +122,6 @@ S.WaitingContainer = styled.div`
 S.Waiting = styled.h1`
     text-align: center;
     color: white;
-`
-
-S.DudDiv = styled.div`
-    height: 100%;
-    width: 45rem;
 `
 
 export default S

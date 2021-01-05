@@ -16,14 +16,12 @@ S.Container1 = styled.div`
 `
 S.RoomForm = styled.form`
     position: relative;
-    height: 10rem;
-    width: 20rem;
+    width: 350px;
     background-color: white;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     align-items: center;
-    padding: 1rem;
+    padding: 25px;
 `
 S.InputContainer = styled.div`
     width: 100%;
@@ -37,13 +35,11 @@ S.Container2 = styled.div`
 
 S.Options = styled.h3`
     text-align: left;
-    padding: 0.25rem;
-    margin-right: 0.5rem;
+    margin: 5px 10px 5px 0;
 `
 
 S.RoomInput = styled.input`
-    height: 60%;
-    width: ${props => props.width ? props.width : "7.5rem"};
+    width: 150px;
     text-align: ${props => props.align ? props.align : "left" };
     vertical-align: bottom;
 `
@@ -55,7 +51,8 @@ S.Required = styled.span`
 `
 
 S.RoomSubmit = styled.input`
-    width: 5rem;
+    width: 75px;
+    margin: 15px 0 0;
 `
 
 S.CancelForm = styled.i`

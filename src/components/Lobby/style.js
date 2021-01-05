@@ -9,21 +9,16 @@ S.Container1 = styled.div`
     flex-direction: column;
     align-items: center;
 `
-S.Container2 = styled.div`
-    margin-top: 5rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-`
+
 S.CreateRoomButton = styled.button`
-    width: 8rem;
-    height: 3rem;
+    width: 150px;
     background-color: steelblue;
     color: white;
+    font-size: 15px;
     border: none;
     border-radius: 10px;
-    font-size: 1rem;
-    margin: 5rem 0 1rem;
+    padding: 15px 25px;
+    margin: 100px 0 25px;
     &:hover {
         background-color: lightseagreen;
 
@@ -31,7 +26,7 @@ S.CreateRoomButton = styled.button`
 `
 
 S.RefreshButton = styled.button`
-    padding: 3px 6px;
+    padding: 5px;
     border: none;
     border-radius: 5px;
     :hover {
@@ -46,7 +41,7 @@ S.LoadingContainer = styled.div`
 S.Loading = styled.i`
     position: fixed;
     top: calc(100vh / 2);
-    font-size: 3rem;
+    font-size: 50px;
     z-index: 1;
 `
 

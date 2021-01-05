@@ -81,6 +81,7 @@ S.UtilityBottom = styled.div`
     justify-content: center;
     align-items: center;
 `
+
 S.Prompt = styled.h2`
     
 `

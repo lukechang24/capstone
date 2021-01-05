@@ -23,8 +23,7 @@ S.Container1 = styled.div`
 
 S.ErrorContainer = styled.div`
     position: relative;
-    height: 10rem;
-    width: 25rem;
+    width: 350px;
     background-color: white;
     display: flex;
     justify-content: center;
@@ -32,7 +31,7 @@ S.ErrorContainer = styled.div`
 `
 
 S.Error = styled.h3`
-    padding: 1rem;
+    padding: 40px 15px;
     text-align: center;
     color: red;
 `

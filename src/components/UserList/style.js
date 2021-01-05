@@ -3,11 +3,9 @@ import styled from "styled-components"
 const S = {}
 
 S.Container1 = styled.div`
-    height: 100%;
-    min-height: 500px;
-    max-height: 700px;
     &.big {
         width: 1000px;
+        height: 700px;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -21,9 +19,8 @@ S.Container1 = styled.div`
         -khtml-user-select: none;
         -webkit-user-select: none;
         -o-user-select: none;
-        width: 15rem;
+        width: 250px;
     }
-    margin-top: 25px;
     background-color: rgb(167, 218, 250);
 `
 
@@ -36,8 +33,7 @@ S.UsersContainer = styled.div`
         align-items: center;
     }
     &.small {
-        height: 100%;
-        width: 100%;
+        width: 245px;
         flex-direction: column;
     }
 `
@@ -49,12 +45,16 @@ S.PlayingUsers = styled.div`
         justify-content: center;
     }
     &.small {
-        height: 50%;
+        /* height: 50%; */
     }
 `
 
+S.WaitingHeader = styled.h3`
+    margin-left: 10px;
+`
+
 S.WaitingUsers = styled.div`
-    height: 50%;
+    /* height: 50%; */
 `
 
 S.UserContainer = styled.div`
@@ -63,16 +63,16 @@ S.UserContainer = styled.div`
     &.small {
         background-color: white;
         border-radius: 5px;
-        margin: 0.5rem;
+        margin: 7.5px 10px;
     }
 `
 
 S.Username = styled.h3`
-    margin: 0rem 1rem;
+    margin: 0 5px;
 `
 S.Points = styled.p`
     vertical-align: middle;
-    margin: 0rem 1rem;
+    margin: 0 5px;
 `
 
 S.Heading = styled.h1`

@@ -14,8 +14,7 @@ S.Container1 = styled.div`
 `
 
 S.SelectionForm = styled.div`
-    height: 20rem;
-    width: 30rem;
+    width: 400px;
     background-color: white;
     display: flex;
     flex-direction: column;
@@ -27,22 +26,24 @@ S.Container2 = styled.div`
 `
 
 S.SelectContainer = styled.select`
-    width: 8rem;
-    height: 2rem;
+    width: 100px;
     background-color: lightblue;
+    margin: 0 0 100px;
 `
 
 S.SelectOption = styled.option`
-    padding: 1rem;
+    padding: 50px;
     background-color: grey;
 `
 
 S.Heading = styled.h3`
+    margin: 15px 0 25px;
     text-align: center;
 `
 
 S.ChosenWordHeader = styled.h3`
     text-align: center;
+    margin: 0 0 15px;
 `
 
 S.ChosenWord = styled.span`

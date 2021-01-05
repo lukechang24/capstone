@@ -8,7 +8,6 @@ S.NavContainer = styled.div`
     top: 0;
     left: 0;
     width: 100vw;
-    height: 3.5rem;
     background-color: lightsteelblue;
     display: flex;
     justify-content: space-between;
@@ -25,31 +24,31 @@ S.AuthContainer = styled.div`
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    margin-right: 1.5rem;
+    margin-right: 15px;
 `
 
 S.AuthLink = styled(NavLink)`
     text-decoration: none;
     color: white;
-    margin: 0rem 0.5rem 0rem;
-    padding: 0.5rem 0rem;
+    margin: 0 15px 0;
+    padding: 0 0 2.5px;
     &:hover {
         color: darkblue;
     }
     &.active {
-        border-bottom: 0.1rem solid white;
+        border-bottom: 2.5px solid white;
     }
 `
 S.SignOut = styled.p`
     color: white;
-    margin: 0rem 0.5rem 0rem;
-    padding: 0.5rem 0rem;
+    margin: 0 15px 0;
+    padding: 0 0 2.5px;
     &:hover {
         color: darkblue;
         cursor: pointer;
     }
     &.active {
-        border-bottom: 0.1rem solid white;
+        border-bottom: 2.5px solid white;
     }
 `
 

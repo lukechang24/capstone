@@ -27,7 +27,7 @@ class Room extends Component {
         showMoreMessages: false,
         timer: 5,
         createNewCanvas: true,
-        showChat: true,
+        // showChat: true,
     }
     componentDidMount() {
         this.props.firebase.findRoom(this.props.match.params.id).get()
@@ -393,12 +393,12 @@ class Room extends Component {
             showMoreMessages: false
         })
     }
-    toggleChat = () => {
-        // let chat = document.querySelector(".chat")
-        this.setState({
-            showChat: !this.state.showChat
-        })
-    }
+    // toggleChat = () => {
+    //     // let chat = document.querySelector(".chat")
+    //     this.setState({
+    //         showChat: !this.state.showChat
+    //     })
+    // }
     componentWillUnmount() {
         this.removeUserFromRoom()
         clearInterval(this.timer)
@@ -408,15 +408,7 @@ class Room extends Component {
     }
     render() {
         return(
-            <S.Container1 className={!this.state.showChat ? "hide" : ""} phase={this.state.phase}>
-                {this.props.currentUser.waiting 
-                    ?
-                        <S.WaitingContainer>
-                            <S.Waiting>Waiting for next round...</S.Waiting>
-                        </S.WaitingContainer>
-                    :
-                        null
-                }
+            <S.Container1 phase={this.state.phase}>
                 {!this.state.waiting 
                     ?
                         <S.TimerContainer>
@@ -425,53 +417,56 @@ class Room extends Component {
                     :
                         null
                 }
-                {this.state.phase.indexOf("write") !== -1 
-                    ? 
-                        <PromptForm phase={this.state.phase}/>
-                    :
-                        null
-                }
-                {this.state.phase === "selection" 
-                    ?
-                        <PromptSelection currentUser={this.props.currentUser}/>
-                    :
-                        null
-                }
-                {this.state.phase.indexOf("vote") !== -1 && this.state.currentCanvas
-                    ?
-                        <ShowCanvas canvasList={this.state.canvasList} phase={this.state.phase} currentCanvas={this.state.currentCanvas} currentUser={this.props.currentUser}/>
-                    :
-                        null
-                }
-                <UserList userList={this.state.userList} waitingList={this.state.waitingList} waiting={this.state.waiting} startGame={this.startGame} isMaster={this.props.currentUser.isMaster}/>
-                {!this.state.waiting
-                    ? 
-                        <Draw1 currentUser={this.props.currentUser} phase={this.state.phase}/>
-                    : 
-                !this.state.waiting ? 
-                        <S.DudDiv>
-
-                        </S.DudDiv>
-                    :
-                        null
-                }
-                <S.Container2 className={!this.state.showChat ? "hide" : ""}>
-                    <S.ToggleChat onClick={() => this.toggleChat()}>
-                        <S.Arrow className={this.state.showChat ? "fas fa-caret-left hide" : "fas fa-caret-left"}></S.Arrow>
-                        {/* <S.Arrow className={this.state.showChat ? "fas fa-caret-right" : ""}></S.Arrow> */}
-                    </S.ToggleChat>
-                    <S.ChatContainer>
-                        <ChatLog currentUser={this.props.currentUser} chatLog={this.state.chatLog} showMoreMessages={this.state.showMoreMessages}/>
-                        <S.MessageForm onSubmit={this.handleSubmit}>
-                            {this.state.showMoreMessages 
-                                ?
-                                    <S.MoreMessages onClick={this.scrollToBottomOfChat}>Show recent messages</S.MoreMessages> 
-                                :
-                                    null
-                            }
-                            <S.MessageInput type="text" onChange={this.handleInput} value={this.state.message} placeholder="Type your message here..."></S.MessageInput>
-                        </S.MessageForm>
-                    </S.ChatContainer>
+                <S.Container2>
+                    <S.TitleDiv>Accurate or Not</S.TitleDiv>
+                    <S.Container3 className="gameContainer">
+                        {this.props.currentUser.waiting 
+                            ?
+                                <S.WaitingContainer>
+                                    <S.Waiting>Waiting for next round...</S.Waiting>
+                                </S.WaitingContainer>
+                            :
+                                null
+                        }
+                        {this.state.phase.indexOf("write") !== -1 
+                            ? 
+                                <PromptForm phase={this.state.phase}/>
+                            :
+                                null
+                        }
+                        {this.state.phase === "selection" 
+                            ?
+                                <PromptSelection currentUser={this.props.currentUser}/>
+                            :
+                                null
+                        }
+                        {this.state.phase.indexOf("vote") !== -1 && this.state.currentCanvas
+                            ?
+                                <ShowCanvas canvasList={this.state.canvasList} phase={this.state.phase} currentCanvas={this.state.currentCanvas} currentUser={this.props.currentUser}/>
+                            :
+                                null
+                        }
+                        <UserList userList={this.state.userList} waitingList={this.state.waitingList} waiting={this.state.waiting} startGame={this.startGame} isMaster={this.props.currentUser.isMaster}/>
+                        {!this.state.waiting
+                            ? 
+                                <Draw1 currentUser={this.props.currentUser} phase={this.state.phase}/>
+                            : 
+                                null
+                        }
+                        <S.ChatContainer>
+                            <ChatLog currentUser={this.props.currentUser} chatLog={this.state.chatLog} showMoreMessages={this.state.showMoreMessages}/>
+                            <S.MessageForm onSubmit={this.handleSubmit}>
+                                {this.state.showMoreMessages 
+                                    ?
+                                        <S.MoreMessages onClick={this.scrollToBottomOfChat}>Show recent messages</S.MoreMessages> 
+                                    :
+                                        null
+                                }
+                                <S.MessageInput type="text" onChange={this.handleInput} value={this.state.message} placeholder="Type your message here..."></S.MessageInput>
+                            </S.MessageForm>
+                        </S.ChatContainer>
+                        <S.ChatSpace></S.ChatSpace>
+                    </S.Container3>
                 </S.Container2>
             </S.Container1>
         )
