@@ -10,8 +10,7 @@ S.Container1 = styled.div`
         flex-direction: column;
         align-items: center;
         justify-content: space-between;
-        margin-left: 5%;
-        margin-right: 5%;
+        margin-right: 15px;
     }
     &.small {
         user-select: none;
@@ -21,7 +20,7 @@ S.Container1 = styled.div`
         -o-user-select: none;
         width: 250px;
     }
-    background-color: rgb(167, 218, 250);
+    background-color: #74C2E1;
 `
 
 S.UsersContainer = styled.div`
@@ -45,34 +44,37 @@ S.PlayingUsers = styled.div`
         justify-content: center;
     }
     &.small {
-        /* height: 50%; */
     }
 `
 
 S.WaitingHeader = styled.h3`
+    color: white;
+    font-weight: bolder;
     margin-left: 10px;
 `
 
 S.WaitingUsers = styled.div`
-    /* height: 50%; */
 `
 
 S.UserContainer = styled.div`
     display: flex;
     justify-content: space-between;
     &.small {
-        background-color: white;
+        background-color: #0191C8;
         border-radius: 5px;
+        padding: 5px 0;
         margin: 7.5px 10px;
     }
 `
 
 S.Username = styled.h3`
-    margin: 0 5px;
+    margin: 0 0 0 10px;
+    color: white;
 `
 S.Points = styled.p`
+    color: white;
     vertical-align: middle;
-    margin: 0 5px;
+    margin: 0 10px 0 0;
 `
 
 S.Heading = styled.h1`

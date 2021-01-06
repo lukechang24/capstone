@@ -12,7 +12,7 @@ S.Container1 = styled.div`
 
 S.CreateRoomButton = styled.button`
     width: 150px;
-    background-color: steelblue;
+    background-color: #0191C8;
     color: white;
     font-size: 15px;
     border: none;
@@ -48,6 +48,7 @@ S.Loading = styled.i`
 S.NoRoom = styled.h1`
     position: fixed;
     top: calc(100vh / 2);
+    color: whitesmoke;
 `
 
 export default S

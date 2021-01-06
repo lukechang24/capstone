@@ -18,10 +18,14 @@ S.TitleDiv = styled.div`
     display: flex;
     justify-content: flex-start;
     width: 100%;
+    margin: 0 0 15px;
+    z-index: 5;
 `
 
 S.Title = styled.h1`
-    font-size: 25px;
+    font-family: 'Jua', sans-serif;
+    font-size: 40px;
+    color: white;
 `
 
 S.Container3 = styled.div`
@@ -29,6 +33,101 @@ S.Container3 = styled.div`
     display: flex;
     justify-content: center;
     align-items: flex-start;
+`
+
+S.Container4 = styled.div`
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    &.small {
+        position: absolute;
+        left: 0;
+    }
+`
+
+S.Interface = styled.div`
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #74C2E1;
+    &.hide {
+        display: none;
+    }
+`
+
+S.ColorContainer = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    margin: 15px 0 25px;
+`
+
+S.Color = styled.div`
+    width: 25px;
+    height: 25px;
+    background-color: ${props => props.color ? props.color : "black"};
+`
+
+S.Container5 = styled.div`
+    width: 90%;
+    display: flex;
+    justify-content: space-between;
+    margin: 0 0 15px;
+`
+
+S.TrashCan = styled.i`
+    font-size: 20px;
+    /* margin: 1rem 0; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.1s ease-in-out;
+    &:hover {
+        color: white;
+    }
+`
+
+S.Square = styled.div`
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+`
+
+S.PaintSize = styled.div`
+    width: 20px;
+    height: 20px;
+    background-color: black;
+    border-radius: 25px;
+    &.small {
+        width: 2.5px;
+        height: 2.5px;
+    }
+    &.medium {
+        width: 7.5px;
+        height: 7.5px;
+    }
+    &.large {
+        width: 13.5px;
+        height: 13.5px;
+    }
+    &:focus {
+        outline: 0;
+    }
+`
+
+S.InterfaceSpace = styled.div`
+    min-width: 250px;
+    height: 100px;
+    background-color: transparent;
+    display: block;
+    &.hide {
+        display: none;
+    }
 `
 
 S.ChatContainer = styled.div`
@@ -41,7 +140,7 @@ S.ChatContainer = styled.div`
     flex-direction: column;
     overflow-y: auto;
     overflow-x: hidden;
-    z-index: 4;
+    z-index: 15;
     @media only screen and (max-width: 1350px) {
         width: 300px;
     }
@@ -53,7 +152,7 @@ S.ChatContainer = styled.div`
 S.ChatSpace = styled.div`
     min-width: 300px;
     height: 100px;
-    background-color: white;
+    background-color: transparent;
     display: block;
     @media only screen and (max-width: 1350px) {
         min-width: 300px;

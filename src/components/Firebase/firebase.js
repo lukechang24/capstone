@@ -26,7 +26,6 @@ class Firebase {
   signInUser = (email, password) => {
     return this.auth.signInWithEmailAndPassword(email, password)
   }
-  test = () => console.log(this.db.FieldValue, "App")
 
   connectionRef = () => this.database.ref(".info/connected")
 

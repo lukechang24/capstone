@@ -54,7 +54,6 @@ class App extends Component {
     const offlineStatus = {
       isOnline: false,
     }
-    this.props.firebase.test()
     this.props.firebase.connectionRef()
       .on("value", snapshot => {
         if(snapshot.val() === false) {

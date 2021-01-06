@@ -8,15 +8,18 @@ S.NavContainer = styled.div`
     top: 0;
     left: 0;
     width: 100vw;
-    background-color: lightsteelblue;
+    background-color: #93E2D5;
     display: flex;
     justify-content: space-between;
     align-items: center;
 `
 
 S.Title = styled.h1`
-    margin-left: 15px;
+    font-family: 'Jua', sans-serif;
+    font-size: 40px;
     font-weight: bold;
+    color: white;
+    margin-left: 15px;
 `
 
 S.AuthContainer = styled.div`

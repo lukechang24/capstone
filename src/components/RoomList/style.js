@@ -6,12 +6,13 @@ S.Container1 = styled.div`
     width: 80%;
     display: flex;
     flex-wrap: wrap;
+    margin: 50px 0 0;
 `
 S.RoomContainer = styled.div`
     width: 250px;
     display: flex;
     flex-direction: column;
-    background-color: lightskyblue;
+    background-color: #34DDDD;
     border-radius: 20px;
     margin: 5px 15px;
     padding: 15px;
