@@ -40,34 +40,24 @@ class ShowCanvas extends Component {
         }, 1000)
         return(
             <S.Container1>
-                <S.UtilityLeft></S.UtilityLeft>
-                <S.Container2>
-                    <S.UtilityTop>
-                        {/* {this.props.phase === "draw"
-                            ?
-                                <S.PromptHeader>
-                                    Draw: <br/><S.Prompt>{this.state.canvas.prompt}</S.Prompt>
-                                </S.PromptHeader>
-                            :
-                                null
-                        } */}
-                    </S.UtilityTop>
-                    <S.CanvasContainer className="container">
-                        <S.Canvas 
-                            className="canvas2"
-                            width="700" 
-                            height="700" 
-                            onMouseDown={this.startDrawing}
-                            onMouseMove={this.drawing}
-                            onMouseUp={this.stopDrawing}
-                            onMouseLeave={this.stopDrawing}
-                        ></S.Canvas>
-                    </S.CanvasContainer>
-                    <S.UtilityBottom>
-                        <S.Prompt>Playing league of legends</S.Prompt>
-                    </S.UtilityBottom>
+                <S.Container2 className={this.props.showPrompt ? "" : "hide"}>
+                    <S.Heading className="big">
+                        <S.Prompt className="big">{this.props.currentCanvas.canvas.prompt}</S.Prompt>
+                        <S.DrawnBy className="big">Drawn by: {this.props.currentCanvas.displayName}</S.DrawnBy>
+                    </S.Heading>
                 </S.Container2>
-                <S.UtilityRight></S.UtilityRight>
+                <S.CanvasContainer className="container">
+                    <S.Heading>
+                        <S.Prompt>{this.props.currentCanvas.canvas.prompt}</S.Prompt>
+                        <S.DrawnBy>Drawn by: {this.props.currentCanvas.displayName}</S.DrawnBy>
+                    </S.Heading>
+                    <S.Canvas 
+                        className="canvas2"
+                        width="700" 
+                        height="700" 
+                    ></S.Canvas>
+                </S.CanvasContainer>
+                <S.OverLay></S.OverLay>
             </S.Container1>
         )
     }

@@ -22,6 +22,7 @@ S.RoomForm = styled.form`
     flex-direction: column;
     align-items: center;
     padding: 25px;
+    border-radius: 10px;
 `
 S.InputContainer = styled.div`
     width: 100%;
@@ -57,8 +58,8 @@ S.RoomSubmit = styled.input`
 
 S.CancelForm = styled.i`
     position: absolute;
-    right: 7.5px;
-    top: 5px;
+    right: 8px;
+    top: 5.5px;
     &:hover {
         color: red;
     }

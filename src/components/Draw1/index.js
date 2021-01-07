@@ -240,7 +240,7 @@ class Draw1 extends Component {
     }
     render() {
         return(
-            <S.Container1>
+            <S.Container1 className={this.props.phase.indexOf("vote") !== -1 ? "hide" : ""}>
                 <S.CanvasContainer className="container">
                     <S.Canvas 
                         className="canvas"

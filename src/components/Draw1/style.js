@@ -4,6 +4,9 @@ import paintBrush from "../../images/paint-brush.png"
 const S = {};
 
 S.Container1 = styled.div`
+    &.hide {
+        display: none;
+    }
 `
 
 S.CanvasContainer = styled.div`

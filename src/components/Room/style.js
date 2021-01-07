@@ -18,7 +18,7 @@ S.TitleDiv = styled.div`
     display: flex;
     justify-content: flex-start;
     width: 100%;
-    margin: 0 0 15px;
+    margin: 15px 0 15px;
     z-index: 5;
 `
 
@@ -81,6 +81,7 @@ S.Container5 = styled.div`
     width: 100%;
     display: flex;
     justify-content: space-around;
+    padding: 0 25px;
 `
 
 S.Square = styled.div`
@@ -160,10 +161,13 @@ S.ChatContainer = styled.div`
     overflow-y: auto;
     overflow-x: hidden;
     z-index: 15;
+    &.hide {
+        display: none;
+    }
     @media only screen and (max-width: 1350px) {
         width: 300px;
     }
-    @media only screen and (max-width: 1000px) {
+    @media only screen and (max-width: 1040px) {
         width: 250px;
     }
 `
@@ -173,10 +177,13 @@ S.ChatSpace = styled.div`
     height: 100px;
     background-color: transparent;
     display: block;
+    &.hide {
+        display: none;
+    }
     @media only screen and (max-width: 1350px) {
         min-width: 300px;
     }
-    @media only screen and (max-width: 1000px) {
+    @media only screen and (max-width: 1040px) {
         min-width: 250px;
     }
 `
@@ -242,5 +249,10 @@ S.Waiting = styled.h1`
     text-align: center;
     color: white;
 `
+
+// S.ShowCanvasContainer = styled.div`
+//     position: relative;
+
+// `
 
 export default S

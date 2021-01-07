@@ -11,13 +11,12 @@ S.Container1 = styled.div`
 `
 
 S.CreateRoomButton = styled.button`
-    width: 150px;
     background-color: #0191C8;
     color: white;
     font-size: 15px;
     border: none;
     border-radius: 10px;
-    padding: 15px 25px;
+    padding: 15px 15px;
     margin: 100px 0 25px;
     &:hover {
         background-color: lightseagreen;
@@ -26,11 +25,14 @@ S.CreateRoomButton = styled.button`
 `
 
 S.RefreshButton = styled.button`
-    padding: 5px;
+    background-color: darkturquoise;
+    color: white;
+    font-size: 12.5px;
+    padding: 5px 10px;
     border: none;
     border-radius: 5px;
     :hover {
-        background-color: lightgrey;
+        background-color: lightseagreen;
     }
 `
 

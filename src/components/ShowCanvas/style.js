@@ -3,87 +3,74 @@ import styled from "styled-components"
 const S = {}
 
 S.Container1 = styled.div`
+`
+
+S.Container2 = styled.div`
     position: fixed;
-    height: 100%;
-    width: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 4;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-`
-
-S.Container2 = styled.div`
-    position: relative;
-    height: 45rem;
-    width: 45rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: rgb(167, 218, 250);
-`
-
-S.UtilityLeft = styled.div`
-    height: 100%;
-    width: 5rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-`
-
-S.UtilityRight = styled.div`
-    height: 100%;
-    width: 5rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-`
-S.Container2 = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    background-color: skyblue;
+    z-index: 25;
+    &.hide {
+        display: none;
+    }
 `
 
 S.CanvasContainer = styled.div`
-    max-width: 600px;
-    height: auto;
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
+    margin: 0 15px;
 `
 
 S.Canvas = styled.canvas`
-    max-width: 1000px;
+    max-width: 1500px;
     width: 100%;
     height: auto;
+    border: 5px solid black;
+    z-index: 15;
 `
 
-S.UtilityTop = styled.div`
-    height: 5rem;
-    width: 100%;
+S.Heading = styled.div`
+    position: absolute;
+    top: -65px;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-`
-
-S.DrawnByHeading = styled.h3`
-
-`
-S.DrawnBy = styled.span`
-    font-weight: 400;
-`
-
-S.UtilityBottom = styled.div`
-    height: 5rem;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    z-index: 5;
+    &.big {
+        position: static;
+    }
 `
 
 S.Prompt = styled.h2`
-    
+    color: white;
+    &.big {
+        font-size: 50px;
+    }
+`
+
+S.DrawnBy = styled.span`
+    font-weight: 400;
+    color: white;
+    &.big {
+        font-size: 45px;
+    }
+`
+
+S.OverLay = styled.div`
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
 `
 
 export default S

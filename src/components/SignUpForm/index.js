@@ -67,11 +67,10 @@ class SignUpForm extends Component {
     render() {
         return(
             <S.Container1>
-                <Navbar currentUser={this.props.currentUser} hideSignOut/>
+                <Navbar currentUser={this.props.currentUser}/>
                 <S.SignUpForm onSubmit={this.handleSubmit}>
                     <S.Heading>Create an Account</S.Heading>
                     <S.Warning>*Please use a fake Gmail/password</S.Warning>
-                    {/* <S.Warning>Fake password must be at least 6 characters long</S.Warning> */}
                     <S.InputTitle>Email</S.InputTitle>
                     <S.Input name="email" autocomplete="off" onChange={this.handleInput}></S.Input>
                     <S.Error className={this.state.errors.indexOf("in-use") === -1 ? "hide" : ""}>This email is already registered with an account</S.Error>

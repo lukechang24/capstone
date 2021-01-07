@@ -58,8 +58,9 @@ class Lobby extends Component {
         })
         return(
             <S.Container1>
+                {console.log(this.props.currentUser)}
                 <Navbar currentUser={this.props.currentUser} signOut={this.props.signOut}/>
-                <S.CreateRoomButton type="submit" onClick={this.toggleForm} value="Create Room">Make a Room</S.CreateRoomButton>
+                <S.CreateRoomButton type="submit" onClick={this.toggleForm} value="Create Room">Create a Room</S.CreateRoomButton>
                 <S.RefreshButton onClick={() => {this.getLobbies()}}>Refresh</S.RefreshButton>
                 {this.state.showForm 
                     ?

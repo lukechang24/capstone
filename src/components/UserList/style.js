@@ -5,12 +5,19 @@ const S = {}
 S.Container1 = styled.div`
     &.big {
         width: 1000px;
-        height: 700px;
+        /* height: 700px; */
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: space-between;
         margin-right: 15px;
+        @media only screen and (max-width: 1300px) {
+            width: 700px;
+            /* height: 500px; */
+        }
+        @media only screen and (max-width: 1040px) {
+            width: 500px;
+        }
     }
     &.small {
         user-select: none;
@@ -30,10 +37,18 @@ S.UsersContainer = styled.div`
         flex-wrap: wrap;
         justify-content: center;
         align-items: center;
+        margin: 275px 0 275px;
+        @media only screen and (max-width: 1300px) {
+            margin: 250px 0 250px;
+        }
+        @media only screen and (max-width: 1040px) {
+            margin: 200px 0 200px;
+        }
     }
     &.small {
         width: 245px;
         flex-direction: column;
+        padding: 15px 0;
     }
 `
 S.PlayingUsers = styled.div`
@@ -80,10 +95,11 @@ S.Points = styled.p`
 S.Heading = styled.h1`
     color: white;
     text-align: center;
+    margin: 15px 0;
 `
 
 S.StartButton = styled.button`
-
+    margin: 0 0 15px;
 `
 
 export default S

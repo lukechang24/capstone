@@ -5,7 +5,7 @@ const Navbar = (props) => {
     return(
         <S.NavContainer>
             <S.Title>Accurate or Naw</S.Title>
-                {!props.hideSignOut
+                {props.currentUser.id
                     ?
                         <S.AuthContainer>
                             <S.AuthLink to={`/user/${props.currentUser.id}`}>{props.currentUser.displayName}</S.AuthLink>

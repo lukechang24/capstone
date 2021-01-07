@@ -29,7 +29,9 @@ class Room extends Component {
         createNewCanvas: true,
         curColor: "black",
         curSize: 5,
-        mode: "pen"
+        mode: "pen",
+        curPresentor: "",
+        showPrompt: false
     }
     componentDidMount() {
         this.props.firebase.findRoom(this.props.match.params.id).get()
@@ -110,7 +112,7 @@ class Room extends Component {
                     if(counter === index) {
                         this.props.firebase.findUser(doc.data().userId).get()
                             .then(user => {
-                                this.props.firebase.findRoom(this.props.match.params.id).update({currentCanvas: {...doc.data(), userId: user.id}})
+                                this.props.firebase.findRoom(this.props.match.params.id).update({currentCanvas: {...doc.data(), userId: user.id, displayName: user.data().displayName}})
                             })
                     }
                     counter++
@@ -226,6 +228,7 @@ class Room extends Component {
                     const updatedTime = snapshot.data().timer - 1
                     this.props.firebase.findRoom(this.props.match.params.id).update({timer: updatedTime})
                     const snapPhase = snapshot.data().phase
+                    let voteDelay = false
                     if(this.state.timer <= 1) {
                         clearInterval(this.timer)
                         let newPhase = snapPhase === "writeNouns" ? "writeVerbs" : snapPhase === "writeVerbs" ? "writeAdjectives" : snapPhase === "writeAdjectives" ? "writeFinished" : snapPhase === "selection" ? "draw" : snapPhase === "draw" ? "vote1" : `vote${parseInt(snapshot.data().phase.replace("vote", ""))+1}`
@@ -287,6 +290,7 @@ class Room extends Component {
                         }
                         if(newPhase.indexOf("vote") !== -1) {
                             this.setCurrentCanvas()
+                            voteDelay = true
                         }
                         const setTime = snapPhase.indexOf("write") !== -1 ? 20 : snapPhase ===  "selection" ? 100 : newPhase === "writeNouns" ? 20 : snapPhase === "draw" || snapPhase.indexOf("vote") !== -1 ? 10 : 0
                         this.props.firebase.findRoom(this.props.match.params.id).update({phase: newPhase})
@@ -307,10 +311,23 @@ class Room extends Component {
                             }, 10000)
                             return
                         }
-                        setTimeout(() => {
-                            this.props.firebase.findRoom(this.props.match.params.id).update({timer: setTime})
-                            this.startTimer()
-                        }, 1000)
+                        if(voteDelay) {
+                            this.setState({
+                                showPrompt: true
+                            })
+                            setTimeout(() => {
+                                this.setState({
+                                    showPrompt: false
+                                })
+                                this.props.firebase.findRoom(this.props.match.params.id).update({timer: setTime})
+                                this.startTimer()
+                            }, 5000)
+                        } else {
+                            setTimeout(() => {
+                                this.props.firebase.findRoom(this.props.match.params.id).update({timer: setTime})
+                                this.startTimer()
+                            }, 1000)
+                        }
                     }
                 })
         },1000)
@@ -461,40 +478,39 @@ class Room extends Component {
                             :
                                 null
                         }
-                        {this.state.phase.indexOf("vote") !== -1 && this.state.currentCanvas
-                            ?
-                                <ShowCanvas canvasList={this.state.canvasList} phase={this.state.phase} currentCanvas={this.state.currentCanvas} currentUser={this.props.currentUser}/>
-                            :
-                                null
-                        }
                         <S.Container4 className={this.state.waiting ? "" : "small" }>
                             <UserList userList={this.state.userList} waitingList={this.state.waitingList} waiting={this.state.waiting} startGame={this.startGame} isMaster={this.props.currentUser.isMaster}/>
-                            <S.Interface className={this.state.waiting ? "hide" : ""}>
-                                <S.ColorContainer>
-                                    <S.ColorRow>
-                                        <S.Color className={`${this.state.curColor === "red" ? "selected" : ""}`} name="red" color="red" onClick={this.handleColor}></S.Color>
-                                        <S.Color className={`${this.state.curColor === "orange" ? "selected" : ""}`} name="orange" color="orange" onClick={this.handleColor}></S.Color>
-                                        <S.Color className={`${this.state.curColor === "yellow" ? "selected" : ""}`} name="yellow" color="yellow" onClick={this.handleColor}></S.Color>
-                                    </S.ColorRow>
-                                    <S.ColorRow>
-                                        <S.Color className={`${this.state.curColor === "green" ? "selected" : ""}`} name="green" color="green" onClick={this.handleColor}></S.Color>
-                                        <S.Color className={`${this.state.curColor === "blue" ? "selected" : ""}`} name="blue" color="blue" onClick={this.handleColor}></S.Color>
-                                        <S.Color className={`${this.state.curColor === "purple" ? "selected" : ""}`} name="purple" color="purple" onClick={this.handleColor}></S.Color>
-                                    </S.ColorRow>
-                                    <S.ColorRow>
-                                        <S.Color className={`${this.state.curColor === "black" ? "selected" : ""}`} name="black" color="black" onClick={this.handleColor}></S.Color>
-                                        <S.Color className={`${this.state.curColor === "brown" ? "selected" : ""}`} name="brown" color="brown" onClick={this.handleColor}></S.Color>
-                                        <S.Color className={`${this.state.curColor === "white" ? "selected" : ""}`} name="white" color="white" onClick={this.handleColor}></S.Color>
-                                    </S.ColorRow>
-                                </S.ColorContainer>
-                                <S.Container5>
-                                    <S.Square onClick={this.handlePaintSize}>
-                                        <S.PaintSize className={`${this.state.curSize === 1 ? "small" : this.state.curSize === 5 ? "medium" : "large"}`}></S.PaintSize>
-                                    </S.Square>
-                                    <S.PaintBrush className={this.state.mode === "pen" ? "selected fas fa-paint-brush" : "fas fa-paint-brush"} name="pen" onClick={this.handleMode}></S.PaintBrush>
-                                    <S.Eraser className={this.state.mode === "eraser" ? "selected fas fa-eraser" : "fas fa-eraser"} name="eraser" onClick={this.handleMode}></S.Eraser>
-                                </S.Container5>
-                            </S.Interface>
+                            {this.state.phase.indexOf("vote") === -1
+                                ?
+                                    <S.Interface className={this.state.waiting ? "hide" : ""}>
+                                        <S.ColorContainer>
+                                            <S.ColorRow>
+                                                <S.Color className={`${this.state.curColor === "red" ? "selected" : ""}`} name="red" color="red" onClick={this.handleColor}></S.Color>
+                                                <S.Color className={`${this.state.curColor === "orange" ? "selected" : ""}`} name="orange" color="orange" onClick={this.handleColor}></S.Color>
+                                                <S.Color className={`${this.state.curColor === "yellow" ? "selected" : ""}`} name="yellow" color="yellow" onClick={this.handleColor}></S.Color>
+                                            </S.ColorRow>
+                                            <S.ColorRow>
+                                                <S.Color className={`${this.state.curColor === "green" ? "selected" : ""}`} name="green" color="green" onClick={this.handleColor}></S.Color>
+                                                <S.Color className={`${this.state.curColor === "blue" ? "selected" : ""}`} name="blue" color="blue" onClick={this.handleColor}></S.Color>
+                                                <S.Color className={`${this.state.curColor === "purple" ? "selected" : ""}`} name="purple" color="purple" onClick={this.handleColor}></S.Color>
+                                            </S.ColorRow>
+                                            <S.ColorRow>
+                                                <S.Color className={`${this.state.curColor === "black" ? "selected" : ""}`} name="black" color="black" onClick={this.handleColor}></S.Color>
+                                                <S.Color className={`${this.state.curColor === "brown" ? "selected" : ""}`} name="brown" color="brown" onClick={this.handleColor}></S.Color>
+                                                <S.Color className={`${this.state.curColor === "white" ? "selected" : ""}`} name="white" color="white" onClick={this.handleColor}></S.Color>
+                                            </S.ColorRow>
+                                        </S.ColorContainer>
+                                        <S.Container5>
+                                            <S.Square onClick={this.handlePaintSize}>
+                                                <S.PaintSize className={`${this.state.curSize === 1 ? "small" : this.state.curSize === 5 ? "medium" : "large"}`}></S.PaintSize>
+                                            </S.Square>
+                                            <S.PaintBrush className={this.state.mode === "pen" ? "selected fas fa-paint-brush" : "fas fa-paint-brush"} name="pen" onClick={this.handleMode}></S.PaintBrush>
+                                            <S.Eraser className={this.state.mode === "eraser" ? "selected fas fa-eraser" : "fas fa-eraser"} name="eraser" onClick={this.handleMode}></S.Eraser>
+                                        </S.Container5>
+                                    </S.Interface>
+                                :
+                                    null
+                            }
                         </S.Container4>
                         <S.InterfaceSpace className={this.state.waiting ? "hide" : ""}></S.InterfaceSpace>
                         {!this.state.waiting
@@ -503,7 +519,28 @@ class Room extends Component {
                             : 
                                 null
                         }
-                        <S.ChatContainer>
+                        {this.state.phase.indexOf("vote") !== -1 && this.state.currentCanvas
+                            ?
+                                <S.Container3>
+                                    <ShowCanvas canvasList={this.state.canvasList} phase={this.state.phase} currentCanvas={this.state.currentCanvas} currentUser={this.props.currentUser} showPrompt={this.state.showPrompt}/>
+                                    <S.ChatContainer className={this.state.showPrompt ? "hide" : ""}>
+                                        <ChatLog currentUser={this.props.currentUser} chatLog={this.state.chatLog} showMoreMessages={this.state.showMoreMessages}/>
+                                        <S.MessageForm onSubmit={this.handleSubmit}>
+                                            {this.state.showMoreMessages 
+                                                ?
+                                                    <S.MoreMessages onClick={this.scrollToBottomOfChat}>Show recent messages</S.MoreMessages> 
+                                                :
+                                                    null
+                                            }
+                                            <S.MessageInput type="text" onChange={this.handleInput} value={this.state.message} placeholder="Type your message here..."></S.MessageInput>
+                                        </S.MessageForm>
+                                    </S.ChatContainer>
+                                    <S.ChatSpace></S.ChatSpace>
+                                </S.Container3>
+                            :
+                                null
+                        }
+                        <S.ChatContainer className={this.state.phase.indexOf("vote") !== -1 ? "hide" : ""}>
                             <ChatLog currentUser={this.props.currentUser} chatLog={this.state.chatLog} showMoreMessages={this.state.showMoreMessages}/>
                             <S.MessageForm onSubmit={this.handleSubmit}>
                                 {this.state.showMoreMessages 
@@ -515,7 +552,7 @@ class Room extends Component {
                                 <S.MessageInput type="text" onChange={this.handleInput} value={this.state.message} placeholder="Type your message here..."></S.MessageInput>
                             </S.MessageForm>
                         </S.ChatContainer>
-                        <S.ChatSpace></S.ChatSpace>
+                        <S.ChatSpace className={this.state.phase.indexOf("vote") !== -1 ? "hide" : ""}></S.ChatSpace>
                     </S.Container3>
                 </S.Container2>
             </S.Container1>

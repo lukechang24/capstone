@@ -42,7 +42,7 @@ class SignUpForm extends Component {
     render() {
         return(
             <S.Container1>
-                <Navbar currentUser={this.props.currentUser} hideSignOut/>
+                <Navbar currentUser={this.props.currentUser}/>
                 <S.SignInForm autocomplete="off" onSubmit={this.handleSubmit}>
                     <S.Heading>Sign In</S.Heading>
                     <S.InputTitle>Email</S.InputTitle>
