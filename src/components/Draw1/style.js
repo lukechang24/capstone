@@ -20,6 +20,21 @@ S.Canvas = styled.canvas`
     height: auto;
 `
 
+S.Prompt = styled.h2`
+    position: absolute;
+    top: -50px;
+    font-size: 25px;
+    color: white;
+    @media only screen and (max-width: 1040px) {
+        top: -40px;
+        font-size: 15px;
+    }
+    /* @media only screen and (max-width: 700px) {
+        top: -30px;
+        font-size: 10px;
+    } */
+`
+
 S.Undo = styled.i`
     position: absolute;
     bottom: 5px;

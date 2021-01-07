@@ -236,7 +236,7 @@ class Draw1 extends Component {
         window.removeEventListener("resize", this.throttle)
         this.unsubscribe()
     }
-    render() {  
+    render() {
         return(
             <S.Container1>
                 <S.CanvasContainer className="container">
@@ -249,6 +249,7 @@ class Draw1 extends Component {
                         onMouseUp={this.stopDrawing}
                         onMouseLeave={this.stopDrawing}
                     ></S.Canvas>
+                    <S.Prompt><span>Draw: </span>{this.state.canvas.prompt}</S.Prompt>
                     <S.TrashCan className="fas fa-trash-alt clear" onClick={this.clearCanvas}></S.TrashCan>
                     <S.Undo className="fas fa-undo" onClick={this.undo}></S.Undo>
                 </S.CanvasContainer>

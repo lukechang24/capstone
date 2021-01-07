@@ -49,6 +49,13 @@ class Lobby extends Component {
         this.props.history.push(`/lobby/${roomId}`)
     }
     render() {
+        const filteredLobbies = this.state.lobbies.filter(room => {
+            if(room.userList.length > 0) {
+                return true
+            } else {
+                return false
+            }
+        })
         return(
             <S.Container1>
                 <Navbar currentUser={this.props.currentUser} signOut={this.props.signOut}/>
@@ -64,11 +71,11 @@ class Lobby extends Component {
                     ?
                         <S.Loading className="fas fa-spinner fa-pulse"></S.Loading>
                     :
-                this.state.lobbies.length === 0 
+                filteredLobbies.length === 0 
                     ?
                         <S.NoRoom>No rooms available</S.NoRoom>
                     :
-                        <RoomList lobbies={this.state.lobbies} setUserRoomId={this.setUserRoomId} sendUserToRoom={this.sendUserToRoom}/>
+                        <RoomList lobbies={filteredLobbies} setUserRoomId={this.setUserRoomId} sendUserToRoom={this.sendUserToRoom}/>
                 }
             </S.Container1>
         )

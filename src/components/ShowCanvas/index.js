@@ -55,8 +55,8 @@ class ShowCanvas extends Component {
                     <S.CanvasContainer className="container">
                         <S.Canvas 
                             className="canvas2"
-                            width="1000" 
-                            height="1000" 
+                            width="700" 
+                            height="700" 
                             onMouseDown={this.startDrawing}
                             onMouseMove={this.drawing}
                             onMouseUp={this.stopDrawing}

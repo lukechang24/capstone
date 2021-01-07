@@ -68,6 +68,9 @@ S.Color = styled.div`
     width: 25px;
     height: 25px;
     background-color: ${props => props.color ? props.color : "black"};
+    &.selected {
+        box-shadow: 5px 5px 5px black;
+    }
 `
 
 S.Container5 = styled.div`
@@ -209,6 +212,7 @@ S.Timer = styled.h1`
 `
 S.WaitingContainer = styled.div`
     position: fixed;
+    top: 0;
     height: 100%;
     width: 100%;
     background-color: rgba(0, 0, 0, 0.5);

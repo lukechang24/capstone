@@ -78,6 +78,7 @@ S.Points = styled.p`
 `
 
 S.Heading = styled.h1`
+    color: white;
     text-align: center;
 `
 
