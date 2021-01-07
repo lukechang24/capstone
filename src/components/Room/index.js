@@ -25,10 +25,11 @@ class Room extends Component {
         waiting: true,
         phase: "",
         showMoreMessages: false,
-        timer: 5,
+        timer: 20,
         createNewCanvas: true,
         curColor: "black",
         curSize: 5,
+        mode: "pen"
     }
     componentDidMount() {
         this.props.firebase.findRoom(this.props.match.params.id).get()
@@ -287,7 +288,7 @@ class Room extends Component {
                         if(newPhase.indexOf("vote") !== -1) {
                             this.setCurrentCanvas()
                         }
-                        const setTime = snapPhase.indexOf("write") !== -1 ? 5 : snapPhase ===  "selection" ? 100 : newPhase === "writeNouns" ? 5 : snapPhase === "draw" || snapPhase.indexOf("vote") !== -1 ? 10 : 0
+                        const setTime = snapPhase.indexOf("write") !== -1 ? 20 : snapPhase ===  "selection" ? 100 : newPhase === "writeNouns" ? 20 : snapPhase === "draw" || snapPhase.indexOf("vote") !== -1 ? 10 : 0
                         this.props.firebase.findRoom(this.props.match.params.id).update({phase: newPhase})
                         if(newPhase === "finished") {
                             setTimeout(() => {
@@ -400,15 +401,21 @@ class Room extends Component {
     //         showChat: !this.state.showChat
     //     })
     // }
-    changeColor = (e) => {
+    handleColor = (e) => {
         this.setState({
-            curColor: e.target.getAttribute("name")
+            curColor: e.target.getAttribute("name"),
+            mode: "pen"
         })
     }
-    changePaintSize = (e) => {
+    handlePaintSize = (e) => {
         const curSize = this.state.curSize
         this.setState({
             curSize: curSize === 1 ? 5 : curSize === 5 ? 10 : 1
+        })
+    }
+    handleMode = (e) => {
+        this.setState({
+            mode: e.target.getAttribute("name")
         })
     }
     componentWillUnmount() {
@@ -464,27 +471,35 @@ class Room extends Component {
                             <UserList userList={this.state.userList} waitingList={this.state.waitingList} waiting={this.state.waiting} startGame={this.startGame} isMaster={this.props.currentUser.isMaster}/>
                             <S.Interface className={this.state.waiting ? "hide" : ""}>
                                 <S.ColorContainer>
-                                    <S.Color className={`${this.state.curColor === "red" ? "selected" : ""}`} name="red" color="red" onClick={this.changeColor}></S.Color>
-                                    <S.Color className={`${this.state.curColor === "orange" ? "selected" : ""}`} name="orange" color="orange" onClick={this.changeColor}></S.Color>
-                                    <S.Color className={`${this.state.curColor === "yellow" ? "selected" : ""}`} name="yellow" color="yellow" onClick={this.changeColor}></S.Color>
-                                    <S.Color className={`${this.state.curColor === "green" ? "selected" : ""}`} name="green" color="green" onClick={this.changeColor}></S.Color>
-                                    <S.Color className={`${this.state.curColor === "blue" ? "selected" : ""}`} name="blue" color="blue" onClick={this.changeColor}></S.Color>
-                                    <S.Color className={`${this.state.curColor === "purple" ? "selected" : ""}`} name="purple" color="purple" onClick={this.changeColor}></S.Color>
-                                    <S.Color className={`${this.state.curColor === "black" ? "selected" : ""}`} name="black" color="black" onClick={this.changeColor}></S.Color>
-                                    <S.Color className={`${this.state.curColor === "brown" ? "selected" : ""}`} name="brown" color="brown" onClick={this.changeColor}></S.Color>
+                                    <S.ColorRow>
+                                        <S.Color className={`${this.state.curColor === "red" ? "selected" : ""}`} name="red" color="red" onClick={this.handleColor}></S.Color>
+                                        <S.Color className={`${this.state.curColor === "orange" ? "selected" : ""}`} name="orange" color="orange" onClick={this.handleColor}></S.Color>
+                                        <S.Color className={`${this.state.curColor === "yellow" ? "selected" : ""}`} name="yellow" color="yellow" onClick={this.handleColor}></S.Color>
+                                    </S.ColorRow>
+                                    <S.ColorRow>
+                                        <S.Color className={`${this.state.curColor === "green" ? "selected" : ""}`} name="green" color="green" onClick={this.handleColor}></S.Color>
+                                        <S.Color className={`${this.state.curColor === "blue" ? "selected" : ""}`} name="blue" color="blue" onClick={this.handleColor}></S.Color>
+                                        <S.Color className={`${this.state.curColor === "purple" ? "selected" : ""}`} name="purple" color="purple" onClick={this.handleColor}></S.Color>
+                                    </S.ColorRow>
+                                    <S.ColorRow>
+                                        <S.Color className={`${this.state.curColor === "black" ? "selected" : ""}`} name="black" color="black" onClick={this.handleColor}></S.Color>
+                                        <S.Color className={`${this.state.curColor === "brown" ? "selected" : ""}`} name="brown" color="brown" onClick={this.handleColor}></S.Color>
+                                        <S.Color className={`${this.state.curColor === "white" ? "selected" : ""}`} name="white" color="white" onClick={this.handleColor}></S.Color>
+                                    </S.ColorRow>
                                 </S.ColorContainer>
                                 <S.Container5>
-                                    <S.TrashCan className="fas fa-trash-alt clear"></S.TrashCan>
-                                    <S.Square onClick={this.changePaintSize}>
+                                    <S.Square onClick={this.handlePaintSize}>
                                         <S.PaintSize className={`${this.state.curSize === 1 ? "small" : this.state.curSize === 5 ? "medium" : "large"}`}></S.PaintSize>
                                     </S.Square>
+                                    <S.PaintBrush className={this.state.mode === "pen" ? "selected fas fa-paint-brush" : "fas fa-paint-brush"} name="pen" onClick={this.handleMode}></S.PaintBrush>
+                                    <S.Eraser className={this.state.mode === "eraser" ? "selected fas fa-eraser" : "fas fa-eraser"} name="eraser" onClick={this.handleMode}></S.Eraser>
                                 </S.Container5>
                             </S.Interface>
                         </S.Container4>
                         <S.InterfaceSpace className={this.state.waiting ? "hide" : ""}></S.InterfaceSpace>
                         {!this.state.waiting
                             ? 
-                                <Draw1 currentUser={this.props.currentUser} phase={this.state.phase} curColor={this.state.curColor} curSize={this.state.curSize}/>
+                                <Draw1 currentUser={this.props.currentUser} phase={this.state.phase} curColor={this.state.curColor} curSize={this.state.curSize} mode={this.state.mode}/>
                             : 
                                 null
                         }

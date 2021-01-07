@@ -39,7 +39,7 @@ class RoomForm extends Component {
                 verbs: [],
                 adjectives: []
             },
-            timer: 5,
+            timer: 20,
         }
         this.props.firebase.createRoom(roomInfo)
             .then(room => {

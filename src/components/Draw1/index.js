@@ -139,14 +139,16 @@ class Draw1 extends Component {
             })
     }
     addClick = (x, y, dragging) => {
+        const curColor = this.props.mode === "pen" ? this.props.curColor : "white"
+        const curSize = this.props.mode === "pen" ? this.props.curSize : 30
         this.setState({
             canvas: {
                 ...this.state.canvas,
                 clickX: [...this.state.canvas.clickX, x],
                 clickY: [...this.state.canvas.clickY, y],
                 clickDrag: [...this.state.canvas.clickDrag, dragging],
-                clickColor: [...this.state.canvas.clickColor, this.props.curColor],
-                clickSize: [...this.state.canvas.clickSize, this.props.curSize],
+                clickColor: [...this.state.canvas.clickColor, curColor],
+                clickSize: [...this.state.canvas.clickSize, curSize],
             },
             strokes: this.state.strokes+1
         })

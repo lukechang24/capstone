@@ -49,7 +49,7 @@ S.Container4 = styled.div`
 S.Interface = styled.div`
     width: 250px;
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
     background-color: #74C2E1;
     &.hide {
@@ -59,9 +59,12 @@ S.Interface = styled.div`
 
 S.ColorContainer = styled.div`
     display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    margin: 15px 0 25px;
+    flex-direction: column;
+`
+
+S.ColorRow = styled.div`
+    display: flex;
+    
 `
 
 S.Color = styled.div`
@@ -69,27 +72,15 @@ S.Color = styled.div`
     height: 25px;
     background-color: ${props => props.color ? props.color : "black"};
     &.selected {
-        box-shadow: 5px 5px 5px black;
+        box-shadow: 0px 0px 5px 2.5px white;
+        z-index: 5;
     }
 `
 
 S.Container5 = styled.div`
-    width: 90%;
+    width: 100%;
     display: flex;
-    justify-content: space-between;
-    margin: 0 0 15px;
-`
-
-S.TrashCan = styled.i`
-    font-size: 20px;
-    /* margin: 1rem 0; */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: 0.1s ease-in-out;
-    &:hover {
-        color: white;
-    }
+    justify-content: space-around;
 `
 
 S.Square = styled.div`
@@ -99,6 +90,7 @@ S.Square = styled.div`
     justify-content: center;
     align-items: center;
     background-color: white;
+    margin: 0 0 5px;
 `
 
 S.PaintSize = styled.div`
@@ -120,6 +112,30 @@ S.PaintSize = styled.div`
     }
     &:focus {
         outline: 0;
+    }
+`
+
+S.PaintBrush = styled.i`
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    &.selected {
+        box-shadow: 0px 0px 10px 2.5px white;
+        background-color: lightblue;
+    }
+`
+
+S.Eraser = styled.i`
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    &.selected {
+        box-shadow: 0px 0px 10px 2.5px white;
+        background-color: lightblue;
     }
 `
 
