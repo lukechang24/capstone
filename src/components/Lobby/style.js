@@ -11,7 +11,7 @@ S.Container1 = styled.div`
 `
 
 S.CreateRoomButton = styled.button`
-    background-color: #0191C8;
+    background-color: #006699;
     color: white;
     font-size: 15px;
     border: none;
@@ -25,7 +25,7 @@ S.CreateRoomButton = styled.button`
 `
 
 S.RefreshButton = styled.button`
-    background-color: darkturquoise;
+    background-color: #0191C8;
     color: white;
     font-size: 12.5px;
     padding: 5px 10px;

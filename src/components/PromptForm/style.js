@@ -13,6 +13,9 @@ S.Container1 = styled.div`
     display: flex; 
     justify-content: center;
     align-items: center;
+    &.hide {
+        display: none;
+    }
 `
 
 S.PromptForm = styled.form`

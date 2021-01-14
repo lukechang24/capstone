@@ -39,6 +39,7 @@ class RoomForm extends Component {
                 verbs: [],
                 adjectives: []
             },
+            showPrompt: false,
             timer: 20,
         }
         this.props.firebase.createRoom(roomInfo)
@@ -68,7 +69,7 @@ class RoomForm extends Component {
                         </S.Container2>
                         <S.Container2>
                             <S.Options>Password:</S.Options>
-                            <S.RoomInput name="password" value={this.state.password} autocomplete="off" onChange={this.handleInput}></S.RoomInput>
+                            <S.RoomInput name="password" value={this.state.password} type="password" autocomplete="off" onChange={this.handleInput}></S.RoomInput>
                         </S.Container2>
                         <S.Container2>
                             <S.Options>Number of Rounds:</S.Options>
@@ -84,7 +85,7 @@ class RoomForm extends Component {
                             </select>
                         </S.Container2>
                     </S.InputContainer>
-                    <S.RoomSubmit className="submit" type="submit"></S.RoomSubmit>
+                    <S.RoomSubmit className="submit" type="submit" value="Create Room"></S.RoomSubmit>
                 </S.RoomForm>
             </S.Container1>
         )

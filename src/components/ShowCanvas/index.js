@@ -41,21 +41,24 @@ class ShowCanvas extends Component {
         return(
             <S.Container1>
                 <S.Container2 className={this.props.showPrompt ? "" : "hide"}>
-                    <S.Heading className="big">
-                        <S.Prompt className="big">{this.props.currentCanvas.canvas.prompt}</S.Prompt>
-                        <S.DrawnBy className="big">Drawn by: {this.props.currentCanvas.displayName}</S.DrawnBy>
-                    </S.Heading>
-                </S.Container2>
-                <S.CanvasContainer className="container">
                     <S.Heading>
                         <S.Prompt>{this.props.currentCanvas.canvas.prompt}</S.Prompt>
                         <S.DrawnBy>Drawn by: {this.props.currentCanvas.displayName}</S.DrawnBy>
                     </S.Heading>
+                </S.Container2>
+                <S.CanvasContainer className="container">
+                    {/* <S.Heading className={this.props.showPrompt ? "" : "hide"}>
+                        <S.Prompt>{this.props.currentCanvas.canvas.prompt}</S.Prompt>
+                        <S.DrawnBy>Drawn by: {this.props.currentCanvas.displayName}</S.DrawnBy>
+                    </S.Heading> */}
                     <S.Canvas 
                         className="canvas2"
                         width="700" 
                         height="700" 
                     ></S.Canvas>
+                    <S.VoteContainer className={this.props.currentCanvas.userId === this.props.currentUser.id || this.props.showPrompt ? "hide" : ""}>
+                    <VoteForm currentCanvas={this.props.currentCanvas}/>
+                    </S.VoteContainer>
                 </S.CanvasContainer>
                 <S.OverLay></S.OverLay>
             </S.Container1>

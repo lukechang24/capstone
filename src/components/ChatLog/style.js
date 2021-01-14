@@ -11,7 +11,7 @@ S.ChatBox = styled.div`
     overflow-y: auto;
 `
 S.MessageContainer = styled.p`
-    padding-left: 5px;
+    padding: 2px 0 2px 5px;
     &.bold {
         font-weight: bold;
         color: orange;

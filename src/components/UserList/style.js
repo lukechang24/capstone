@@ -27,7 +27,7 @@ S.Container1 = styled.div`
         -o-user-select: none;
         width: 250px;
     }
-    background-color: #74C2E1;
+    background-color: #0191C8;
 `
 
 S.UsersContainer = styled.div`
@@ -37,7 +37,7 @@ S.UsersContainer = styled.div`
         flex-wrap: wrap;
         justify-content: center;
         align-items: center;
-        margin: 275px 0 275px;
+        margin: 250px 0 275px;
         @media only screen and (max-width: 1300px) {
             margin: 250px 0 250px;
         }
@@ -75,7 +75,7 @@ S.UserContainer = styled.div`
     display: flex;
     justify-content: space-between;
     &.small {
-        background-color: #0191C8;
+        background-color: #005B9A;
         border-radius: 5px;
         padding: 5px 0;
         margin: 7.5px 10px;
@@ -99,7 +99,15 @@ S.Heading = styled.h1`
 `
 
 S.StartButton = styled.button`
+    color: black;
+    background-color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
     margin: 0 0 15px;
+    &:hover {
+        background-color: lightgray;
+    }
 `
 
 export default S

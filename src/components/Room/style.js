@@ -51,7 +51,7 @@ S.Interface = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #74C2E1;
+    background-color: #0191C8;
     &.hide {
         display: none;
     }
@@ -242,7 +242,10 @@ S.WaitingContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    z-index: 10;
+    z-index: 30;
+    &.hide {
+        display: none;
+    }
 `
 
 S.Waiting = styled.h1`

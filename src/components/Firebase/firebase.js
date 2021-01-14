@@ -12,6 +12,17 @@ const config = {
   messagingSenderId: 105595358454,
 }
 
+// const config = {
+//   apiKey: "AIzaSyCv8SLdoRoTw18xbpG34uM3CEXolI8Pobs",
+//   authDomain: "accurate-or-nah.firebaseapp.com",
+//   databaseURL: "https://accurate-or-nah-default-rtdb.firebaseio.com",
+//   projectId: "accurate-or-nah",
+//   storageBucket: "accurate-or-nah.appspot.com",
+//   messagingSenderId: "656336213198",
+//   appId: "1:656336213198:web:be3469855b59af33892c9f",
+//   measurementId: "G-XNSN0QX8H6"
+// };
+
 class Firebase {
   constructor() {
     app.initializeApp(config)

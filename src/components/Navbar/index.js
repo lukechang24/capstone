@@ -4,7 +4,7 @@ import S from "./style"
 const Navbar = (props) => {
     return(
         <S.NavContainer>
-            <S.Title>Accurate or Naw</S.Title>
+            <S.Title>Accurate or Nah</S.Title>
                 {props.currentUser.id
                     ?
                         <S.AuthContainer>

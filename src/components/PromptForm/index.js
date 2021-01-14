@@ -66,7 +66,7 @@ class PromptForm extends Component {
     }
     render() {
         return(
-            <S.Container1>
+            <S.Container1 className={this.props.phase.indexOf("write") === -1 ? "hide" : ""}>
                 <S.PromptForm onSubmit={this.handleSubmit}>
                     <S.PromptHeading>Submit as many words as you can</S.PromptHeading>
                         {this.props.phase === "writeNouns"

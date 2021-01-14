@@ -48,7 +48,7 @@ const UserList = (props) => {
                         null
                 }
             </S.UsersContainer>
-            {props.waiting
+            {props.waiting && props.isMaster
                 ?
                     <S.StartButton onClick={() => {props.startGame()}} disabled={!props.isMaster}>Start Game</S.StartButton> 
                 : 

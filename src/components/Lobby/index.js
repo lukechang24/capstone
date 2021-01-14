@@ -1,6 +1,7 @@
 import React, { Component } from "react"
 import Navbar from "../Navbar"
 import RoomForm from "../RoomForm"
+import PasswordForm from "../PasswordForm"
 import RoomList from "../RoomList"
 import { withRouter } from "react-router-dom"
 import { withFirebase } from "../Firebase"
@@ -10,6 +11,8 @@ class Lobby extends Component {
     state = {
         lobbies: [],
         showForm: false,
+        showPasswordForm: false,
+        currentRoomId: "",
         loading: false
     }
     componentDidMount() {
@@ -45,8 +48,23 @@ class Lobby extends Component {
             showForm: !this.state.showForm
         })
     }
+    togglePassword = () => {
+        this.setState({
+            showPasswordForm: !this.state.showPasswordForm,
+        })
+    }
     sendUserToRoom = roomId => {
-        this.props.history.push(`/lobby/${roomId}`)
+        this.props.firebase.findRoom(roomId).get()
+            .then(snap => {
+                if(snap.data().password.length > 0) {
+                    this.togglePassword()
+                    this.setState({
+                        currentRoomId: snap.data().id
+                    })
+                } else {
+                    this.props.history.push(`/lobby/${roomId}`)
+                }
+            })
     }
     render() {
         const filteredLobbies = this.state.lobbies.filter(room => {
@@ -58,13 +76,18 @@ class Lobby extends Component {
         })
         return(
             <S.Container1>
-                {console.log(this.props.currentUser)}
                 <Navbar currentUser={this.props.currentUser} signOut={this.props.signOut}/>
                 <S.CreateRoomButton type="submit" onClick={this.toggleForm} value="Create Room">Create a Room</S.CreateRoomButton>
                 <S.RefreshButton onClick={() => {this.getLobbies()}}>Refresh</S.RefreshButton>
                 {this.state.showForm 
                     ?
                         <RoomForm currentUser={this.props.currentUser} toggleForm={this.toggleForm}/>
+                    :
+                        null
+                }
+                {this.state.showPasswordForm
+                    ?
+                        <PasswordForm currentRoomId={this.state.currentRoomId} togglePassword={this.togglePassword}/>
                     :
                         null
                 }

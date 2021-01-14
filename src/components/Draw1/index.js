@@ -69,38 +69,35 @@ class Draw1 extends Component {
                             })
                     }
                 })
-        document.addEventListener("keydown", (e) => {
-            if(e.ctrlKey && e.which === 90) {
-                this.undo()
-            }
-        })
         this.setState({
             ctx: document.querySelector(".canvas").getContext("2d")
         })
         this.resize()
-        window.addEventListener("resize", this.throttle(this.resize, 500))
+        window.addEventListener("resize", this.throttle, false)
+        window.addEventListener("keydown", this.undo, false)
     }
     componentDidUpdate() {
         this.redraw()
     }
     resize = () => {
         let container = document.querySelector(".container")
-        setTimeout(() => {
+        this.interval1 = setTimeout(() => {
             let newRatio = container.getBoundingClientRect().width/700
             this.setState({
                 ratio: newRatio
             })
         }, 500)
     }
-    throttle = (callback, limit) => {
+    throttle = () => {
+        const func = this.resize()
         var waiting = false
         return function () {
             if (!waiting) {
-                callback.apply(this, arguments)
+                func.apply(this, arguments)
                 waiting = true
-                setTimeout(function () {
+                this.interval2 = setTimeout(function () {
                     waiting = false
-                }, limit)
+                }, 500)
             }
         }
     }
@@ -181,7 +178,7 @@ class Draw1 extends Component {
         this.setState({
             doNotDraw: true
         }, () => {
-            setTimeout(() => {
+            this.interval3 = setTimeout(() => {
                 this.setState({doNotDraw: false})
             }, 10)
         })
@@ -195,23 +192,25 @@ class Draw1 extends Component {
                 })
             })
     }
-    undo = () => {
-        const recentStroke = this.state.strokeCount.pop()
-        const { clickX, clickY, clickDrag, clickColor, clickSize } = this.state.canvas
-        const canvasInfo = {
-            ...this.state.canvas,
-            clickX: clickX.slice(0, clickX.length - recentStroke),
-            clickY: clickY.slice(0, clickY.length - recentStroke),
-            clickDrag: clickDrag.slice(0, clickDrag.length-recentStroke),
-            clickColor: clickColor.slice(0, clickColor.length - recentStroke),
-            clickSize: clickSize.slice(0, clickSize.length - recentStroke),
-        }
-        this.props.firebase.findCanvases(this.props.match.params.id).where("userId", "==", this.props.currentUser.id).get()
-                .then(snapshot => {
-                    snapshot.forEach(doc => {
-                        this.props.firebase.findCanvas(doc.id).update({canvas: {...canvasInfo}})
+    undo = (e) => {
+        if(e.ctrlKey && e.which === 90) {
+            const recentStroke = this.state.strokeCount.pop()
+            const { clickX, clickY, clickDrag, clickColor, clickSize } = this.state.canvas
+            const canvasInfo = {
+                ...this.state.canvas,
+                clickX: clickX.slice(0, clickX.length - recentStroke),
+                clickY: clickY.slice(0, clickY.length - recentStroke),
+                clickDrag: clickDrag.slice(0, clickDrag.length-recentStroke),
+                clickColor: clickColor.slice(0, clickColor.length - recentStroke),
+                clickSize: clickSize.slice(0, clickSize.length - recentStroke),
+            }
+            this.props.firebase.findCanvases(this.props.match.params.id).where("userId", "==", this.props.currentUser.id).get()
+                    .then(snapshot => {
+                        snapshot.forEach(doc => {
+                            this.props.firebase.findCanvas(doc.id).update({canvas: {...canvasInfo}})
+                        })
                     })
-                })
+        }
     }
     clearCanvas = (e) => {
         const { ctx } = this.state
@@ -235,8 +234,12 @@ class Draw1 extends Component {
             })
     }
     componentWillUnmount() {
-        window.removeEventListener("resize", this.throttle)
+        window.removeEventListener("resize", this.throttle, false)
+        window.removeEventListener("keydown", this.undo, false)
         this.unsubscribe()
+        clearInterval(this.interval1)
+        clearInterval(this.interval2)
+        clearInterval(this.interval3)
     }
     render() {
         return(

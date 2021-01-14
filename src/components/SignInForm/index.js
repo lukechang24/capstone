@@ -10,6 +10,11 @@ class SignUpForm extends Component {
         password: "",
         errors: [],
     }
+    componentDidMount() {
+        if(window.location.href.indexOf("signin") !== -1 && this.props.currentUser.id) {
+            this.props.history.push("/lobby")
+        }
+    }
     handleInput = e => {
         this.setState({
             [e.target.name]: e.target.value

@@ -292,7 +292,7 @@ class Room extends Component {
                             this.setCurrentCanvas()
                             voteDelay = true
                         }
-                        const setTime = snapPhase.indexOf("write") !== -1 ? 20 : snapPhase ===  "selection" ? 100 : newPhase === "writeNouns" ? 20 : snapPhase === "draw" || snapPhase.indexOf("vote") !== -1 ? 10 : 0
+                        const setTime = snapPhase.indexOf("write") !== -1 ? 20 : snapPhase ===  "selection" ? 140 : newPhase === "writeNouns" ? 20 : snapPhase === "draw" || snapPhase.indexOf("vote") !== -1 ? 10 : 0
                         this.props.firebase.findRoom(this.props.match.params.id).update({phase: newPhase})
                         if(newPhase === "finished") {
                             setTimeout(() => {
@@ -315,11 +315,12 @@ class Room extends Component {
                             this.setState({
                                 showPrompt: true
                             })
+                            this.props.firebase.findRoom(this.props.match.params.id).update({showPrompt: true})
                             setTimeout(() => {
                                 this.setState({
                                     showPrompt: false
                                 })
-                                this.props.firebase.findRoom(this.props.match.params.id).update({timer: setTime})
+                                this.props.firebase.findRoom(this.props.match.params.id).update({timer: setTime, showPrompt: false})
                                 this.startTimer()
                             }, 5000)
                         } else {
@@ -342,6 +343,7 @@ class Room extends Component {
                                 waiting: doc.data().waiting,
                                 phase: doc.data().phase,
                                 timer: doc.data().timer,
+                                showPrompt: doc.data().showPrompt
                             })
                             const isMaster = this.props.currentUser.id === snapshot.data().userList[0] || !snapshot.data().userList
                             this.props.firebase.findUser(this.props.currentUser.id).get()
@@ -455,23 +457,23 @@ class Room extends Component {
                 }
                 <S.Container2>
                     <S.TitleDiv>
-                        <S.Title>Accurate or Not</S.Title>
+                        <S.Title>Accurate or Nah</S.Title>
                     </S.TitleDiv>
                     <S.Container3 className="gameContainer">
-                        {this.props.currentUser.waiting 
-                            ?
-                                <S.WaitingContainer>
+                        {/* {this.props.currentUser.waiting 
+                            ? */}
+                                <S.WaitingContainer className={!this.props.currentUser.waiting ? "hide" : ""}>
                                     <S.Waiting>Waiting for next round...</S.Waiting>
                                 </S.WaitingContainer>
-                            :
+                            {/* :
                                 null
-                        }
-                        {this.state.phase.indexOf("write") !== -1 
-                            ? 
+                        } */}
+                        {/* {this.state.phase.indexOf("write") !== -1 
+                            ?  */}
                                 <PromptForm phase={this.state.phase}/>
-                            :
+                            {/* :
                                 null
-                        }
+                        } */}
                         {this.state.phase === "selection" 
                             ?
                                 <PromptSelection currentUser={this.props.currentUser}/>
@@ -480,9 +482,9 @@ class Room extends Component {
                         }
                         <S.Container4 className={this.state.waiting ? "" : "small" }>
                             <UserList userList={this.state.userList} waitingList={this.state.waitingList} waiting={this.state.waiting} startGame={this.startGame} isMaster={this.props.currentUser.isMaster}/>
-                            {this.state.phase.indexOf("vote") === -1
-                                ?
-                                    <S.Interface className={this.state.waiting ? "hide" : ""}>
+                            {/* {this.state.phase.indexOf("vote") === -1
+                                ? */}
+                                    <S.Interface className={this.state.waiting || this.state.phase.indexOf("vote") !== -1 ? "hide" : ""}>
                                         <S.ColorContainer>
                                             <S.ColorRow>
                                                 <S.Color className={`${this.state.curColor === "red" ? "selected" : ""}`} name="red" color="red" onClick={this.handleColor}></S.Color>
@@ -508,9 +510,9 @@ class Room extends Component {
                                             <S.Eraser className={this.state.mode === "eraser" ? "selected fas fa-eraser" : "fas fa-eraser"} name="eraser" onClick={this.handleMode}></S.Eraser>
                                         </S.Container5>
                                     </S.Interface>
-                                :
+                                {/* :
                                     null
-                            }
+                            } */}
                         </S.Container4>
                         <S.InterfaceSpace className={this.state.waiting ? "hide" : ""}></S.InterfaceSpace>
                         {!this.state.waiting

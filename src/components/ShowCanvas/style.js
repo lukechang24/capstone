@@ -15,7 +15,7 @@ S.Container2 = styled.div`
     justify-content: center;
     align-items: center;
     background-color: skyblue;
-    z-index: 25;
+    z-index: 23;
     &.hide {
         display: none;
     }
@@ -38,29 +38,29 @@ S.Canvas = styled.canvas`
 `
 
 S.Heading = styled.div`
-    position: absolute;
-    top: -65px;
     display: flex;
     flex-direction: column;
     align-items: center;
     z-index: 5;
-    &.big {
-        position: static;
-    }
 `
 
 S.Prompt = styled.h2`
+    font-size: 50px;
     color: white;
-    &.big {
-        font-size: 50px;
-    }
 `
 
 S.DrawnBy = styled.span`
+    font-size: 45px;
     font-weight: 400;
     color: white;
-    &.big {
-        font-size: 45px;
+`
+
+S.VoteContainer = styled.div`
+    position: absolute;
+    top: -50px;
+    z-index: 25;
+    &.hide {
+        display: none;
     }
 `
 
@@ -72,5 +72,6 @@ S.OverLay = styled.div`
     height: 100vh;
     background-color: rgba(0, 0, 0, 0.5);
 `
+
 
 export default S

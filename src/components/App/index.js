@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route, Switch, withRouter } from "react-router-dom"
+import { Route, Switch, Redirect, withRouter } from "react-router-dom"
 import { withFirebase } from "../Firebase"
 import SignUpForm from "../SignUpForm"
 import SignInForm from "../SignInForm"
@@ -8,6 +8,7 @@ import Room from "../Room"
 import S from "./style"
 
 class App extends Component {
+  unsubscribe = null
   state = {
     currentUser: JSON.parse(localStorage.getItem("savedUser")) || {},
     error: null
@@ -37,7 +38,7 @@ class App extends Component {
   }
   checkForUserChanges = () => {
     if(this.state.currentUser.id) {
-      this.props.firebase.findUser(this.state.currentUser.id)
+      this.unsubscribe = this.props.firebase.findUser(this.state.currentUser.id)
         .onSnapshot(snapshot => {
           this.setState({
             currentUser: {
@@ -94,6 +95,9 @@ class App extends Component {
       this.props.history.push("/auth/signin")
     }
   }
+  componentWillUnmount() {
+    this.unsubscribe()
+  }
   render() {
     return (
       <S.AppContainer>
@@ -113,6 +117,9 @@ class App extends Component {
           <Route exact path="/auth/signin" render={() => <SignInForm currentUser={this.state.currentUser}/>}></Route>
           <Route exact path="/lobby" render={() => <Lobby currentUser={this.state.currentUser} setError={this.setError} signOut={this.signOut} />}></Route>
           <Route exact path="/lobby/:id" render={() => <Room currentUser={this.state.currentUser} setCurrentUser={this.setCurrentUser} setError={this.setError}/>}></Route>
+          <Route>
+            <Redirect to="/lobby"></Redirect>
+          </Route>
         </Switch>
       </S.AppContainer>
     )

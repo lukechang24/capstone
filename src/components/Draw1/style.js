@@ -21,6 +21,9 @@ S.Canvas = styled.canvas`
     max-width: 1500px;
     width: 100%;
     height: auto;
+    &:hover {
+        cursor: url(${paintBrush}) 2 20, auto;
+    }
 `
 
 S.Prompt = styled.h2`

@@ -20,6 +20,7 @@ S.RoomForm = styled.form`
     background-color: white;
     display: flex;
     flex-direction: column;
+    align-items: center;
     padding: 25px;
     border-radius: 10px;
 `
@@ -42,13 +43,6 @@ S.RoomInput = styled.input`
     width: 150px;
     text-align: ${props => props.align ? props.align : "left" };
     vertical-align: bottom;
-    padding: 1px 2.5px;
-`
-
-S.Required = styled.span`
-    font-style: italic;
-    color: blue;
-    vertical-align: top;
 `
 
 S.RoomSubmit = styled.input`
@@ -60,15 +54,6 @@ S.RoomSubmit = styled.input`
     margin: 25px 0 0;
     &:hover {
         background-color: lightgray;
-    }
-`
-
-S.Error = styled.span`
-    width: 256px;
-    font-size: 10px;
-    color: red;
-    &.hide {
-        visibility: hidden;
     }
 `
 
