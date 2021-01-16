@@ -6,7 +6,7 @@ const ChatLog = (props) => {
         if(message.createdAt > props.currentUser.joinedAt) {
             if(message.isSpecial) {
                 return(
-                    <S.MessageContainer className="bold" key={i}>
+                    <S.MessageContainer className={message.content.indexOf('"') !== -1 ? "red bold" : "bold"} key={i}>
                         <S.Message>{message.content}</S.Message>
                     </S.MessageContainer>
                 )

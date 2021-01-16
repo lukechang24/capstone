@@ -11,44 +11,52 @@ exports.changeUserStatus = functions.database.ref("/status/{uid}").onUpdate(
         const userStatusFirestoreRef = db.doc(`status/${context.params.uid}`)
         const userRef = db.doc(`users/${context.params.uid}`)
         const batch = db.batch()
+        batch.set(userStatusFirestoreRef, eventStatus)
         if(!eventStatus.isOnline) {
             batch.set(userRef, {currentRoomId: null, isMaster: null, joinedAt: null, points: null, givenPrompts: {}, chosenPrompt: ""}, {merge: true})
         }
-        batch.set(userStatusFirestoreRef, eventStatus)
         return batch.commit()
     })
 
-exports.deleteUserFromRoom = functions.firestore
+    exports.deleteUserFromRoom = functions.firestore
     .document("status/{uid}")
     .onUpdate(change => {
         const data = change.after.data()
 
         const roomRef = db.collection("rooms")
+        const userStatusRef = db.collection("status")
         const batch = db.batch()
 
         if(!data.isOnline) {
-            roomRef.where("userList", "array-contains", change.after.id).get()
-                .then(snapshot => {
-                    snapshot.forEach(doc => {
-                        const updatedUserList = [...doc.data().userList]
-                        if(updatedUserList.indexOf(change.after.id) !== -1) {
-                            updatedUserList.splice(updatedUserList.indexOf(change.after.id), 1)
-                            batch.update(roomRef.doc(doc.id), {userList: updatedUserList})
-                            return batch.commit()
-                        }
-                    })
-                })
-            roomRef.where("waitingList", "array-contains", change.after.id).get()
-            .then(snapshot => {
-                snapshot.forEach(doc => {
-                    const updatedWaitingList = [...doc.data().waitingList]
-                    if(updatedWaitingList.indexOf(change.afterid) !== -1) {
-                        updatedWaitingList.splice(updatedWaitingList.indexOf(change.after.id), 1)
-                        batch.update(roomRef.doc(doc.id), {waitingList: updatedWaitingList})
-                        return batch.commit()
+            userStatusRef.doc(change.after.id).get()
+                .then(snap => {
+                    if(snap.data().isOnline) {
+                        return null
+                    } else {
+                        roomRef.where("userList", "array-contains", change.after.id).get()
+                            .then(snapshot => {
+                                snapshot.forEach(doc => {
+                                    const updatedUserList = [...doc.data().userList]
+                                    if(updatedUserList.indexOf(change.after.id) !== -1) {
+                                        updatedUserList.splice(updatedUserList.indexOf(change.after.id), 1)
+                                        batch.update(roomRef.doc(doc.id), {userList: updatedUserList})
+                                        return batch.commit()
+                                    }
+                                })
+                            })
+                        roomRef.where("waitingList", "array-contains", change.after.id).get()
+                        .then(snapshot => {
+                            snapshot.forEach(doc => {
+                                const updatedWaitingList = [...doc.data().waitingList]
+                                if(updatedWaitingList.indexOf(change.afterid) !== -1) {
+                                    updatedWaitingList.splice(updatedWaitingList.indexOf(change.after.id), 1)
+                                    batch.update(roomRef.doc(doc.id), {waitingList: updatedWaitingList})
+                                    return batch.commit()
+                                }
+                            })
+                        })
                     }
                 })
-            })
         } else {
             return null
         }
@@ -117,8 +125,7 @@ exports.deleteCanvases = functions.firestore
         const deletedData = change.data()
         const canvasRef = db.collection("canvases")
         const batch = db.batch()
-
-        canvasRef.where("roomId", "==", null).get()
+        canvasRef.where("roomId", "==", deletedData.id).get()
             .then(snapshot => {
                 snapshot.forEach(doc => {
                     batch.delete(canvasRef.doc(doc.id))
@@ -128,18 +135,18 @@ exports.deleteCanvases = functions.firestore
             })
 })
 
-exports.deleteEmptyCanvases = functions.firestore
-    .document("canvases/{canvasId}")
-    .onUpdate(change => {
-        const data = change.after.data()
+// exports.deleteEmptyCanvases = functions.firestore
+//     .document("canvases/{canvasId}")
+//     .onUpdate(change => {
+//         const data = change.after.data()
         
-        const canvasRef = db.collection("canvases").doc(change.after.id)
-        const batch = db.batch()
+//         const canvasRef = db.collection("canvases").doc(change.after.id)
+//         const batch = db.batch()
 
-        if(!data.canvas.clickX[0] && !data.roomId) {
-            batch.delete(canvasRef)
-            return batch.commit()
-        } else {
-            return null
-        }
-})
+//         if(!data.canvas.clickX[0] && !data.roomId) {
+//             batch.delete(canvasRef)
+//             return batch.commit()
+//         } else {
+//             return null
+//         }
+// })

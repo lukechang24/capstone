@@ -111,8 +111,11 @@ class Room extends Component {
                 snapshot.forEach(doc => {
                     if(counter === index) {
                         this.props.firebase.findUser(doc.data().userId).get()
-                            .then(user => {
-                                this.props.firebase.findRoom(this.props.match.params.id).update({currentCanvas: {...doc.data(), userId: user.id, displayName: user.data().displayName}})
+                        .then(user => {
+                            this.setState({
+                                currentCanvas: {...doc.data(), userId: user.id, displayName: user.data().displayName, id: doc.id}
+                            })
+                            this.props.firebase.findRoom(this.props.match.params.id).update({currentCanvas: {...doc.data(), userId: user.id, displayName: user.data().displayName, id: doc.id}})
                             })
                     }
                     counter++
@@ -171,12 +174,12 @@ class Room extends Component {
                         }
                         this.props.firebase.findRoom(snapshot.data().id).update({userList: [...updatedUserList], waitingList: [...updatedWaitingList]})
                         this.props.firebase.findUser(this.props.currentUser.id).update({currentRoomId: null, joinedAt: null, isMaster: null, givenPrompts: {}, chosenPrompt: null, waiting: null})
-                        this.props.firebase.findCanvases(this.props.match.params.id).where("userId", "==", this.props.currentUser.id).get()
-                            .then(snapshot => {
-                                snapshot.forEach(doc => {
-                                    this.props.firebase.findCanvas(doc.id).update({roomId: null})
-                                })
-                            })
+                        // this.props.firebase.findCanvases(this.props.match.params.id).where("userId", "==", this.props.currentUser.id).get()
+                        //     .then(snapshot => {
+                        //         snapshot.forEach(doc => {
+                        //             this.props.firebase.findCanvas(doc.id).update({roomId: null})
+                        //         })
+                        //     })
                         this.props.firebase.findChatLogs(this.props.match.params.id).get()
                             .then(snapshot1 => {
                                 const introStatement = {
@@ -257,7 +260,11 @@ class Room extends Component {
                                                         totalPoints += extraPoints
                                                         this.props.firebase.findUser(user.id).update({points: totalPoints})
                                                             .then(() => {
-                                                                this.props.firebase.findCanvas(canvas.id).delete()
+                                                                if(!canvas.data().isSaved) {
+                                                                    this.props.firebase.findCanvas(canvas.id).delete()
+                                                                } else {
+                                                                    this.props.firebase.findCanvas(canvas.id).update({roomId: null})
+                                                                }
                                                             })
                                                     })
                                             })
@@ -276,7 +283,7 @@ class Room extends Component {
                                                 backgroundColor: "white",
                                                 prompt: ""
                                             }
-                                            this.props.firebase.createCanvas({canvas: newCanvas, roomId: this.props.match.params.id, userId: doc.id})
+                                            this.props.firebase.createCanvas({canvas: newCanvas, roomId: this.props.match.params.id, userId: doc.id, votes: [], createdAt: Date.now()})
                                         })
                                     })
                             }
@@ -314,18 +321,38 @@ class Room extends Component {
                         if(voteDelay) {
                             this.setState({
                                 showPrompt: true
+                            }, () => {
+                                this.props.firebase.findRoom(this.props.match.params.id).update({showPrompt: true})
                             })
-                            this.props.firebase.findRoom(this.props.match.params.id).update({showPrompt: true})
                             setTimeout(() => {
                                 this.setState({
                                     showPrompt: false
+                                }, () => {
+                                    this.props.firebase.findRoom(this.props.match.params.id).update({timer: setTime, showPrompt: false})
+                                    this.props.firebase.findChatLogs(this.props.match.params.id).get()
+                                    .then(snapshot1 => {
+                                        const introStatement = {
+                                            content: `${this.state.currentCanvas.displayName} drew "${this.state.currentCanvas.canvas.prompt}"`,
+                                            isSpecial: true,
+                                            createdAt: Date.now()
+                                        }
+                                        snapshot1.forEach(doc => {
+                                            this.props.firebase.chatRef().doc(doc.id).get()
+                                                .then(snapshot2 => {
+                                                    const updatedChatLog = [...snapshot2.data().messages, introStatement]
+                                                    this.props.firebase.chatRef().doc(snapshot2.id).update({messages: updatedChatLog})
+                                                })
+                                        })
+                                    })
+                                    this.startTimer()
                                 })
-                                this.props.firebase.findRoom(this.props.match.params.id).update({timer: setTime, showPrompt: false})
-                                this.startTimer()
                             }, 5000)
                         } else {
                             setTimeout(() => {
                                 this.props.firebase.findRoom(this.props.match.params.id).update({timer: setTime})
+                                // if(this.state.phase.indexOf("vote") !== -1) {
+                                //     this.props.firebase.findCanvas(this.state.currentCanvas.id).update({roomId: null})
+                                // }
                                 this.startTimer()
                             }, 1000)
                         }
@@ -372,7 +399,8 @@ class Room extends Component {
                                 }
                             if(doc.data().phase.indexOf("vote") !== -1) {
                                 this.setState({
-                                    currentCanvas: doc.data().currentCanvas
+                                    currentCanvas: doc.data().currentCanvas,
+                                    showPrompt: doc.data().showPrompt
                                 })
                             }
                         }
@@ -449,7 +477,7 @@ class Room extends Component {
             <S.Container1 phase={this.state.phase}>
                 {!this.state.waiting 
                     ?
-                        <S.TimerContainer>
+                        <S.TimerContainer className={this.state.phase.indexOf("write") !== -1 || this.state.phase === "selection" ? "middle" : ""}>
                             <S.Timer>{this.state.timer}</S.Timer>
                         </S.TimerContainer>
                     :
@@ -460,20 +488,10 @@ class Room extends Component {
                         <S.Title>Accurate or Nah</S.Title>
                     </S.TitleDiv>
                     <S.Container3 className="gameContainer">
-                        {/* {this.props.currentUser.waiting 
-                            ? */}
-                                <S.WaitingContainer className={!this.props.currentUser.waiting ? "hide" : ""}>
-                                    <S.Waiting>Waiting for next round...</S.Waiting>
-                                </S.WaitingContainer>
-                            {/* :
-                                null
-                        } */}
-                        {/* {this.state.phase.indexOf("write") !== -1 
-                            ?  */}
-                                <PromptForm phase={this.state.phase}/>
-                            {/* :
-                                null
-                        } */}
+                        <S.WaitingContainer className={!this.props.currentUser.waiting ? "hide" : ""}>
+                            <S.Waiting>Waiting for next round...</S.Waiting>
+                        </S.WaitingContainer>
+                        <PromptForm phase={this.state.phase}/>
                         {this.state.phase === "selection" 
                             ?
                                 <PromptSelection currentUser={this.props.currentUser}/>

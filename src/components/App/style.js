@@ -6,9 +6,9 @@ S.AppContainer = styled.div`
     height: 100vh;
     width: 100vw;
     background-color: teal;
-    display: flex; 
+    /* display: flex; 
     justify-content: center;
-    align-items: center;
+    align-items: center; */
 `
 S.Container1 = styled.div`
     position: fixed;

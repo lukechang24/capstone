@@ -28,7 +28,6 @@ class RoomForm extends Component {
             roomName: this.state.roomName.trim(),
             password: this.state.password.trim(),
             rounds: parseInt(this.state.rounds),
-            canvasId: "",
             userList: [],
             waitingList: [],
             currentRound: 1,

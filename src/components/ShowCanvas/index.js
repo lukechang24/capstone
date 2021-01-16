@@ -7,10 +7,19 @@ import S from "./style"
 class ShowCanvas extends Component {
     state = {
         ctx: null,
+        isSaved: false
     }
     componentDidMount() {
         this.setState({
             ctx: document.querySelector(".canvas2").getContext("2d")
+        })
+    }
+    handleSubmit = (e) => {
+        e.preventDefault()
+        this.setState({
+            isSaved: true
+        }, () => {
+            this.props.firebase.findCanvas(this.props.currentCanvas.id).update({isSaved: true})
         })
     }
     redraw = () => {
@@ -47,17 +56,16 @@ class ShowCanvas extends Component {
                     </S.Heading>
                 </S.Container2>
                 <S.CanvasContainer className="container">
-                    {/* <S.Heading className={this.props.showPrompt ? "" : "hide"}>
-                        <S.Prompt>{this.props.currentCanvas.canvas.prompt}</S.Prompt>
-                        <S.DrawnBy>Drawn by: {this.props.currentCanvas.displayName}</S.DrawnBy>
-                    </S.Heading> */}
                     <S.Canvas 
                         className="canvas2"
                         width="700" 
                         height="700" 
                     ></S.Canvas>
                     <S.VoteContainer className={this.props.currentCanvas.userId === this.props.currentUser.id || this.props.showPrompt ? "hide" : ""}>
-                    <VoteForm currentCanvas={this.props.currentCanvas}/>
+                        <VoteForm currentCanvas={this.props.currentCanvas}/>
+                    </S.VoteContainer>
+                    <S.VoteContainer className={this.props.currentCanvas.userId !== this.props.currentUser.id || this.props.showPrompt ? "hide" : ""}>
+                        <S.SaveCanvas className={this.isSaved ? "hide" : ""} onClick={(e) => {this.handleSubmit(e)}} disabled={this.state.isSaved}>Save Drawing</S.SaveCanvas>
                     </S.VoteContainer>
                 </S.CanvasContainer>
                 <S.OverLay></S.OverLay>

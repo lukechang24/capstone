@@ -219,8 +219,8 @@ S.TimerContainer = styled.div`
     position: absolute;
     top: 5px;
     right: 5px;
-    height: 50px;
-    width: 50px;
+    height: 60px;
+    width: 60px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -228,6 +228,13 @@ S.TimerContainer = styled.div`
     border-radius: 25px;
     background-color: white;
     z-index: 20;
+    &.middle {
+        top: calc(50% - 250px);
+        left: 0;
+        right: 0;
+        margin-left: auto;
+        margin-right: auto;
+    }
 `
 
 S.Timer = styled.h1`

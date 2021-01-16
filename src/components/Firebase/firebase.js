@@ -62,6 +62,8 @@ class Firebase {
 
   findCanvases = roomId => this.db.collection("canvases").where("roomId", "==", roomId)
 
+  findUserCanvases = userId => this.db.collection("canvases").where("userId", "==", userId)
+
   createChat = (chatInfo) => this.db.collection("chats").add(chatInfo)
 
   chatRef = () => this.db.collection("chats")

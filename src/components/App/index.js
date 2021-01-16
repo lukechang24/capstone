@@ -5,6 +5,7 @@ import SignUpForm from "../SignUpForm"
 import SignInForm from "../SignInForm"
 import Lobby from "../Lobby"
 import Room from "../Room"
+import Profile from "../Profile"
 import S from "./style"
 
 class App extends Component {
@@ -61,7 +62,6 @@ class App extends Component {
             this.props.firebase.userStatusFirestoreRef().set(offlineStatus)
             return
         }
-
         this.props.firebase.userStatusDatabaseRef().onDisconnect().set(offlineStatus)
           .then(() => {
             this.props.firebase.userStatusDatabaseRef().set(onlineStatus)
@@ -117,6 +117,7 @@ class App extends Component {
           <Route exact path="/auth/signin" render={() => <SignInForm currentUser={this.state.currentUser}/>}></Route>
           <Route exact path="/lobby" render={() => <Lobby currentUser={this.state.currentUser} setError={this.setError} signOut={this.signOut} />}></Route>
           <Route exact path="/lobby/:id" render={() => <Room currentUser={this.state.currentUser} setCurrentUser={this.setCurrentUser} setError={this.setError}/>}></Route>
+          <Route exact path="/user/:id" render={() => <Profile currentUser={this.state.currentUser}/>}></Route>
           <Route>
             <Redirect to="/lobby"></Redirect>
           </Route>

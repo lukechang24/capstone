@@ -15,6 +15,9 @@ S.MessageContainer = styled.p`
     &.bold {
         font-weight: bold;
         color: orange;
+        &.red {
+            color: #ff0000;
+        }
     }
 `
 

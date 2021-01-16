@@ -18,8 +18,9 @@ S.CanvasContainer = styled.div`
 `
 
 S.Canvas = styled.canvas`
-    max-width: 1500px;
     width: 100%;
+    max-width: 1500px;
+    min-width: 300px;
     height: auto;
     &:hover {
         cursor: url(${paintBrush}) 2 20, auto;

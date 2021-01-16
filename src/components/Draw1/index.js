@@ -15,6 +15,7 @@ class Draw1 extends Component {
             backgroundColor: "white",
             prompt: ""
         },
+        undoHistory: [],
         ctx: null,
         paint: false,
         strokes: 0,
@@ -53,7 +54,7 @@ class Draw1 extends Component {
                             backgroundColor: "white",
                             prompt: ""
                         }
-                        this.props.firebase.createCanvas({canvas: newCanvas, roomId: this.props.match.params.id, userId: this.props.currentUser.id, votes: []})
+                        this.props.firebase.createCanvas({canvas: newCanvas, roomId: this.props.match.params.id, userId: this.props.currentUser.id, votes: [], createdAt: Date.now()})
                             .then(doc => {
                                 this.props.firebase.findCanvas(doc.id).get()
                                     .then(snapshot => {
@@ -204,6 +205,16 @@ class Draw1 extends Component {
                 clickColor: clickColor.slice(0, clickColor.length - recentStroke),
                 clickSize: clickSize.slice(0, clickSize.length - recentStroke),
             }
+            // const undoHistory = {
+            //     clickX: clickX.slice(clickX.length - recentStroke),
+            //     clickY: clickY.slice(clickY.length - recentStroke),
+            //     clickDrag: clickDrag.slice(clickDrag.length-recentStroke),
+            //     clickColor: clickColor.slice(clickColor.length - recentStroke),
+            //     clickSize: clickSize.slice(clickSize.length - recentStroke)
+            // }
+            // this.setState({
+            //     undoHistory
+            // })
             this.props.firebase.findCanvases(this.props.match.params.id).where("userId", "==", this.props.currentUser.id).get()
                     .then(snapshot => {
                         snapshot.forEach(doc => {

@@ -30,8 +30,9 @@ S.CanvasContainer = styled.div`
 `
 
 S.Canvas = styled.canvas`
-    max-width: 1500px;
     width: 100%;
+    max-width: 1500px;
+    min-width: 300px;
     height: auto;
     border: 5px solid black;
     z-index: 15;
@@ -45,12 +46,12 @@ S.Heading = styled.div`
 `
 
 S.Prompt = styled.h2`
-    font-size: 50px;
+    font-size: 60px;
     color: white;
 `
 
 S.DrawnBy = styled.span`
-    font-size: 45px;
+    font-size: 40px;
     font-weight: 400;
     color: white;
 `
@@ -61,6 +62,23 @@ S.VoteContainer = styled.div`
     z-index: 25;
     &.hide {
         display: none;
+    }
+`
+
+S.SaveCanvas = styled.button`
+    font-family: 'Fjalla One', sans-serif;
+    font-size: 20px;
+    color: white;
+    background-color: #005B9A;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 2.5px;
+    margin: 0 10px;
+    &.hide {
+        display: none;
+    }
+    &:hover {
+        background-color: skyblue;
     }
 `
 
