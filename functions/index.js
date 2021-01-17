@@ -3,6 +3,8 @@ const admin = require("firebase-admin")
 admin.initializeApp(functions.config().firebase)
 
 const db = admin.firestore()
+const database = admin.database()
+const auth = admin.auth()
 
 exports.changeUserStatus = functions.database.ref("/status/{uid}").onUpdate(
     async (change, context) => {
@@ -20,46 +22,71 @@ exports.changeUserStatus = functions.database.ref("/status/{uid}").onUpdate(
 
     exports.deleteUserFromRoom = functions.firestore
     .document("status/{uid}")
-    .onUpdate(change => {
+    .onUpdate((change, context) => {
         const data = change.after.data()
 
         const roomRef = db.collection("rooms")
-        const userStatusRef = db.collection("status")
+        const userStatusFirestoreRef = db.doc(`status/${context.params.uid}`)
+        const userFirestoreRef = db.doc(`users/${context.params.uid}`)
         const batch = db.batch()
-
         if(!data.isOnline) {
-            userStatusRef.doc(change.after.id).get()
+            userStatusFirestoreRef.get()
                 .then(snap => {
                     if(snap.data().isOnline) {
                         return null
                     } else {
-                        roomRef.where("userList", "array-contains", change.after.id).get()
+                        return roomRef.where("userList", "array-contains", change.after.id).get()
                             .then(snapshot => {
                                 snapshot.forEach(doc => {
                                     const updatedUserList = [...doc.data().userList]
                                     if(updatedUserList.indexOf(change.after.id) !== -1) {
                                         updatedUserList.splice(updatedUserList.indexOf(change.after.id), 1)
                                         batch.update(roomRef.doc(doc.id), {userList: updatedUserList})
-                                        return batch.commit()
                                     }
                                 })
+                                return null
                             })
-                        roomRef.where("waitingList", "array-contains", change.after.id).get()
-                        .then(snapshot => {
-                            snapshot.forEach(doc => {
-                                const updatedWaitingList = [...doc.data().waitingList]
-                                if(updatedWaitingList.indexOf(change.afterid) !== -1) {
-                                    updatedWaitingList.splice(updatedWaitingList.indexOf(change.after.id), 1)
-                                    batch.update(roomRef.doc(doc.id), {waitingList: updatedWaitingList})
-                                    return batch.commit()
-                                }
+                            .then(() => {
+                                return roomRef.where("waitingList", "array-contains", change.after.id).get()
+                                .then(snapshot => {
+                                    snapshot.forEach(doc => {
+                                        const updatedWaitingList = [...doc.data().waitingList]
+                                        if(updatedWaitingList.indexOf(change.afterid) !== -1) {
+                                            updatedWaitingList.splice(updatedWaitingList.indexOf(change.after.id), 1)
+                                            batch.update(roomRef.doc(doc.id), {waitingList: updatedWaitingList})
+                                        }
+                                    })
+                                    return null
+
+                                })
                             })
-                        })
+                            .then(() => {
+                                return userFirestoreRef.get()
+                                    .then(snap => {
+                                        console.log(snap.data())
+                                        if(snap.data().isAnonymous && snap.data().doRemove) {
+                                            batch.delete(userFirestoreRef)
+                                            batch.delete(userStatusFirestoreRef)
+                                        }
+                                        return null
+                                    })
+                            })
+                            .then(() => {
+                                return batch.commit()
+                            })
                     }
                 })
         } else {
             return null
         }
+    })
+
+exports.deleteUserStatus = functions.firestore
+    .document("status/{uid}")
+    .onDelete((change, context) => {
+        auth.deleteUser(context.params.uid)
+        const ref = database.ref(`status/${context.params.uid}`)
+        return ref.remove()
     })
 
 exports.archiveChat = functions.firestore

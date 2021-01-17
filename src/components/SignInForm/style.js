@@ -46,7 +46,10 @@ S.Input = styled.input`
 S.Submit = styled.button`
     height: 25px;
     width: 256px;
-    margin: 25px 25px 50px;
+    margin: 25px;
+    &.small {
+        margin: 25px 25px 100px;
+    }
 `
 
 S.Link = styled.a`
@@ -55,6 +58,18 @@ S.Link = styled.a`
     text-align: center;
     color: red;
     margin-bottom: 15px;
+`
+
+S.GuestLink = styled.p`
+    width: 90%;
+    font-size: 12.5px;
+    text-align: center;
+    text-decoration: underline;
+    color: red;
+    margin-bottom: 15px;
+    &:hover {
+        cursor: pointer;
+    }
 `
 
 S.Error = styled.span`

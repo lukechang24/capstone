@@ -40,7 +40,8 @@ class SignUpForm extends Component {
                         isMaster: null,
                         chosenPrompt: null,
                         points: null,
-                        waiting: null
+                        waiting: null,
+                        isAnonymous: false
                     })
                     this.props.history.push("/lobby")
                 }

@@ -7,6 +7,7 @@ import Lobby from "../Lobby"
 import Room from "../Room"
 import Profile from "../Profile"
 import S from "./style"
+import { auth } from 'firebase';
 
 class App extends Component {
   unsubscribe = null
@@ -15,12 +16,15 @@ class App extends Component {
     error: null
   }
   componentDidMount() {
+    console.log(this.state.currentUser)
     this.props.firebase.auth.onAuthStateChanged(authUser => {
       if(authUser) {
         this.props.firebase.findUser(authUser.uid).get()
           .then(snapshot => {
             const userJson = JSON.stringify({...snapshot.data()})
-            localStorage.setItem("savedUser", userJson)
+            if(!authUser.isAnonymous) {
+              localStorage.setItem("savedUser", userJson)
+            } 
             this.setState({
               currentUser: {
                 ...snapshot.data()
@@ -36,6 +40,9 @@ class App extends Component {
         })
       }
     })
+  }
+  componentDidCatch(error, errorInfo) {
+    this.props.history.push("/lobby")
   }
   checkForUserChanges = () => {
     if(this.state.currentUser.id) {
@@ -85,13 +92,17 @@ class App extends Component {
     })
   }
   signOut = () => {
+    this.unsubscribe()
+    this.setState({
+      currentUser: {}
+    })
     if(this.props.firebase.auth.currentUser) {
+      if(this.state.currentUser.isAnonymous) {
+        this.props.firebase.findUser(this.state.currentUser.id).update({doRemove: true})
+      }
       localStorage.removeItem("savedUser")
-      this.props.firebase.userStatusDatabaseRef().set({isOnline: false})
       this.props.firebase.signOut()
-      this.setState({
-        currentUser: {}
-      })
+      this.props.firebase.userStatusDatabaseRef().set({isOnline: false})
       this.props.history.push("/auth/signin")
     }
   }

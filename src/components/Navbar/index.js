@@ -8,7 +8,7 @@ const Navbar = (props) => {
                 {props.currentUser.id
                     ?
                         <S.AuthContainer>
-                            <S.AuthLink to={`/user/${props.currentUser.id}`}>{props.currentUser.displayName}</S.AuthLink>
+                            <S.AuthLink to={`/user/${props.currentUser.isAnonymous === true ? "guest" : props.currentUser.id}`}>{`${props.currentUser.isAnonymous ? "Guest" : props.currentUser.displayName}`}</S.AuthLink>
                             <S.SignOut onClick={() => {props.signOut()}}>Sign Out</S.SignOut>
                         </S.AuthContainer>
                     :

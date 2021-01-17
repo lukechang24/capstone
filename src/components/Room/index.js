@@ -36,11 +36,13 @@ class Room extends Component {
     componentDidMount() {
         this.props.firebase.findRoom(this.props.match.params.id).get()
             .then(snapshot => {
-                if(!this.props.currentUser.id) {
-                    this.props.setError("You must be logged in to create/join a lobby")
-                    this.props.history.push("/auth/signin")
-                    return
-                }
+                setTimeout(() => {
+                    if(!this.props.currentUser.id) {
+                        this.props.setError("You must be signed in to create/join a lobby")
+                        this.props.history.push("/auth/signin")
+                        return
+                    }
+                }, 1000)
                 if(snapshot.exists) {
                     // if(snapshot.data().waiting) {
                         this.addUsertoRoom()

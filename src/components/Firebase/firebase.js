@@ -38,6 +38,10 @@ class Firebase {
     return this.auth.signInWithEmailAndPassword(email, password)
   }
 
+  signInAnonymously = displayName => {
+    return this.auth.signInAnonymously()
+  }
+
   connectionRef = () => this.database.ref(".info/connected")
 
   userStatusDatabaseRef = () => this.database.ref(`/status/${this.auth.currentUser.uid}`)

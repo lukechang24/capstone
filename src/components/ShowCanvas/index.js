@@ -61,9 +61,15 @@ class ShowCanvas extends Component {
                         width="700" 
                         height="700" 
                     ></S.Canvas>
-                    <S.VoteContainer className={this.props.currentCanvas.userId === this.props.currentUser.id || this.props.showPrompt ? "hide" : ""}>
-                        <VoteForm currentCanvas={this.props.currentCanvas}/>
-                    </S.VoteContainer>
+                    {this.props.currentCanvas.userId === this.props.currentUser.id || this.props.showPrompt
+                        ?
+                            <S.VoteContainer className={this.props.currentCanvas.userId === this.props.currentUser.id || this.props.showPrompt ? "hide" : ""}>
+                                <VoteForm currentCanvas={this.props.currentCanvas}/>
+                            </S.VoteContainer>
+                        :
+                            null
+
+                    }
                     <S.VoteContainer className={this.props.currentCanvas.userId !== this.props.currentUser.id || this.props.showPrompt ? "hide" : ""}>
                         <S.SaveCanvas className={this.isSaved ? "hide" : ""} onClick={(e) => {this.handleSubmit(e)}} disabled={this.state.isSaved}>Save Drawing</S.SaveCanvas>
                     </S.VoteContainer>

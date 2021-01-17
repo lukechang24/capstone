@@ -16,7 +16,10 @@ class Lobby extends Component {
         loading: false
     }
     componentDidMount() {
-        this.getLobbies()
+        if(this.props.currentUser.id) {
+            console.log("did this")
+            this.getLobbies()
+        }
     }
     getLobbies = () => {
         this.setState({
@@ -36,11 +39,14 @@ class Lobby extends Component {
                         lobbies: [...lobbies],
                     })
                 })
+                .catch(error => {
+                    console.log(error)
+                })
         }, 1000)
     }
     toggleForm = () => {
         if(!this.props.currentUser.id) {
-            this.props.setError("You must be logged in to create/join a room")
+            this.props.setError("You must be signed in to create/join a room")
             this.props.history.push("/auth/signin")
             return
         }
@@ -97,7 +103,7 @@ class Lobby extends Component {
                     :
                 filteredLobbies.length === 0 
                     ?
-                        <S.NoRoom>No rooms available</S.NoRoom>
+                        <S.NoRoom>{this.props.currentUser ? "No rooms available" : "Sign in to join a lobby"}</S.NoRoom>
                     :
                         <RoomList lobbies={filteredLobbies} setUserRoomId={this.setUserRoomId} sendUserToRoom={this.sendUserToRoom}/>
                 }
