@@ -49,30 +49,30 @@ class ShowCanvas extends Component {
         }, 1000)
         return(
             <S.Container1>
-                <S.Container2 className={this.props.showPrompt ? "" : "hide"}>
-                    <S.Heading>
-                        <S.Prompt>{this.props.currentCanvas.canvas.prompt}</S.Prompt>
-                        <S.DrawnBy>Drawn by: {this.props.currentCanvas.displayName}</S.DrawnBy>
-                    </S.Heading>
-                </S.Container2>
                 <S.CanvasContainer className="container">
+                    {this.props.showPrompt
+                        ?
+                            <S.Heading className={this.props.showPrompt ? "" : "hide"}>
+                                <S.Prompt>The prompt: <br/>{this.props.currentCanvas.canvas.prompt}</S.Prompt>
+                            </S.Heading>
+                        :
+                            <S.Heading className={this.props.showPrompt ? "" : "hide"}>
+                                <S.DrawnBy>Drawn by: <br/>{this.props.currentCanvas.displayName}</S.DrawnBy>
+                            </S.Heading>
+
+                    }
                     <S.Canvas 
                         className="canvas2"
                         width="700" 
                         height="700" 
                     ></S.Canvas>
-                    {this.props.currentCanvas.userId === this.props.currentUser.id || this.props.showPrompt
+                    {this.props.showVote && this.props.currentUser.id !== this.props.currentCanvas.userId
                         ?
-                            <S.VoteContainer className={this.props.currentCanvas.userId === this.props.currentUser.id || this.props.showPrompt ? "hide" : ""}>
-                                <VoteForm currentCanvas={this.props.currentCanvas}/>
-                            </S.VoteContainer>
+                            <VoteForm currentUser={this.props.currentUser} currentCanvas={this.props.currentCanvas} promptOptions={this.props.promptOptions}/>
                         :
                             null
 
                     }
-                    <S.VoteContainer className={this.props.currentCanvas.userId !== this.props.currentUser.id || this.props.showPrompt ? "hide" : ""}>
-                        <S.SaveCanvas className={this.isSaved ? "hide" : ""} onClick={(e) => {this.handleSubmit(e)}} disabled={this.state.isSaved}>Save Drawing</S.SaveCanvas>
-                    </S.VoteContainer>
                 </S.CanvasContainer>
                 <S.OverLay></S.OverLay>
             </S.Container1>

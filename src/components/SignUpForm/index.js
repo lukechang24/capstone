@@ -43,7 +43,9 @@ class SignUpForm extends Component {
                         waiting: null,
                         isAnonymous: false
                     })
-                    this.props.history.push("/lobby")
+                        .then(() => {
+                            this.props.history.push("/lobby")
+                        })
                 }
             })
             .catch(err => {
@@ -71,7 +73,6 @@ class SignUpForm extends Component {
                 <Navbar currentUser={this.props.currentUser}/>
                 <S.SignUpForm onSubmit={this.handleSubmit}>
                     <S.Heading>Create an Account</S.Heading>
-                    <S.Warning>*Please use a fake Gmail/password</S.Warning>
                     <S.InputTitle>Email</S.InputTitle>
                     <S.Input name="email" autocomplete="off" onChange={this.handleInput}></S.Input>
                     <S.Error className={this.state.errors.indexOf("in-use") === -1 ? "hide" : ""}>This email is already registered with an account</S.Error>

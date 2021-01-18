@@ -16,7 +16,6 @@ class App extends Component {
     error: null
   }
   componentDidMount() {
-    console.log(this.state.currentUser)
     this.props.firebase.auth.onAuthStateChanged(authUser => {
       if(authUser) {
         this.props.firebase.findUser(authUser.uid).get()

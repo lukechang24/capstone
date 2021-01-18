@@ -4,8 +4,8 @@ import S from "./style"
 const UserList = (props) => {
     const userList = props.userList.map((user,i) => {
         return(
-            <S.UserContainer className={props.waiting ? "big" : "small"}>
-                <S.Username key={i}>
+            <S.UserContainer className={props.waiting ? "big" : "small"} key={i}>
+                <S.Username>
                     {user.isMaster && props.waiting ? <i className="fas fa-crown"></i> : null} {user.displayName}
                 </S.Username>
                 {!props.waiting 

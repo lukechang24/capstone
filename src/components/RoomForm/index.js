@@ -38,7 +38,8 @@ class RoomForm extends Component {
                 verbs: [],
                 adjectives: []
             },
-            showPrompt: false,
+            promptOptions: {},
+            showVote: false,
             timer: 20,
         }
         this.props.firebase.createRoom(roomInfo)
@@ -72,10 +73,10 @@ class RoomForm extends Component {
                         </S.Container2>
                         <S.Container2>
                             <S.Options>Number of Rounds:</S.Options>
-                            <select name="rounds" onChange={this.handleInput}>
+                            <select name="rounds" defaultValue="3" onChange={this.handleInput}>
                                 <option>1</option>
                                 <option>2</option>
-                                <option selected="selected">3</option>
+                                <option>3</option>
                                 <option>4</option>
                                 <option>5</option>
                                 <option>6</option>

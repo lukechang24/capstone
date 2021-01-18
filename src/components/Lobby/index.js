@@ -17,7 +17,6 @@ class Lobby extends Component {
     }
     componentDidMount() {
         if(this.props.currentUser.id) {
-            console.log("did this")
             this.getLobbies()
         }
     }
@@ -62,13 +61,18 @@ class Lobby extends Component {
     sendUserToRoom = roomId => {
         this.props.firebase.findRoom(roomId).get()
             .then(snap => {
-                if(snap.data().password.length > 0) {
-                    this.togglePassword()
-                    this.setState({
-                        currentRoomId: snap.data().id
-                    })
+                if(snap.exists) {
+                    if(snap.data().password.length > 0) {
+                        this.togglePassword()
+                        this.setState({
+                            currentRoomId: snap.data().id
+                        })
+                    } else {
+                        this.props.history.push(`/lobby/${roomId}`)
+                    }
                 } else {
-                    this.props.history.push(`/lobby/${roomId}`)
+                    this.props.setError("The room you have searched for does not exist")
+                    this.getLobbies()
                 }
             })
     }

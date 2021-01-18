@@ -39,6 +39,8 @@ S.Canvas = styled.canvas`
 `
 
 S.Heading = styled.div`
+    position: absolute;
+    top: -65px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -46,14 +48,13 @@ S.Heading = styled.div`
 `
 
 S.Prompt = styled.h2`
-    font-size: 60px;
     color: white;
+    text-align: center;
 `
 
-S.DrawnBy = styled.span`
-    font-size: 40px;
-    font-weight: 400;
+S.DrawnBy = styled.h2`
     color: white;
+    text-align: center;
 `
 
 S.VoteContainer = styled.div`

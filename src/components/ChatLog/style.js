@@ -14,10 +14,15 @@ S.MessageContainer = styled.p`
     padding: 2px 0 2px 5px;
     &.bold {
         font-weight: bold;
+    }
+    &.orange {
         color: orange;
-        &.red {
-            color: #ff0000;
-        }
+    }
+    &.red {
+        color: #ff0000;
+    }
+    &.green {
+        color: #1DD70F
     }
 `
 

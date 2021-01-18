@@ -267,7 +267,7 @@ class Draw1 extends Component {
                     ></S.Canvas>
                     <S.Prompt><span>Draw: </span>{this.state.canvas.prompt}</S.Prompt>
                     <S.TrashCan className="fas fa-trash-alt clear" onClick={this.clearCanvas}></S.TrashCan>
-                    <S.Undo className="fas fa-undo" onClick={this.undo}></S.Undo>
+                    <S.Undo className="fas fa-undo" onClick={(e) => {this.undo(e)}}></S.Undo>
                 </S.CanvasContainer>
             </S.Container1>
         )

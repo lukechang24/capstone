@@ -63,7 +63,6 @@ exports.changeUserStatus = functions.database.ref("/status/{uid}").onUpdate(
                             .then(() => {
                                 return userFirestoreRef.get()
                                     .then(snap => {
-                                        console.log(snap.data())
                                         if(snap.data().isAnonymous && snap.data().doRemove) {
                                             batch.delete(userFirestoreRef)
                                             batch.delete(userStatusFirestoreRef)
