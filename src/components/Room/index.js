@@ -99,7 +99,6 @@ class Room extends Component {
             })
     }
     setCurrentCanvas = () => {
-        console.log("Setting canvas")
         this.props.firebase.findCanvases(this.props.match.params.id).get()
             .then(snapshot => {
                 const canvasList = []
@@ -112,10 +111,24 @@ class Room extends Component {
                             this.setState({
                                 currentCanvas: {...doc.data(), userId: user.id, displayName: user.data().displayName, id: doc.id}
                             }, () => {
+                                this.props.firebase.findChatLogs(this.props.match.params.id).get()
+                                    .then(snapshot => {
+                                        const newMessage = {
+                                            content: `What prompt did ${user.data().displayName} draw?`,
+                                            type: null,
+                                            isSpecial: true,
+                                            createdAt: Date.now()
+                                        }
+                                        snapshot.forEach(chat => {
+                                            const updatedChat = [...chat.data().messages]
+                                            updatedChat.push(newMessage)
+                                            this.props.firebase.chatRef().doc(chat.id).update({messages: updatedChat})
+                                        })
+                                    })
                                 this.assignPromptOptions()
                             })
                             this.props.firebase.findRoom(this.props.match.params.id).update({currentCanvas: {...doc.data(), userId: user.id, displayName: user.data().displayName, id: doc.id}})
-                            })
+                        })
                     }
                     counter++
                 })
@@ -230,7 +243,6 @@ class Room extends Component {
                     adjectives: []
                 }
                 const splitPrompt = this.state.currentCanvas.canvas.prompt.split(" ")
-                console.log(splitPrompt, "split prompt")
                 const noun = splitPrompt[2]
                 const verb = splitPrompt[0]
                 const adjective = splitPrompt[1]
@@ -304,11 +316,6 @@ class Room extends Component {
                                         createdAt: Date.now()
                                     }
                                     updatedChat.push(newMessage)
-                                    // snapshot.forEach(chat => {
-                                    //     const updatedChat = [...chat.data().messages]
-                                    //     updatedChat.push(newMessage)
-                                    //     this.props.firebase.chatRef().doc(chat.id).update({messages: [...updatedChat]})
-                                    // })
                                 }
                             })
                             const newMessage = {
@@ -326,16 +333,13 @@ class Room extends Component {
     }
     startTimer = () => {
         this.timer = setInterval(() => {
-            if(this.state.currentCanvas) {
-                console.log(this.state.currentCanvas.userId)
-            }
             this.props.firebase.findRoom(this.props.match.params.id).get()
                 .then(snapshot => {
                     const updatedTime = snapshot.data().timer - 1
                     this.props.firebase.findRoom(this.props.match.params.id).update({timer: updatedTime})
                     const snapPhase = snapshot.data().phase
                     let voteDelay = false
-                    if(this.state.phase.indexOf("vote") !== -1 && this.state.timer === 11) {
+                    if(this.state.phase.indexOf("vote") !== -1 && this.state.timer === 15) {
                         // this.assignPromptOptions()
                         // setTimeout(() => {
                             this.props.firebase.findRoom(this.props.match.params.id).update({showVote: true})
@@ -344,7 +348,6 @@ class Room extends Component {
                     if(this.state.timer <= 1) {
                         clearInterval(this.timer)
                         let newPhase = snapPhase === "writeNouns" ? "writeVerbs" : snapPhase === "writeVerbs" ? "writeAdjectives" : snapPhase === "writeAdjectives" ? "writeFinished" : snapPhase === "selection" ? "draw" : snapPhase === "draw" ? "vote1" : `vote${parseInt(snapshot.data().phase.replace("vote", ""))+1}`
-
                         if(parseInt(snapPhase.replace("vote", "")) >= snapshot.data().userList.length) {
                             newPhase = snapshot.data().rounds === snapshot.data().currentRound ? "finished" : "writeNouns"
                             this.props.firebase.findRoom(this.props.match.params.id).get()
@@ -397,7 +400,7 @@ class Room extends Component {
                         if(newPhase === "vote1") {
                             this.setCurrentCanvas()
                         }
-                        const setTime = snapPhase.indexOf("write") !== -1 ? 20 : snapPhase ===  "selection" ? 125 : newPhase === "writeNouns" ? 20 : snapPhase === "draw" || snapPhase.indexOf("vote") !== -1 ? 20 : 0
+                        const setTime = snapPhase.indexOf("write") !== -1 ? 20 : snapPhase ===  "selection" ? 125 : newPhase === "writeNouns" ? 20 : snapPhase === "draw" || snapPhase.indexOf("vote") !== -1 ? 25 : 0
                         if(voteDelay) {
                             
                         } else {
@@ -427,7 +430,6 @@ class Room extends Component {
                             setTimeout(() => {
                                 this.props.firebase.findRoom(this.props.match.params.id).update({phase: newPhase, showVote: false, showPrompt: false})
                                 this.setCurrentCanvas()
-                                // this.assignPromptOptions()
                                 this.startTimer()
                             }, 5000)
                         } else {

@@ -21,9 +21,7 @@ class App extends Component {
         this.props.firebase.findUser(authUser.uid).get()
           .then(snapshot => {
             const userJson = JSON.stringify({...snapshot.data()})
-            if(!authUser.isAnonymous) {
-              localStorage.setItem("savedUser", userJson)
-            } 
+            localStorage.setItem("savedUser", userJson)
             this.setState({
               currentUser: {
                 ...snapshot.data()

@@ -16,9 +16,13 @@ class Lobby extends Component {
         loading: false
     }
     componentDidMount() {
-        if(this.props.currentUser.id) {
-            this.getLobbies()
-        }
+        setTimeout(() => {
+            if(!this.props.currentUser.id) {
+                this.props.history.push("/auth/signin")
+            } else {
+                this.getLobbies()
+            }
+        }, 500)
     }
     getLobbies = () => {
         this.setState({

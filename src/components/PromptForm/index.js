@@ -73,21 +73,21 @@ class PromptForm extends Component {
                             ?
                                 <S.GrammerContainer>
                                     <S.Grammer>A noun</S.Grammer>
-                                    <S.PromptInput name="noun" value={this.state.prompt.noun} onChange={this.handleInput}></S.PromptInput>
+                                    <S.PromptInput name="noun" value={this.state.prompt.noun} onChange={this.handleInput} maxLength="15"></S.PromptInput>
                                 </S.GrammerContainer>
                             :
                         this.props.phase === "writeVerbs"
                             ?
                                 <S.GrammerContainer>
                                     <S.Grammer>A verb ending in '-ing'</S.Grammer>
-                                    <S.PromptInput name="verb" value={this.state.prompt.verb} onChange={this.handleInput}></S.PromptInput>
+                                    <S.PromptInput name="verb" value={this.state.prompt.verb} onChange={this.handleInput} maxLength="15"></S.PromptInput>
                                 </S.GrammerContainer>
                             :
                         this.props.phase === "writeAdjectives"
                             ?
                                 <S.GrammerContainer>
                                     <S.Grammer>An adjective</S.Grammer>
-                                    <S.PromptInput name="adjective" value={this.state.prompt.adjective} onChange={this.handleInput}></S.PromptInput>
+                                    <S.PromptInput name="adjective" value={this.state.prompt.adjective} onChange={this.handleInput} maxLength="15"></S.PromptInput>
                                 </S.GrammerContainer>
                             :
                                 null

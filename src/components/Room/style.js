@@ -240,6 +240,7 @@ S.TimerContainer = styled.div`
 S.Timer = styled.h1`
     padding-bottom: 5px;
 `
+
 S.WaitingContainer = styled.div`
     position: fixed;
     top: 0;

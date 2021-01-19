@@ -193,8 +193,8 @@ class Draw1 extends Component {
                 })
             })
     }
-    undo = (e) => {
-        if(e.ctrlKey && e.which === 90) {
+    undo = (e, clicked) => {
+        if(e.ctrlKey && e.which === 90 || clicked) {
             const recentStroke = this.state.strokeCount.pop()
             const { clickX, clickY, clickDrag, clickColor, clickSize } = this.state.canvas
             const canvasInfo = {
@@ -267,7 +267,7 @@ class Draw1 extends Component {
                     ></S.Canvas>
                     <S.Prompt><span>Draw: </span>{this.state.canvas.prompt}</S.Prompt>
                     <S.TrashCan className="fas fa-trash-alt clear" onClick={this.clearCanvas}></S.TrashCan>
-                    <S.Undo className="fas fa-undo" onClick={(e) => {this.undo(e)}}></S.Undo>
+                    <S.Undo className="fas fa-undo" onClick={(e) => {this.undo(e, true)}}></S.Undo>
                 </S.CanvasContainer>
             </S.Container1>
         )

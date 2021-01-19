@@ -19,51 +19,51 @@ S.Container1 = styled.div`
 `
 
 S.SelectionForm = styled.div`
-    width: 400px;
     background-color: white;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    /* margin-bottom: 25px; */
 ` 
 S.Container2 = styled.div`
     display: flex;
     justify-content: space-around;
 `
 
-S.SelectContainer = styled.div`
+S.WordContainer = styled.div`
     display: flex;
     flex-direction: column;
-    align-items: center;
-    margin: 0 0 75px;
+    margin: 0 25px 0;
 `
 
-S.Select = styled.select`
-    width: 100px;
-    background-color: lightblue;
-    margin: 0 15px 0;
+S.Word = styled.p`
+    min-width: 80px;
+    background-color: skyblue;
+    text-align: center;
+    padding: 2.5px 10px;
+    border: 2px solid transparent;
+    margin: 2.5px 0;
+    &.selected {
+        background-color: #005B9A;
+        color: white;
+        border-color: black;
+    }
 `
 
-S.SelectOption = styled.option`
-    padding: 50px;
-    background-color: grey;
-`
-
-S.SelectPoints = styled.p`
+S.Points = styled.p`
     font-size: 15px;
-    margin: 5px 0 0;
+    text-align: center;
 `
-
 
 S.Heading = styled.h3`
-    margin: 15px 0 25px;
+    width: 450px;
+    margin: 10px 0 25px;
     text-align: center;
 `
 
 S.ChosenWordHeader = styled.h3`
     text-align: center;
-    margin: 0 0 15px;
+    margin: 25px 0 10px;
 `
 
 S.ChosenWord = styled.span`

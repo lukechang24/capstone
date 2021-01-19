@@ -5,54 +5,14 @@ import S from "./style"
 
 class VoteForm extends Component {
     state = {
-        promptList: [],
         answer: {
             verb: "",
             adjective: "",
             noun: ""
-        },
+        }
     }
     componentDidMount() {
-        const promptOptions = this.props.promptOptions
-        const nouns = !promptOptions.nouns ? null : promptOptions.nouns.map((noun,i) => {
-            return(
-                <S.SelectOption key={i}>{noun}</S.SelectOption>
-            )
-        })
-        const verbs = !promptOptions.verbs ? null : promptOptions.verbs.map((verb,i) => {
-            return(
-                <S.SelectOption key={i}>{verb}</S.SelectOption>
-            )
-        })
-        const adjectives = !promptOptions.adjectives ? null : promptOptions.adjectives.map((adjective,i) => {
-            return(
-                <S.SelectOption key={i}>{adjective}</S.SelectOption>
-            )
-        })
-        const nounSelection = 
-        <S.SelectContainer key={0}>
-            <S.Select name="noun" onChange={this.handleChange}>
-                {nouns}
-            </S.Select>
-            <S.SelectPoints>+50pts</S.SelectPoints>
-        </S.SelectContainer>
-        const verbSelection = 
-        <S.SelectContainer key={1}>
-            <S.Select name="verb" onChange={this.handleChange}>
-                {verbs}
-            </S.Select>
-            <S.SelectPoints>+100pts</S.SelectPoints>
-        </S.SelectContainer>
-        const adjectiveSelection = 
-        <S.SelectContainer key={2}>
-            <S.Select name="adjective" onChange={this.handleChange}>
-                {adjectives}
-            </S.Select>
-            <S.SelectPoints>+100pts</S.SelectPoints>
-        </S.SelectContainer>
-        const promptList = [verbSelection, adjectiveSelection, nounSelection]
         this.setState({
-            promptList: promptList,
             answer: {
                 verb: this.props.promptOptions.verbs[0],
                 adjective: this.props.promptOptions.adjectives[0],
@@ -68,23 +28,51 @@ class VoteForm extends Component {
         this.setState({
             answer: {
                 ...this.state.answer,
-                [e.target.name]: e.target.value
-            } 
+                [e.target.getAttribute("name")]: e.target.innerHTML
+            }
         }, () => {
+            console.log(this.state.answer)
             const { verb, adjective, noun } = this.state.answer
             const phrase = `${verb} ${adjective} ${noun}`
             this.props.firebase.findUser(this.props.currentUser.id).update({answer: phrase})
         })
     }
     render() {
+        const givenPrompts = this.props.promptOptions
+        const nouns = givenPrompts.nouns.map((noun, i) => {
+            return(
+                <S.Word className={this.state.answer.noun === noun ? "selected" : ""} name="noun" onClick={this.handleChange} key={i}>{noun}</S.Word>
+            )
+        })
+        const verbs = givenPrompts.verbs.map((verb, i) => {
+            return(
+                <S.Word className={this.state.answer.verb === verb ? "selected" : ""} name="verb" onClick={this.handleChange} key={i}>{verb}</S.Word>
+            )
+        })
+        const adjectives = givenPrompts.adjectives.map((adjective, i) => {
+            return(
+                <S.Word className={this.state.answer.adjective === adjective ? "selected" : ""} name="adjective" onClick={this.handleChange}>{adjective}</S.Word>
+            )
+        })
         const { verb, adjective, noun } = this.state.answer
         const phrase = `${verb} ${adjective} ${noun}`
         return(
             <S.Container1>
                 <S.SelectionForm>
-                    <S.Heading>What was {this.props.currentCanvas.displayName}'s prompt?</S.Heading>
+                    <S.Heading>Select the combination of words that you think match {this.props.currentCanvas.displayName}'s drawing.</S.Heading>
                     <S.Container2>
-                        {this.state.promptList}
+                        <S.WordContainer>
+                            <S.Points>(100pts)</S.Points>
+                            {verbs}
+                        </S.WordContainer>
+                        <S.WordContainer>
+                            <S.Points>(100pts)</S.Points>
+                            {adjectives}
+                        </S.WordContainer>
+                        <S.WordContainer>
+                            <S.Points>(50pts)</S.Points>
+                            {nouns}
+                        </S.WordContainer>
                     </S.Container2>
                     <S.ChosenWordHeader>
                         Your answer: <S.ChosenWord>{phrase}</S.ChosenWord>
