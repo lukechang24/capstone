@@ -10,20 +10,18 @@ class Profile extends Component {
         ctxList: []
     }
     componentDidMount() {
-        this.props.firebase.findUserCanvases(this.props.currentUser.id).get()
-            .then(snapshot => {
-                snapshot.forEach(snap => {
-                    this.setState({
-                        canvasList: [...this.state.canvasList, snap.data()]
-                    })
+        this.props.firebase.canvasRef1().orderByChild("userId").equalTo(this.props.currentUser.id).once("value", canvases => {
+            canvases.forEach(canvas => {
+                this.setState({
+                    canvasList: [...this.state.canvasList, canvas.val()]
                 })
-                for(let i = 0; i < snapshot.size; i++) {
-                    this.setState({
-                        // [`ctx${i}`]: document.querySelector(`.canvas${i}`)
-                        ctxList: [...this.state.ctxList, document.querySelector(`.canvas${i}`).getContext("2d")]
-                    })
-                }
             })
+            for(let i = 0; i < canvases.size; i++) {
+                this.setState({
+                    ctxList: [...this.state.ctxList, document.querySelector(`.canvas${i}`).getContext("2d")]
+                })
+            }
+        })
     }
     redraw = () => {
         for(let i = 0; i < this.state.canvasList.length; i++) {

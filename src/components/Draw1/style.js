@@ -32,6 +32,7 @@ S.Prompt = styled.h2`
     top: -50px;
     font-size: 25px;
     color: white;
+    user-select: none;
     @media only screen and (max-width: 1040px) {
         top: -40px;
         font-size: 15px;

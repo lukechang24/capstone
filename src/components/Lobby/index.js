@@ -16,7 +16,7 @@ class Lobby extends Component {
         loading: false
     }
     componentDidMount() {
-        setTimeout(() => {
+        this.interval = setTimeout(() => {
             if(!this.props.currentUser.id) {
                 this.props.history.push("/auth/signin")
             } else {
@@ -29,22 +29,20 @@ class Lobby extends Component {
             loading: true
         })
         setTimeout(() => {
-            this.props.firebase.findRooms().get()
-                .then(snapshot => {
-                    this.setState({
-                        loading: false
-                    })
-                    const lobbies = []
-                    snapshot.forEach(doc => {
-                        lobbies.push(doc.data())
-                    })
-                    this.setState({
-                        lobbies: [...lobbies],
-                    })
+            this.props.firebase.roomRef1().once("value", rooms => {
+                const lobbies = []
+                this.setState({
+                    loading: false
                 })
-                .catch(error => {
-                    console.log(error)
+                rooms.forEach(room => {
+                    lobbies.push(room.val())
                 })
+                console.log(lobbies)
+                this.setState({
+                    lobbies: [...lobbies]
+                })
+                    
+            })
         }, 1000)
     }
     toggleForm = () => {
@@ -63,27 +61,33 @@ class Lobby extends Component {
         })
     }
     sendUserToRoom = roomId => {
-        this.props.firebase.findRoom(roomId).get()
-            .then(snap => {
-                if(snap.exists) {
-                    if(snap.data().password.length > 0) {
-                        this.togglePassword()
-                        this.setState({
-                            currentRoomId: snap.data().id
-                        })
-                    } else {
-                        this.props.history.push(`/lobby/${roomId}`)
-                    }
+        this.props.firebase.findRoom1(roomId).once("value", room => {
+            if(room.exists()) {
+                if(room.val().password.length > 0) {
+                    this.togglePassword()
+                    this.setState({
+                        currentRoomId: room.key
+                    })
                 } else {
-                    this.props.setError("The room you have searched for does not exist")
-                    this.getLobbies()
+                    this.props.history.push(`/lobby/${roomId}`)
                 }
-            })
+            } else {
+                this.props.setError("The room you have searched for does not exist")
+                this.getLobbies()
+            }
+        })
+    }
+    componentWillUnmount() {
+        clearInterval(this.interval)
     }
     render() {
         const filteredLobbies = this.state.lobbies.filter(room => {
-            if(room.userList.length > 0) {
-                return true
+            if(room.userList){
+                if(room.userList.length > 0) {
+                    return true
+                } else {
+                    return false
+                }
             } else {
                 return false
             }

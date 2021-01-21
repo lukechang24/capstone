@@ -17,7 +17,7 @@ const UserList = (props) => {
             </S.UserContainer>
         )
     })
-    const waitingList = props.waitingList.map((user,i) => {
+    const waitingList = props.waitingList ? props.waitingList.map((user,i) => {
         return(
             <S.UserContainer className={props.waiting ? "big" : "small"}>
                 <S.Username key={i}>
@@ -25,7 +25,7 @@ const UserList = (props) => {
                 </S.Username>
             </S.UserContainer>
         )
-    })
+    }) : []
     return(
         <S.Container1 className={props.waiting ? "big" : "small"}>
             {props.waiting 

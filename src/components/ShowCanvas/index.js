@@ -19,12 +19,17 @@ class ShowCanvas extends Component {
         this.setState({
             isSaved: true
         }, () => {
-            this.props.firebase.findCanvas(this.props.currentCanvas.id).update({isSaved: true})
+            this.props.firebase.findCanvas1(this.props.currentCanvas.id).update({isSaved: true})
         })
     }
     redraw = () => {
         const ctx = this.state.ctx
-        const { clickX, clickY, clickDrag, clickColor, clickSize, backgroundColor } = this.props.currentCanvas.canvas
+        const { backgroundColor } = this.props.currentCanvas.canvas
+        const clickX = this.props.currentCanvas.canvas.clickX ? this.props.currentCanvas.canvas.clickX : []
+        const clickY = this.props.currentCanvas.canvas.clickY ? this.props.currentCanvas.canvas.clickY : []
+        const clickSize = this.props.currentCanvas.canvas.clickSize ? this.props.currentCanvas.canvas.clickSize : []
+        const clickColor = this.props.currentCanvas.canvas.clickColor ? this.props.currentCanvas.canvas.clickColor : []
+        const clickDrag = this.props.currentCanvas.canvas.clickDrag ? this.props.currentCanvas.canvas.clickDrag : []
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
         ctx.lineJoin = "round"
         ctx.fillStyle = backgroundColor
@@ -66,7 +71,7 @@ class ShowCanvas extends Component {
                         width="700" 
                         height="700" 
                     ></S.Canvas>
-                    {this.props.showVote && this.props.currentUser.id !== this.props.currentCanvas.userId
+                    {this.props.showVote && this.props.currentUser.id !== this.props.currentCanvas.userId && !this.props.currentUser.waiting
                         ?
                             <VoteForm currentUser={this.props.currentUser} currentCanvas={this.props.currentCanvas} promptOptions={this.props.promptOptions}/>
                         :

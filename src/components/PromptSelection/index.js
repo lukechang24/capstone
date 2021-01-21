@@ -42,7 +42,7 @@ class PromptSelection extends Component {
         }, () => {
             const { verb, adjective, noun } = this.state.chosenPrompt
             const phrase = `${verb} ${adjective} ${noun}`
-            this.props.firebase.findUser(this.props.currentUser.id).update({chosenPrompt: phrase})
+            this.props.firebase.findUser1(this.props.currentUser.id).update({chosenPrompt: phrase})
         })
     }
     handleChange = e => {
@@ -54,7 +54,7 @@ class PromptSelection extends Component {
         }, () => {
             const { verb, adjective, noun } = this.state.chosenPrompt
             const phrase = `${verb} ${adjective} ${noun}`
-            this.props.firebase.findUser(this.props.currentUser.id).update({chosenPrompt: phrase})
+            this.props.firebase.findUser1(this.props.currentUser.id).update({chosenPrompt: phrase})
         })
     }
     render() {

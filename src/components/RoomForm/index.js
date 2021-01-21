@@ -40,20 +40,22 @@ class RoomForm extends Component {
             },
             promptOptions: {},
             showVote: false,
-            timer: 20,
+            timer: 10,
+            createdAt: Date.now()
         }
-        this.props.firebase.createRoom(roomInfo)
+        this.props.firebase.createRoom1(roomInfo)
             .then(room => {
+                console.log(room)
                 const chatInfo = {
-                    roomId: room.id,
+                    roomId: room.key,
                     createdAt: Date.now(),
                     messages: []
                 }
-                this.props.firebase.createChat(chatInfo)
-                    .then(doc => {
-                        this.props.firebase.chatRef().doc(doc.id).update({id: doc.id})
-                        this.props.firebase.findRoom(room.id).update({id: room.id, chatId: doc.id})
-                        this.props.history.push(`/lobby/${room.id}`)
+                this.props.firebase.createChat1(chatInfo)
+                    .then(chat => {
+                        this.props.firebase.findChatLog1(chat.key).update({id: chat.key})
+                        this.props.firebase.findRoom1(room.key).update({id: room.key, chatId: chat.key})
+                        this.props.history.push(`/lobby/${room.key}`)
                     })
             })
     }

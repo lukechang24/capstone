@@ -15,6 +15,10 @@ class SignUpForm extends Component {
         if(window.location.href.indexOf("signup") !== -1 && this.props.currentUser.id) {
             this.props.history.push("/lobby")
         }
+        // this.props.firebase.findUser1().where("id", "==", "TL1u1MebeWQGSJwBtcOBlmMS8g22")
+        //     .once("value", (doc) => {
+        //         console.log(doc.vak())
+        //     })
     }
     handleInput = e => {
         this.setState({
@@ -31,16 +35,17 @@ class SignUpForm extends Component {
                         errors: [...this.state.errors, "displayName"]
                     })
                 } else {
-                    this.props.firebase.findUser(cred.user.uid).set({
+                    this.props.firebase.findUser1(cred.user.uid).set({
                         email,
                         displayName,
-                        currentRoomId: null,
+                        currentRoomId: "",
                         id: cred.user.uid,
-                        joinedAt: null,
-                        isMaster: null,
-                        chosenPrompt: null,
-                        points: null,
-                        waiting: null,
+                        joinedAt: 0,
+                        isMaster: false,
+                        chosenPrompt: "",
+                        answer: "",
+                        points: 0,
+                        waiting: false,
                         isAnonymous: false
                     })
                         .then(() => {

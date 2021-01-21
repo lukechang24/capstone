@@ -6,92 +6,52 @@ const db = admin.firestore()
 const database = admin.database()
 const auth = admin.auth()
 
-exports.changeUserStatus = functions.database.ref("/status/{uid}").onUpdate(
-    async (change, context) => {
-        const eventStatus = change.after.val()
+exports.changeUserStatus = functions.database.ref("/status/{uid}").onUpdate(async (change, context) => {
+    const eventStatus = change.after.val()
+    const userStatusRef = database.ref(`status/${context.params.uid}`)
+    const userRef = database.ref(`users/${context.params.uid}`)
 
-        const userStatusFirestoreRef = db.doc(`status/${context.params.uid}`)
-        const userRef = db.doc(`users/${context.params.uid}`)
-        const batch = db.batch()
-        batch.set(userStatusFirestoreRef, eventStatus)
-        if(!eventStatus.isOnline) {
-            batch.set(userRef, {currentRoomId: null, isMaster: null, joinedAt: null, points: null, givenPrompts: {}, chosenPrompt: ""}, {merge: true})
-        }
-        return batch.commit()
-    })
-
-    exports.deleteUserFromRoom = functions.firestore
-    .document("status/{uid}")
-    .onUpdate((change, context) => {
-        const data = change.after.data()
-
-        const roomRef = db.collection("rooms")
-        const userStatusFirestoreRef = db.doc(`status/${context.params.uid}`)
-        const userFirestoreRef = db.doc(`users/${context.params.uid}`)
-        const batch = db.batch()
-        if(!data.isOnline) {
-            userStatusFirestoreRef.get()
-                .then(snap => {
-                    if(snap.data().isOnline) {
-                        return null
-                    } else {
-                        return roomRef.where("userList", "array-contains", change.after.id).get()
-                            .then(snapshot => {
-                                snapshot.forEach(doc => {
-                                    const updatedUserList = [...doc.data().userList]
-                                    if(updatedUserList.indexOf(change.after.id) !== -1) {
-                                        updatedUserList.splice(updatedUserList.indexOf(change.after.id), 1)
-                                        batch.update(roomRef.doc(doc.id), {userList: updatedUserList})
-                                    }
-                                })
-                                return null
-                            })
-                            .then(() => {
-                                return roomRef.where("waitingList", "array-contains", change.after.id).get()
-                                .then(snapshot => {
-                                    snapshot.forEach(doc => {
-                                        const updatedWaitingList = [...doc.data().waitingList]
-                                        if(updatedWaitingList.indexOf(change.afterid) !== -1) {
-                                            updatedWaitingList.splice(updatedWaitingList.indexOf(change.after.id), 1)
-                                            batch.update(roomRef.doc(doc.id), {waitingList: updatedWaitingList})
-                                        }
-                                    })
-                                    return null
-
-                                })
-                            })
-                            .then(() => {
-                                return userFirestoreRef.get()
-                                    .then(snap => {
-                                        if(snap.data().isAnonymous && snap.data().doRemove) {
-                                            batch.delete(userFirestoreRef)
-                                            batch.delete(userStatusFirestoreRef)
-                                        }
-                                        return null
-                                    })
-                            })
-                            .then(() => {
-                                return batch.commit()
-                            })
-                    }
+    if(!eventStatus.isOnline) {
+        userStatusRef.once("value", status => {
+            console.log(status.val())
+            if(status.val().isOnline) {
+                return null
+            } else {
+                userRef.once("value", user => {
+                    const roomRef = database.ref(`rooms/${user.val().currentRoomId}`)
+                    roomRef.once("value", room => {
+                        const updatedUserList = room.val().userList ? [...room.val().userList] : []
+                        if(updatedUserList.indexOf(context.params.uid) !== -1) {
+                            updatedUserList.splice(updatedUserList.indexOf(context.params.uid), 1)
+                            roomRef.update({userList: updatedUserList})
+                        }
+                        const updatedWaitingList = room.val().waitingList ? [...room.val().waitingList] : []
+                        if(updatedWaitingList.indexOf(context.params.uid) !== -1) {
+                            updatedUserList.splice(updatedWaitingList.indexOf(context.params.uid), 1)
+                            roomRef.update({userList: updatedWaitingList})
+                        }
+                    })
                 })
-        } else {
-            return null
-        }
-    })
+                .then(() => {
+                    userRef.once("value", user => {
+                        if(user.val().isAnonymous && user.val().doRemove) {
+                            userRef.remove()
+                            userStatusRef.remove()
+                            auth.deleteUser(context.params.uid)
+                        } else {
+                            userRef.update({currentRoomId: "", isMaster: false, joinedAt: 0, points: 0, givenPrompts: {}, chosenPrompt: ""})
+                        }
+                    })
+                })
+            }
+        })
+    }
+    return null
+})
 
-exports.deleteUserStatus = functions.firestore
-    .document("status/{uid}")
-    .onDelete((change, context) => {
-        auth.deleteUser(context.params.uid)
-        const ref = database.ref(`status/${context.params.uid}`)
-        return ref.remove()
-    })
-
-exports.archiveChat = functions.firestore
-    .document("chats/{chatId}")
-    .onUpdate(change => {
-        const data = change.after.data()
+exports.archiveChat = functions.database.ref("/chats/{chatId}")
+    .onUpdate((change, context) => {
+        const data = change.after.val()
 
         const maxLen = 100
         const msgLen = data.messages.length
@@ -103,76 +63,44 @@ exports.archiveChat = functions.firestore
             const deleteCount = msgLen - maxLen <= 0 ? 1 : msgLen - maxLen
             data.messages.splice(0, deleteCount)
         
-            const ref = db.collection("chats").doc(change.after.id)
+            const chatRef = database.ref(`chats/${context.params.chatId}`)
+            chatRef.update(data)
 
-            batch.set(ref, data, {merge: true})
-
-            return batch.commit()
         } else {
             return null
         }   
     })
 
-exports.deleteEmptyRooms = functions.firestore
-    .document("rooms/{roomId}")
-    .onUpdate(change => {
-        const dataBefore = change.before.data()
-        const dataAfter = change.after.data()
-        
-        const batch = db.batch()
+exports.deleteEmptyRooms = functions.database.ref("/rooms/{roomId}")
+    .onUpdate((change, context) => {
+        const dataBefore = change.before.val()
+        const dataAfter = change.after.val()
 
-        if(dataBefore.userList.length === 1 && !dataAfter.userList[0]) {
-        
-            const ref = db.collection("rooms").doc(change.after.id)
-            
-            batch.delete(ref, dataAfter)
-
-            return batch.commit()
+        if(!dataAfter.userList && dataBefore.userList[0]) {
+            const roomRef = database.ref(`rooms/${context.params.roomId}`)
+            roomRef.remove()
         } else {
             return null
-        }   
+        }
     })
 
-exports.deleteChat = functions.firestore
-    .document("rooms/{roomId}")
+exports.deleteChat = functions.database.ref("/rooms/{roomId}")
     .onDelete(change => {
-        const deletedData = change.data()
-        
-        const chatRef = db.collection("chats").doc(deletedData.chatId)
-        const batch = db.batch()
+        const data = change.val()
+        const chatRef = database.ref(`chats/${data.chatId}`)
+        chatRef.remove()
 
-        batch.delete(chatRef)
-        return batch.commit()
+        return null
 })
 
-exports.deleteCanvases = functions.firestore
-    .document("rooms/{roomId}")
+exports.deleteCanvases = functions.database.ref("/rooms/{roomId}")
     .onDelete((change, context) => {
-        const deletedData = change.data()
-        const canvasRef = db.collection("canvases")
-        const batch = db.batch()
-        canvasRef.where("roomId", "==", deletedData.id).get()
-            .then(snapshot => {
-                snapshot.forEach(doc => {
-                    batch.delete(canvasRef.doc(doc.id))
-                })
-            }).then(() => {
-                return batch.commit()
+        const canvasRef = database.ref(`canvases`)
+        canvasRef.orderByChild("roomId").equalTo(context.params.roomId).once("value", canvases => {
+            canvases.forEach(canvas => {
+                if(!canvas.val().isSaved) {
+                    database.ref(`canvases/${canvas.key}`).remove()
+                }
             })
+        })
 })
-
-// exports.deleteEmptyCanvases = functions.firestore
-//     .document("canvases/{canvasId}")
-//     .onUpdate(change => {
-//         const data = change.after.data()
-        
-//         const canvasRef = db.collection("canvases").doc(change.after.id)
-//         const batch = db.batch()
-
-//         if(!data.canvas.clickX[0] && !data.roomId) {
-//             batch.delete(canvasRef)
-//             return batch.commit()
-//         } else {
-//             return null
-//         }
-// })

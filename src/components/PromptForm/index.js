@@ -24,45 +24,56 @@ class PromptForm extends Component {
         if((!this.state.prompt.noun && this.props.phase === "writeNouns") || (!this.state.prompt.verb && this.props.phase === "writeVerbs") || (!this.state.prompt.adjective && this.props.phase === "writeAdjectives")) {
             return
         }
-        this.props.firebase.findRoom(this.props.match.params.id).get()
-            .then(snapshot => {
-                const { noun, verb, adjective } = this.state.prompt
-                if(this.props.phase === "writeNouns") {
-                    const updatedNouns = [...snapshot.data().prompts.nouns, noun]
-                    const uniqueNouns = [...new Set(updatedNouns)]
-                    this.props.firebase.findRoom(snapshot.id).update({
+        this.props.firebase.findRoom1(this.props.match.params.id).once("value", room => {
+            const { noun, verb, adjective } = this.state.prompt
+            if(this.props.phase === "writeNouns") {
+                const updatedNouns = room.val().prompts ? [...room.val().prompts.nouns] : []
+                updatedNouns.push(noun)
+                const uniqueNouns = [...new Set(updatedNouns)]
+                if(room.val().prompts) {
+                    this.props.firebase.findRoom1(room.key).update({
                         prompts: {
-                            ...snapshot.data().prompts,
+                            ...room.val().prompts,
                             nouns: uniqueNouns
                         }
                     })
-                } else if(this.props.phase === "writeVerbs") {
-                    const updatedVerbs = [...snapshot.data().prompts.verbs, verb]
-                    const uniqueVerbs = [...new Set(updatedVerbs)]
-                    this.props.firebase.findRoom(snapshot.id).update({
+                } else {
+                    this.props.firebase.findRoom1(room.key).update({
                         prompts: {
-                            ...snapshot.data().prompts,
-                            verbs: uniqueVerbs
+                            nouns: uniqueNouns
                         }
                     })
-                } else if(this.props.phase === "writeAdjectives") {
-                    const updatedAdjectives = [...snapshot.data().prompts.adjectives, adjective]
-                    const uniqueAdjectives = [...new Set(updatedAdjectives)]
-                    this.props.firebase.findRoom(snapshot.id).update({
-                        prompts: {
-                            ...snapshot.data().prompts,
-                            adjectives: uniqueAdjectives
-                        }
-                    })
+
                 }
-                this.setState({
-                        prompt: {
-                            noun: "",
-                            verb: "",
-                            adjective: ""
-                        }
-                    })
-            })
+            } else if(this.props.phase === "writeVerbs") {
+                const updatedVerbs = room.val().prompts.verbs ? [...room.val().prompts.verbs] : []
+                updatedVerbs.push(verb)
+                const uniqueVerbs = [...new Set(updatedVerbs)]
+                this.props.firebase.findRoom1(room.key).update({
+                    prompts: {
+                        ...room.val().prompts,
+                        verbs: uniqueVerbs
+                    }
+                })
+            } else if(this.props.phase === "writeAdjectives") {
+                const updatedAdjectives = room.val().prompts.adjectives ? [...room.val().prompts.adjectives] : []
+                updatedAdjectives.push(adjective)
+                const uniqueAdjectives = [...new Set(updatedAdjectives)]
+                this.props.firebase.findRoom1(room.key).update({
+                    prompts: {
+                        ...room.val().prompts,
+                        adjectives: uniqueAdjectives
+                    }
+                })
+            }
+            this.setState({
+                    prompt: {
+                        noun: "",
+                        verb: "",
+                        adjective: ""
+                    }
+                })
+        })
     }
     render() {
         return(

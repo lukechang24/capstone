@@ -18,18 +18,18 @@ class App extends Component {
   componentDidMount() {
     this.props.firebase.auth.onAuthStateChanged(authUser => {
       if(authUser) {
-        this.props.firebase.findUser(authUser.uid).get()
-          .then(snapshot => {
-            const userJson = JSON.stringify({...snapshot.data()})
-            localStorage.setItem("savedUser", userJson)
-            this.setState({
-              currentUser: {
-                ...snapshot.data()
-              }
-            }, () => {
-              this.checkForUserChanges()
-            })
+        this.props.firebase.findUser1(authUser.uid).once("value", doc => {
+          const userJson = JSON.stringify({...doc.val()})
+          localStorage.setItem("savedUser", userJson)
+          this.setState({
+            currentUser: {
+              ...doc.val()
+            }
+          }, () => {
+            this.checkForUserChanges()
+            console.log(this.state.currentUser)
           })
+        })
         this.setUserStatusOnline()
       } else {
         this.setState({
@@ -43,14 +43,11 @@ class App extends Component {
   }
   checkForUserChanges = () => {
     if(this.state.currentUser.id) {
-      this.unsubscribe = this.props.firebase.findUser(this.state.currentUser.id)
-        .onSnapshot(snapshot => {
-          this.setState({
-            currentUser: {
-              ...snapshot.data()
-            }
-          })
+      this.unsubscribe = this.props.firebase.findUser1(this.state.currentUser.id).on("value", user => {
+        this.setState({
+          currentUser: {...user.val()}
         })
+      })
     }
   }
   setUserStatusOnline = () => {
@@ -63,13 +60,12 @@ class App extends Component {
     this.props.firebase.connectionRef()
       .on("value", snapshot => {
         if(snapshot.val() === false) {
-            this.props.firebase.userStatusFirestoreRef().set(offlineStatus)
+            // this.props.firebase.userStatusFirestoreRef().set(offlineStatus)
             return
         }
         this.props.firebase.userStatusDatabaseRef().onDisconnect().set(offlineStatus)
           .then(() => {
             this.props.firebase.userStatusDatabaseRef().set(onlineStatus)
-            this.props.firebase.userStatusFirestoreRef().set(onlineStatus)
         })
       })
   }
@@ -89,13 +85,13 @@ class App extends Component {
     })
   }
   signOut = () => {
-    this.unsubscribe()
+    this.props.firebase.findUser1(this.state.currentUser.id).off("value", this.unsubscribe)
     this.setState({
       currentUser: {}
     })
     if(this.props.firebase.auth.currentUser) {
       if(this.state.currentUser.isAnonymous) {
-        this.props.firebase.findUser(this.state.currentUser.id).update({doRemove: true})
+        this.props.firebase.findUser1(this.state.currentUser.id).update({doRemove: true})
       }
       localStorage.removeItem("savedUser")
       this.props.firebase.signOut()
@@ -104,7 +100,7 @@ class App extends Component {
     }
   }
   componentWillUnmount() {
-    this.unsubscribe()
+    // this.unsubscribe()
   }
   render() {
     return (

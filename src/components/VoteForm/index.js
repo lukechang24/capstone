@@ -1,4 +1,5 @@
 import React, { Component } from "react"
+import Draggable from "react-draggable"
 import { withRouter } from "react-router-dom"
 import { withFirebase } from "../Firebase"
 import S from "./style"
@@ -21,7 +22,7 @@ class VoteForm extends Component {
         }, () => {
             const { verb, adjective, noun } = this.state.answer
             const phrase = `${verb} ${adjective} ${noun}`
-            this.props.firebase.findUser(this.props.currentUser.id).update({answer: phrase})
+            this.props.firebase.findUser1(this.props.currentUser.id).update({answer: phrase})
         })
     }
     handleChange = e => {
@@ -34,7 +35,7 @@ class VoteForm extends Component {
             console.log(this.state.answer)
             const { verb, adjective, noun } = this.state.answer
             const phrase = `${verb} ${adjective} ${noun}`
-            this.props.firebase.findUser(this.props.currentUser.id).update({answer: phrase})
+            this.props.firebase.findUser1(this.props.currentUser.id).update({answer: phrase})
         })
     }
     render() {
@@ -58,26 +59,29 @@ class VoteForm extends Component {
         const phrase = `${verb} ${adjective} ${noun}`
         return(
             <S.Container1>
-                <S.SelectionForm>
-                    <S.Heading>Select the combination of words that you think match {this.props.currentCanvas.displayName}'s drawing.</S.Heading>
-                    <S.Container2>
-                        <S.WordContainer>
-                            <S.Points>(100pts)</S.Points>
-                            {verbs}
-                        </S.WordContainer>
-                        <S.WordContainer>
-                            <S.Points>(100pts)</S.Points>
-                            {adjectives}
-                        </S.WordContainer>
-                        <S.WordContainer>
-                            <S.Points>(50pts)</S.Points>
-                            {nouns}
-                        </S.WordContainer>
-                    </S.Container2>
-                    <S.ChosenWordHeader>
-                        Your answer: <S.ChosenWord>{phrase}</S.ChosenWord>
-                    </S.ChosenWordHeader>
-                </S.SelectionForm>
+                <Draggable handle="#handle">
+                    <S.SelectionForm>
+                        <S.SelectionBar id="handle"></S.SelectionBar>
+                        <S.Heading>Select the combination of words that you think match {this.props.currentCanvas.displayName}'s drawing.</S.Heading>
+                        <S.Container2>
+                            <S.WordContainer>
+                                <S.Points>(100pts)</S.Points>
+                                {verbs}
+                            </S.WordContainer>
+                            <S.WordContainer>
+                                <S.Points>(100pts)</S.Points>
+                                {adjectives}
+                            </S.WordContainer>
+                            <S.WordContainer>
+                                <S.Points>(50pts)</S.Points>
+                                {nouns}
+                            </S.WordContainer>
+                        </S.Container2>
+                        <S.ChosenWordHeader>
+                            Your answer: <S.ChosenWord>{phrase}</S.ChosenWord>
+                        </S.ChosenWordHeader>
+                    </S.SelectionForm>
+                </Draggable>
             </S.Container1>
         )
     }

@@ -12,17 +12,6 @@ const config = {
   messagingSenderId: 105595358454,
 }
 
-// const config = {
-//   apiKey: "AIzaSyCv8SLdoRoTw18xbpG34uM3CEXolI8Pobs",
-//   authDomain: "accurate-or-nah.firebaseapp.com",
-//   databaseURL: "https://accurate-or-nah-default-rtdb.firebaseio.com",
-//   projectId: "accurate-or-nah",
-//   storageBucket: "accurate-or-nah.appspot.com",
-//   messagingSenderId: "656336213198",
-//   appId: "1:656336213198:web:be3469855b59af33892c9f",
-//   measurementId: "G-XNSN0QX8H6"
-// };
-
 class Firebase {
   constructor() {
     app.initializeApp(config)
@@ -48,33 +37,29 @@ class Firebase {
 
   userStatusFirestoreRef = () => this.db.doc(`/status/${this.auth.currentUser.uid}`)
 
-  userRef = () => this.db.collection("users")
+  userRef1 = () => this.database.ref("users")
 
-  findUser = uid => this.db.collection("users").doc(uid)
+  findUser1 = uid => this.database.ref(`users/${uid}`)
 
   findUsers = roomId => this.db.collection("users").where("currentRoomId", "==", roomId)
 
-  createRoom = roomInfo => this.db.collection("rooms").add(roomInfo) 
+  createRoom1 = roomInfo => this.database.ref("rooms").push(roomInfo) 
 
-  findRoom = id => this.db.collection("rooms").doc(id)
+  findRoom1 = roomId => this.database.ref(`rooms/${roomId}`)
 
-  findRooms = () => this.db.collection("rooms")
+  roomRef1 = () => this.database.ref("rooms") //WATCHOUT
 
-  createCanvas = (canvasInfo) => this.db.collection("canvases").add(canvasInfo)
+  createCanvas1 = (canvasInfo) => this.database.ref("canvases").push(canvasInfo)
 
-  findCanvas = id => this.db.collection("canvases").doc(id)
+  findCanvas1 = canvasId => this.database.ref(`canvases/${canvasId}`)
 
-  findCanvases = roomId => this.db.collection("canvases").where("roomId", "==", roomId)
+  canvasRef1 = () => this.database.ref("canvases") //WATCH OUT
 
-  findUserCanvases = userId => this.db.collection("canvases").where("userId", "==", userId)
+  createChat1 = (chatInfo) => this.database.ref("chats").push(chatInfo)
 
-  createChat = (chatInfo) => this.db.collection("chats").add(chatInfo)
+  chatRef1 = () => this.database.ref(`chats`)
 
-  chatRef = () => this.db.collection("chats")
-
-  findChatLogs = roomId => this.db.collection("chats").where("roomId", "==", roomId)
-
-  wordBankRef = () => this.db.collection("wordBank")
+  findChatLog1 = chatId => this.database.ref(`chats/${chatId}`) //WATCH OUT
 
   signOut = () => this.auth.signOut()
 }

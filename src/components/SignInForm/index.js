@@ -59,19 +59,18 @@ class SignInForm extends Component {
         this.props.firebase.signInAnonymously()
             .then(authUser => {
                 const newUser = {
-                    email: null,
                     displayName: this.state.displayName,
-                    currentRoomId: null,
+                    currentRoomId: "",
                     id: authUser.user.uid,
-                    joinedAt: null,
-                    isMaster: null,
-                    chosenPrompt: null,
-                    points: null,
-                    waiting: null,
+                    joinedAt: 0,
+                    isMaster: false,
+                    chosenPrompt: "",
+                    points: 0,
+                    waiting: false,
                     isAnonymous: true,
                     doRemove: false
                 }
-                this.props.firebase.findUser(authUser.user.uid).set(newUser)
+                this.props.firebase.findUser1(authUser.user.uid).set(newUser)
                     .then(() => {
                         this.props.history.push("/lobby")
                     })

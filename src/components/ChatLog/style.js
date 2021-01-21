@@ -22,7 +22,7 @@ S.MessageContainer = styled.p`
         color: #ff0000;
     }
     &.green {
-        color: #1DD70F
+        color: #24CB17;
     }
 `
 

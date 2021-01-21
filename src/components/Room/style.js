@@ -239,6 +239,9 @@ S.TimerContainer = styled.div`
 
 S.Timer = styled.h1`
     padding-bottom: 5px;
+    &.red {
+        color: red;
+    }
 `
 
 S.WaitingContainer = styled.div`
