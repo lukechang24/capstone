@@ -3,9 +3,10 @@
 A website where you can draw silly prompts with your friends  
 https://capstone-ab1a2.firebaseapp.com/lobby
 
-## How to Play
+## Game Description
 
-To start, you must be registered to create a room, where you wait for other players to join your room. Click start when everyone is in, and players will be prompted to fill in as many nouns, verbs, and adjectives as they can before time runs out. Then, the words inputted by all the players will be scrambled up and randomly assigned to each player, in which they have to create a prompt from those words. They are then sent to a drawing phase, where they attempt to draw their selected prompt as best as possible.
+An online multiplayer drawing app that puts the user’s drawing and analyzing abilities to the test. After joining a room, players are given a limited amount of time to input nouns, verbs, and adjectives to generate randomized prompts, draw their selected prompt, and guess the other player’s prompts. While drawing, players are provided tools such as a selection of colors and pen tip sizes, an eraser, and an undo button. At the end of the drawing phase, each players’ drawings are presented one by one, and users must use the provided wordbank to guess which combination of noun, verb, and adjective matches each drawing, and are awarded points for each word in the prompt they match correctly. Throughout the game, players also have the ability to chat with other participants via chatbox, which also serves the purpose to notify users when a player has joined or left the room.
+
 
 ## Technologies Used
 
